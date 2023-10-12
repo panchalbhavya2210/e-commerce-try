@@ -1,0 +1,9 @@
+// place files you want to import through the `$lib` alias in this folder.
+
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://iectxtycitvmqgpihdgy.supabase.co";
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export default supabase;
