@@ -1,5 +1,4 @@
 <script>
-  import { sineIn } from "svelte/easing";
   import supabase from "../../lib/index";
   import { onMount } from "svelte";
 
