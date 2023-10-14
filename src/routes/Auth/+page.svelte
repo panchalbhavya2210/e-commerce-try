@@ -3,75 +3,20 @@
   import supabase from "../../lib/index";
   import { onMount } from "svelte";
 
-  //   const { data, error } = supabase.auth.signUp({
-  //     email: "panchalbhavya2210@gmail.com",
-  //     password: "King@2210",
-  //   });
-  //   console.log(data, error);
-
-  // try {
-  //   const { data, error } = supabase.auth.signInWithPassword({
-  //     email: "panchalbhavya2210@gmail.com",
-  //     password: "King@2210",
-  //   });
-  //   if (error) {
-  //     console.error("Error signing in:", error.message);
-  //   } else {
-  //     console.log("User signed in successfully:", data);
-  //   }
-  // } catch (error) {
-  //   console.error("Error signing in:", error.message);
-  // }
-
-  // try {
-  //   const { data, error } = supabase
-  //     .from("Seller Data")
-  //     .insert([{ "1": "Hello" }]);
-  //   if (error) {
-  //     console.error("Error signing in:", error.message);
-  //   } else {
-  //     console.log("data set:", data);
-  //   }
-  // } catch (error) {
-  //   console.log("error when setting database : ", error);
-  // }
-
-  const tableName = "SellerData";
-
-  // Data to insert
   const dataToInsert = [
     {
       seller_name: "Hello",
-    },
-    {
       seller_email: "hello@gmail.com",
-    },
-    {
       seller_image: "pmg",
-    },
-    {
-      seller_category: [{ "1": "none" }, { "2": "none" }],
-    },
-    {
-      seller_products: [
-        {
-          "1": "none",
-        },
-        {
-          "1": "none",
-        },
-      ],
-    },
-    {
+      seller_category: ["none", "none", "none"],
+      seller_products: ["none", "none", "none"],
       seller_price: "2000",
-    },
-    {
-      seller_address: "confidentail",
+      seller_address: "confidential",
     },
   ];
 
   // Insert data into the table
-  (async () => {
+  async function insertData() {
     const { data, error } = await supabase
       .from("SellerData")
       .upsert(dataToInsert);
@@ -81,25 +26,27 @@
     } else {
       console.log("Data inserted successfully:", data);
     }
-  })();
+  }
+  // insertData();
   onMount(() => {
-    setTimeout(() => {
-      const { data, error } = supabase.from("SellerData").select("*");
-      console.log(data);
-      console.log(error);
-    }, 1500);
-  });
+    // insertData();
+    async function fetchData() {
+      try {
+        // Replace 'your_table_name' with the actual name of your table
+        const { data, error } = await supabase
+          .from("SellerData")
+          .select("seller_category, seller_name, seller_products"); // You can specify specific columns if needed
 
-  // try {
-  //   const { error } = supabase.from("countries").insert([
-  //     { id: 1, name: "Nepal" },
-  //     { id: 1, name: "Vietnam" },
-  //   ]);
-  // } catch (error) {
-  //   if (error) {
-  //     console.error("Error inserting data:", error);
-  //   } else {
-  //     console.log("Data inserted successfully:", data);
-  //   }
-  // }
+        if (error) {
+          console.error("Error fetching data:", error);
+        } else {
+          console.log("Data fetched successfully:", data);
+          // Process or use the data as needed
+        }
+      } catch (error) {
+        console.error("Error:", error.message);
+      }
+    }
+    fetchData();
+  });
 </script>
