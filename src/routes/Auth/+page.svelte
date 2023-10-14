@@ -14,7 +14,6 @@
     },
   ];
 
-  // Insert data into the table
   async function insertData() {
     const { data, error } = await supabase
       .from("SellerData")
