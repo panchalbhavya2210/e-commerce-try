@@ -5,27 +5,37 @@
   import imageThree from "../lib/slider-image/pexels-kai-pilger-996329.jpg";
   import imageFour from "../lib/slider-image/pexels-polina-tankilevitch-3735641.jpg";
   import imageFive from "../lib/slider-image/pexels-sam-lion-5709665.jpg";
+  import transParent from "../lib/slider-image/—Pngtree—gradient black horizontal vertical_5659215.png";
   import "../lib/global.css";
 </script>
 
+<svelte:head />
 <main>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css"
     rel="stylesheet"
   />
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
-  ></script>
   <div class="carouselMain p-10 h-full">
-    <div id="default-carousel" class="relative" data-carousel="slide">
+    <div id="default-carousel" class="relative" data-carousel="static">
       <!-- Carousel wrapper -->
       <div class="relative h-96 overflow-hidden rounded-lg md:h-96">
         <!-- Item 1 -->
-        <div
-          class="relative hidden duration-700 ease-in-out"
-          data-carousel-item
-        >
-          <h1 class="absolute z-10">Hello</h1>
+        <div class="relative duration-700 ease-in-out" data-carousel-item>
+          <div class="absolute z-10">
+            <img src={transParent} class="-rotate-90" alt="" />
+            <div
+              class="sm:ml-16 mt-10 textOpacityNone absolute text-white top-0 left-0 w-5/12"
+            >
+              <h1 class="sm:text-5xl font-bold">ShopaHolic's</h1>
+              <h1 class="sm:mt-2 text-5xl font-bold">Clothing Collection</h1>
+
+              <p class="ml-2 mt-5">
+                A unique collection of clothing unveils a world of creativity
+                and individuality. These garments defy convention, offering a
+                <br />one-of-a-kind style that stands out in any crowd.
+              </p>
+            </div>
+          </div>
           <img
             src={imageOne}
             class="absolute block w-full top-0 left-0 object-cover h-96"
@@ -34,7 +44,10 @@
           <h1>Hello</h1>
         </div>
         <!-- Item 2 -->
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+        <div
+          class="relative hidden duration-700 ease-in-out"
+          data-carousel-item
+        >
           <img
             src={imageTwo}
             class="absolute block w-full top-0 left-0 object-cover h-96"
@@ -42,7 +55,10 @@
           />
         </div>
         <!-- Item 3 -->
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+        <div
+          class="relative hidden duration-700 ease-in-out"
+          data-carousel-item
+        >
           <img
             src={imageThree}
             class="absolute block w-full top-0 left-0 object-cover h-96"
@@ -50,7 +66,10 @@
           />
         </div>
         <!-- Item 4 -->
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+        <div
+          class="relative hidden duration-700 ease-in-out"
+          data-carousel-item
+        >
           <img
             src={imageFour}
             class="absolute block w-full top-0 left-0 object-cover h-96"
@@ -58,7 +77,10 @@
           />
         </div>
         <!-- Item 5 -->
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+        <div
+          class="relative hidden duration-700 ease-in-out"
+          data-carousel-item
+        >
           <img
             src={imageFive}
             class="absolute block w-full top-0 left-0 object-cover h-96"
@@ -161,4 +183,7 @@
       </button>
     </div>
   </div>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
+  ></script>
 </main>
