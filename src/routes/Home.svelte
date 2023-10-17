@@ -1,10 +1,10 @@
 <script>
   import { onMount } from "svelte";
-  import imageOne from "../lib/slider-image/pexels-daian-gan-102129.jpg";
-  import imageTwo from "../lib/slider-image/pexels-dom-j-45982.jpg";
-  import imageThree from "../lib/slider-image/pexels-kai-pilger-996329.jpg";
-  import imageFour from "../lib/slider-image/pexels-polina-tankilevitch-3735641.jpg";
-  import imageFive from "../lib/slider-image/pexels-sam-lion-5709665.jpg";
+  import imageOne from "../lib/slider-image/pexels-aline-viana-prado-2465877.webp";
+  import imageTwo from "../lib/slider-image/pexels-daian-gan-102129 (1).webp";
+  import imageThree from "../lib/slider-image/pexels-george-dolgikh-1303082.webp";
+  import imageFour from "../lib/slider-image/pexels-photomix-company-1038628.webp";
+  import imageFive from "../lib/slider-image/pexels-tetyana-kovyrina-12211 (1).webp";
   import transParent from "../lib/slider-image/—Pngtree—gradient black horizontal vertical_5659215.png";
   import acEl from "../lib/category-icons/ac-el.png";
   import clothEl from "../lib/category-icons/cloth-cl.png";
@@ -34,13 +34,47 @@
         <!-- Item 1 -->
         <div class="relative duration-700 ease-in-out" data-carousel-item>
           <div class="absolute z-10 overflow-hidden">
-            <img src={transParent} class="-rotate-90 scale-110" alt="" />
+            <img src={transParent} class="-rotate-90 scale-150" alt="" />
             <div
-              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-              <h1 class="-ml-1 sm:mt-2 text-5xl font-bold">
-                Clothing Collection
+              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
+                Cool Clothing Collection
+              </h1>
+
+              <p class="ml-1 mt-4 sm:mt-5">
+                Our library boasts a rich collection of books, spanning diverse
+                genres, from classics to contemporary bestsellers. With
+                thousands of titles, it caters to a wide range of interests and
+                is a treasure.
+              </p>
+
+              <button
+                class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
+                >Explore</button
+              >
+            </div>
+          </div>
+          <img
+            src={imageTwo}
+            class="absolute block w-full top-0 left-0 object-cover h-96"
+            alt="..."
+          />
+        </div>
+        <!-- Item 2 -->
+        <div
+          class="relative hidden duration-700 ease-in-out"
+          data-carousel-item
+        >
+          <div class="absolute z-10 overflow-hidden">
+            <img src={transParent} class="-rotate-90 scale-150" alt="" />
+            <div
+              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+            >
+              <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
+              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
+                Great Book Collection
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
@@ -61,58 +95,26 @@
             alt="..."
           />
         </div>
-        <!-- Item 2 -->
-        <div
-          class="relative hidden duration-700 ease-in-out"
-          data-carousel-item
-        >
-          <div class="absolute z-10 overflow-hidden">
-            <img src={transParent} class="-rotate-90 scale-110" alt="" />
-            <div
-              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
-            >
-              <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-              <h1 class="-ml-1 sm:mt-2 text-5xl font-bold">
-                Clothing Collection
-              </h1>
-
-              <p class="ml-1 mt-4 sm:mt-5">
-                A unique collection of clothing unveils a world of creativity
-                and individuality. These garments defy convention, offering a
-                <br />one-of-a-kind style that stands out in any crowd.
-              </p>
-
-              <button
-                class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                >Explore</button
-              >
-            </div>
-          </div>
-          <img
-            src={imageTwo}
-            class="absolute block w-full top-0 left-0 object-cover h-96"
-            alt="..."
-          />
-        </div>
         <!-- Item 3 -->
         <div
           class="relative hidden duration-700 ease-in-out"
           data-carousel-item
         >
           <div class="absolute z-10">
-            <img src={transParent} class="-rotate-90 scale-110" alt="" />
+            <img src={transParent} class="-rotate-90 scale-150" alt="" />
             <div
-              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-              <h1 class="-ml-1 sm:mt-2 text-5xl font-bold">
-                Clothing Collection
+              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
+                Exotic Gifting Collection
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
-                A unique collection of clothing unveils a world of creativity
-                and individuality. These garments defy convention, offering a
-                <br />one-of-a-kind style that stands out in any crowd.
+                Our rich collection of gifts offers a diverse array of
+                thoughtful and unique presents for every occasion. From elegant
+                jewelry and personalized keepsakes to tech gadgets and gourmet
+                treats.
               </p>
 
               <button
@@ -133,19 +135,20 @@
           data-carousel-item
         >
           <div class="absolute z-10">
-            <img src={transParent} class="-rotate-90 scale-110" alt="" />
+            <img src={transParent} class="-rotate-90 scale-150" alt="" />
             <div
-              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-              <h1 class="-ml-1 sm:mt-2 text-5xl font-bold">
-                Clothing Collection
+              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
+                Blazing Electric Collection
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
-                A unique collection of clothing unveils a world of creativity
-                and individuality. These garments defy convention, offering a
-                <br />one-of-a-kind style that stands out in any crowd.
+                Our electrical appliances e-commerce platform boasts a rich
+                collection of cutting-edge devices. From smart home solutions to
+                energy-efficient appliances, we offer a diverse range of
+                products.
               </p>
 
               <button
@@ -166,19 +169,20 @@
           data-carousel-item
         >
           <div class="absolute z-10">
-            <img src={transParent} class="-rotate-90 scale-110" alt="" />
+            <img src={transParent} class="-rotate-90 scale-150" alt="" />
             <div
-              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-              <h1 class="-ml-1 sm:mt-2 text-5xl font-bold">
+              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
                 Clothing Collection
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
-                A unique collection of clothing unveils a world of creativity
-                and individuality. These garments defy convention, offering a
-                <br />one-of-a-kind style that stands out in any crowd.
+                Our collection of toys and kids' games boasts a rich variety of
+                options to ignite children's imaginations. From educational
+                puzzles and interactive board games to cuddly stuffed animals
+                and creative building sets.
               </p>
 
               <button

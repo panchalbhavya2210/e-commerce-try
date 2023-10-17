@@ -1,8 +1,10 @@
 <script>
   import "../lib/global.css";
+
+  let navMobileState, profileView;
 </script>
 
-<nav class="bg-gray-100">
+<nav class="bg-gray-200 shadow-sm">
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -12,14 +14,15 @@
           class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
           aria-controls="mobile-menu"
           aria-expanded="false"
+          on:click={() => (navMobileState = !navMobileState)}
         >
           <span class="absolute -inset-0.5" />
           <span class="sr-only">Open main menu</span>
           <!--
-              Icon when menu is closed.
-  
-              Menu open: "hidden", Menu closed: "block"
-            -->
+            Icon when menu is closed.
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
           <svg
             class="block h-6 w-6"
             fill="none"
@@ -35,10 +38,10 @@
             />
           </svg>
           <!--
-              Icon when menu is open.
-  
-              Menu open: "block", Menu closed: "hidden"
-            -->
+            Icon when menu is open.
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
           <svg
             class="hidden h-6 w-6"
             fill="none"
@@ -55,22 +58,22 @@
           </svg>
         </button>
       </div>
-      <div class="flex flex-shrink-0 items-center">
-        <img
-          class="h-8 w-auto"
-          src="https://raw.githubusercontent.com/panchalbhavya2210/e-commerce-try/main/src/lib/Screenshot_2023-10-15_162702-transformed-removebg-preview.png"
-          alt="Your Company"
-        />
-      </div>
       <div
-        class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
+        class="flex flex-1 items-center justify-center sm:justify-start lg:justify-start"
       >
-        <div class="hidden sm:block">
+        <div class="flex flex-shrink-0 items-center">
+          <img
+            class="h-8 w-auto sm:absolute sm:left-0"
+            src="https://raw.githubusercontent.com/panchalbhavya2210/e-commerce-try/main/src/lib/Screenshot_2023-10-15_162702-transformed-removebg-preview.png"
+            alt="Your Company"
+          />
+        </div>
+        <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <a
               href="#"
-              class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
+              class=" rounded-md px-3 py-2 text-sm font-medium"
               aria-current="page">Dashboard</a
             >
             <a
@@ -125,6 +128,7 @@
               id="user-menu-button"
               aria-expanded="false"
               aria-haspopup="true"
+              on:click={() => (profileView = !profileView)}
             >
               <span class="absolute -inset-1.5" />
               <span class="sr-only">Open user menu</span>
@@ -137,17 +141,19 @@
           </div>
 
           <!--
-              Dropdown menu, show/hide based on menu state.
-  
-              Entering: "transition ease-out duration-100"
-                From: "transform opacity-0 scale-95"
-                To: "transform opacity-100 scale-100"
-              Leaving: "transition ease-in duration-75"
-                From: "transform opacity-100 scale-100"
-                To: "transform opacity-0 scale-95"
-            -->
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
           <div
-            class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+            class="absolute right-0 z-50 mt-2 w-48 transition-all {profileView
+              ? 'scale-100'
+              : 'scale-0'} origin-top-right rounded-md rgba(255, 0 ,0 ,0.8) z-10 py-1 backdrop-blur-lg shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="user-menu-button"
@@ -156,21 +162,21 @@
             <!-- Active: "bg-gray-100", Not Active: "" -->
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700"
+              class="block px-4 py-2 text-sm text-black"
               role="menuitem"
               tabindex="-1"
               id="user-menu-item-0">Your Profile</a
             >
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700"
+              class="block px-4 py-2 text-sm text-black"
               role="menuitem"
               tabindex="-1"
               id="user-menu-item-1">Settings</a
             >
             <a
               href="#"
-              class="block px-4 py-2 text-sm text-gray-700"
+              class="block px-4 py-2 text-sm text-black"
               role="menuitem"
               tabindex="-1"
               id="user-menu-item-2">Sign out</a
@@ -182,27 +188,32 @@
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
-  <div class="sm:hidden" id="mobile-menu">
-    <div class="space-y-1 px-2 pb-3 pt-2">
+  <div
+    class="sm:hidden duration-500 transition-all {navMobileState
+      ? '-translate-y-0'
+      : '-translate-y-52 '}"
+    id="mobile-menu"
+  >
+    <div class="space-y-1 px-2 pb-3 pt-2 {navMobileState ? 'block' : 'hidden'}">
       <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
       <a
         href="#"
-        class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium"
+        class=" block rounded-md px-3 py-2 text-base font-medium"
         aria-current="page">Dashboard</a
       >
       <a
         href="#"
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         >Team</a
       >
       <a
         href="#"
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         >Projects</a
       >
       <a
         href="#"
-        class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+        class="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
         >Calendar</a
       >
     </div>
