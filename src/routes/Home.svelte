@@ -5,7 +5,7 @@
   import imageThree from "../lib/slider-image/pexels-george-dolgikh-1303082.webp";
   import imageFour from "../lib/slider-image/pexels-photomix-company-1038628.webp";
   import imageFive from "../lib/slider-image/pexels-tetyana-kovyrina-12211 (1).webp";
-  import transParent from "../lib/slider-image/—Pngtree—gradient black horizontal vertical_5659215.png";
+  import transParent from "../lib/slider-image/—Pngtree—gradient black horizontal vertical_5659215 (1).webp";
   import acEl from "../lib/category-icons/ac-el.png";
   import clothEl from "../lib/category-icons/cloth-cl.png";
   import Furniture from "../lib/category-icons/sofa.png";
@@ -241,14 +241,18 @@
       <!-- Slider controls -->
     </div>
   </div>
-
+  <div>
+    <h1 class="text-3xl mb-5 sm:text-4xl font-bold ml-4 sm:mt-16">
+      Shop By Category
+    </h1>
+  </div>
   <div class="categorymenu w-full sm:w-full sm:p-10 md:p-5">
     <div
-      class="grid grid-cols-1 gap-4 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
+      class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
     >
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:w-11/12 rounded-lg h-20 bg-gradient-to-l from-red-300 to-red-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:w-11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={acEl}
@@ -261,7 +265,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-orange-300 to-orange-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={clothEl}
@@ -274,7 +278,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-lime-300 to-lime-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={Furniture}
@@ -287,7 +291,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-green-300 to-green-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={Book}
@@ -300,7 +304,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-teal-300 to-teal-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={Groc}
@@ -313,7 +317,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-cyan-300 to-cyan-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={fatal}
@@ -326,7 +330,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-indigo-300 to-indigo-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={toy}
@@ -339,7 +343,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-purple-300 to-purple-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={sport}
@@ -352,7 +356,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-red-300 to-red-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={pet}
@@ -365,7 +369,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-violet-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={gift}
@@ -378,7 +382,7 @@
       </div>
       <div class="rowOne cursor-pointer group transition-all">
         <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-blue-300 to-blue-400 flex justify-start items-center"
+          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
         >
           <img
             src={misc}
