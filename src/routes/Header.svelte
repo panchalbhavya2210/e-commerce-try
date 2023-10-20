@@ -1,6 +1,4 @@
 <script>
-  import "../lib/global.css";
-
   let navMobileState, profileView;
 </script>
 
@@ -58,23 +56,23 @@
           </svg>
         </button>
       </div>
-      <div
-        class="flex flex-1 items-center justify-center sm:justify-start lg:justify-start"
-      >
-        <div class="flex flex-shrink-0 items-center">
-          <img
-            class="h-8 w-auto sm:absolute sm:left-0"
-            src="https://raw.githubusercontent.com/panchalbhavya2210/e-commerce-try/main/src/lib/Screenshot_2023-10-15_162702-transformed-removebg-preview.png"
-            alt="Your Company"
-          />
+      <div class="flex flex-1 items-center justify-center">
+        <div class="flex flex-shrink-0 items-center sm:absolute left-0">
+          <a href="/">
+            <img
+              class="h-8 w-auto"
+              src="https://raw.githubusercontent.com/panchalbhavya2210/e-commerce-try/main/src/lib/Screenshot_2023-10-15_162702-transformed-removebg-preview.png"
+              alt="Your Company"
+            />
+          </a>
         </div>
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
             <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
             <a
-              href="#"
+              href="/Auth"
               class=" rounded-md px-3 py-2 text-sm font-medium"
-              aria-current="page">Dashboard</a
+              aria-current="page">Sign Up</a
             >
             <a
               href="#"

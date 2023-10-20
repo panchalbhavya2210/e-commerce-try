@@ -1,6 +1,8 @@
 <script>
   import supabase from "../../lib/index";
+  import "../../lib/global.css";
   import { onMount } from "svelte";
+  import { blur } from "svelte/transition";
 
   const dataToInsert = [
     {
@@ -45,6 +47,20 @@
         console.error("Error:", error.message);
       }
     }
-    fetchData();
+    // fetchData();
   });
 </script>
+
+<main>
+  <div class="wrapper">
+    <div class="alignAll flex justify-center">
+      <div class="headerContainer">
+        <h1>Hello</h1>
+      </div>
+    </div>
+
+    <div class="formContainer">
+      <!--  -->
+    </div>
+  </div>
+</main>
