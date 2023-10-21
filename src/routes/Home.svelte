@@ -17,11 +17,12 @@
   import pet from "../lib/category-icons/pet.png";
   import gift from "../lib/category-icons/gift.png";
   import misc from "../lib/category-icons/hsh.png";
+  import { fade, fly } from "svelte/transition";
 
   import "../lib/global.css";
 </script>
 
-<main>
+<main transition:fly={{ y: 200 }}>
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css"
     rel="stylesheet"
