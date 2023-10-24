@@ -107,65 +107,69 @@
     validateEmail(emailVal);
 
     if (us != null) {
-      /**
-    * * const { data, error } = await supabase.auth.signUp({
-    * *  email: emailVal,
-    * *  password: password,
-    }); */
+      const { data, error } = await supabase.auth.signUp({
+        email: emailVal,
+        password: password,
+      });
       const userData = supabase.auth.getUser();
       const getUid = userData.then((response) => {
         let uid = response.data.user.id;
-        console.log(uid);
 
         if (selected == "User") {
-          const { data, error } = supabase.storage
-            .from("profiles")
-            .upload(`${uid}/${file}`, fileIt);
-          if (error) {
+          async function pushData() {
+            console.log(uid);
+
+            const { data1, error1 } = supabase.storage
+              .from("profiles")
+              .upload(`${uid}/${file}`, fileIt);
+
+            const { data } = supabase.storage
+              .from("profiles")
+              .getPublicUrl(`${uid}/${file}`);
+
+            let imageUrl = data.publicUrl;
+            const userDataToInsert = [
+              {
+                user_name: firstName + " " + lastName,
+                user_email: emailVal,
+                user_profile: imageUrl,
+                user_address: "",
+              },
+            ];
+            console.log(userDataToInsert);
+            const { error } = await supabase
+              .from("User Data")
+              .insert(userDataToInsert);
             console.log(error);
-          } else {
-            function pushData() {
-              const { data } = supabase.storage
-                .from("profiles")
-                .getPublicUrl(`${uid}/${file}`);
-              let imageUrl = data.publicUrl;
-              const userDataToInsert = [
-                {
-                  user_name: firstName + lastName,
-                  user_email: emailVal,
-                  user_picture: imageUrl,
-                  user_address: "",
-                },
-              ];
-              supabase
-                .from("User Data")
-                .insert(userDataToInsert)
-                .then(() => {
-                  console.log("user created suucces");
-                });
-            }
-            pushData();
           }
+
+          pushData();
         } else {
           const { data, error } = supabase.storage
             .from("profiles")
             .upload(`${uid}/${file}`, fileIt);
-          if (error) {
-            console.log(error);
-          } else {
+
+          async function pushData() {
             const { data } = supabase.storage
               .from("profiles")
               .getPublicUrl(`${uid}/${file}`);
-            console.log(data.publicUrl);
-            const SellerDataToInsert = [
+
+            let imageUrl = data.publicUrl;
+            const sellerDataToInsert = [
               {
-                seller_name: "Hello",
-                seller_email: "hello@gmail.com",
-                seller_image: "pmg",
-                seller_address: "confidential",
+                seller_name: firstName + " " + lastName,
+                seller_email: emailVal,
+                seller_image: imageUrl,
+                seller_address: "",
               },
             ];
+            console.log(sellerDataToInsert);
+            const { error } = await supabase
+              .from("seller_auth")
+              .insert(sellerDataToInsert);
+            console.log(error);
           }
+          pushData();
         }
       });
     } else {
