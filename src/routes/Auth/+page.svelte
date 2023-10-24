@@ -7,8 +7,6 @@
   import eyeOn from "../../lib/assets/eye-on.svg";
   import { get } from "svelte/store";
 
-  let files;
-
   const dataToInsert = [
     {
       seller_name: "Hello",
@@ -70,20 +68,37 @@
         /\b[A-Za-z0-9._%+-]+@(gmail\.com|outlook\.com|yahoo\.com|protonmail\.com)\b/
       );
   };
-
   function submitData() {
     validateEmail(emailVal);
+    console.log(files);
 
-    if (emailVal != "" && us == null) {
-      console.log(1);
-    } else {
+    // if (emailVal != "" && us == null) {
+    //   console.log(1);
+    // } else {
+  }
+
+  let files;
+
+  async function uploadFile() {
+    console.log(files[0]);
+    let file = files[0].name;
+    let fileIt = files[0];
+    const userData = supabase.auth.getUser();
+    const getUid = userData.then((response) => {
+      console.log(response.data.user.id);
+
+      let uid = response.data.user.id;
+
       const { data, error } = supabase.storage
-        .from("avatars")
-        .upload(`${uid}/${files[0]}`, avatarFile, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-    }
+        .from("profiles")
+        .upload(`${uid}/${file}`, fileIt);
+      if (error) {
+        console.log(error);
+        // Handle error
+      } else {
+        // Handle success
+      }
+    });
   }
 </script>
 
@@ -216,7 +231,7 @@
       <div>
         <button
           type="submit"
-          on:click={insertData}
+          on:click={uploadFile}
           class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
           >Sign in</button
         >
