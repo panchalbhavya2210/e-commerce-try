@@ -7,37 +7,29 @@
   import eyeOn from "../../lib/assets/eye-on.svg";
   import { get } from "svelte/store";
 
-  const dataToInsert = [
-    {
-      seller_name: "Hello",
-      seller_email: "hello@gmail.com",
-      seller_image: "pmg",
-      seller_category: ["none", "none", "none"],
-      seller_products: ["none", "none", "none"],
-      seller_price: "2000",
-      seller_address: "confidential",
-    },
-  ];
-
-  /**
-  * ? This is a function to insert user data and also an function for getting user id 
-  * async function insertData() {
-    const { data, error } = supabase.from("SellerData").upsert(dataToInsert);
-
-    if (error) {
-      console.error("Error inserting data:", error);
-    } else {
-      console.log("Data inserted successfully:", data);
-    }
-
-    const userData = supabase.auth.getUser();
-    const getUid = userData.then((response) => {
-      console.log(response.data.user.id);
-    });
+  let selected;
+  function onChange(event) {
+    selected = event.currentTarget.value;
+    console.log(selected);
   }
-  * todo add stockist radio label when selected data gets transferred in stockist and when not data pushes in user
-  insertData();
-  */
+
+  async function insertData() {
+    try {
+      // Replace 'your_table_name' with the actual name of your table
+      const { data, error } = await supabase
+        .from("seller_auth")
+        .insert(dataToInsert); // You can specify specific columns if needed
+
+      if (error) {
+        console.error("Error fetching data:", error);
+      } else {
+        console.log("Data fetched successfully:", data);
+        // Process or use the data as needed
+      }
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  }
   onMount(() => {
     // insertData();
     async function fetchData() {
@@ -68,62 +60,120 @@
         /\b[A-Za-z0-9._%+-]+@(gmail\.com|outlook\.com|yahoo\.com|protonmail\.com)\b/
       );
   };
-  function submitData() {
-    validateEmail(emailVal);
-    console.log(files);
 
-    // if (emailVal != "" && us == null) {
-    //   console.log(1);
-    // } else {
-  }
+  let files, firstName, lastName, password, uid;
 
-  let files;
+  // async function getUid() {
+  //   const userData = await supabase.auth.getUser();
+  //   const getUid = userData.then((response) => {
+  //     uid = response.data.user.id;
+  //   });
+  // }
+  // async function createUser() {
+  //   const { data, error } = await supabase.auth.signUp({
+  //     email: emailVal,
+  //     password: password,
+  //   });
+  // }
+  // async function uploadImage() {
+  //   let fileName = files[0].name;
+  //   let fileIt = files[0];
+  // }
 
-  async function uploadFile() {
+  // function mainFunction() {
+  //   validateEmail(emailVal);
+
+  //   if (us != null) {
+  //     alert(1);
+  //     // createUser()
+  //     const userData = supabase.auth.getUser();
+  //     const getUid = userData.then((response) => {
+  //       let uid = response.data.user.id;
+  //       console.log(uid);
+  //       if (selected == "User") {
+  //       }
+  //     }).catch((err) => {
+  //       console.log(err)
+  //     });
+  //   } else {
+  //   }
+  // }
+
+  async function mainFunction() {
     console.log(files[0]);
     let file = files[0].name;
     let fileIt = files[0];
-    const userData = supabase.auth.getUser();
-    const getUid = userData.then((response) => {
-      console.log(response.data.user.id);
 
-      let uid = response.data.user.id;
+    validateEmail(emailVal);
 
-      const { data, error } = supabase.storage
-        .from("profiles")
-        .upload(`${uid}/${file}`, fileIt);
-      if (error) {
-        console.log(error);
-        // Handle error
-      } else {
-        // Handle success
-      }
-    });
+    if (us != null) {
+      /**
+    * * const { data, error } = await supabase.auth.signUp({
+    * *  email: emailVal,
+    * *  password: password,
+    }); */
+      const userData = supabase.auth.getUser();
+      const getUid = userData.then((response) => {
+        let uid = response.data.user.id;
+        console.log(uid);
+
+        if (selected == "User") {
+          const { data, error } = supabase.storage
+            .from("profiles")
+            .upload(`${uid}/${file}`, fileIt);
+          if (error) {
+            console.log(error);
+          } else {
+            function pushData() {
+              const { data } = supabase.storage
+                .from("profiles")
+                .getPublicUrl(`${uid}/${file}`);
+              let imageUrl = data.publicUrl;
+              const userDataToInsert = [
+                {
+                  user_name: firstName + lastName,
+                  user_email: emailVal,
+                  user_picture: imageUrl,
+                  user_address: "",
+                },
+              ];
+              supabase
+                .from("User Data")
+                .insert(userDataToInsert)
+                .then(() => {
+                  console.log("user created suucces");
+                });
+            }
+            pushData();
+          }
+        } else {
+          const { data, error } = supabase.storage
+            .from("profiles")
+            .upload(`${uid}/${file}`, fileIt);
+          if (error) {
+            console.log(error);
+          } else {
+            const { data } = supabase.storage
+              .from("profiles")
+              .getPublicUrl(`${uid}/${file}`);
+            console.log(data.publicUrl);
+            const SellerDataToInsert = [
+              {
+                seller_name: "Hello",
+                seller_email: "hello@gmail.com",
+                seller_image: "pmg",
+                seller_address: "confidential",
+              },
+            ];
+          }
+        }
+      });
+    } else {
+      console.log("Fuck email not valid");
+    }
   }
 </script>
 
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
-<!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
 <div class="flex min-h-full flex-col justify-center px-6 py-6 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img
@@ -153,6 +203,7 @@
               name="fname"
               type="text"
               required
+              bind:value={firstName}
               class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
             />
           </div>
@@ -169,6 +220,7 @@
               name="lname"
               type="text"
               required
+              bind:value={lastName}
               class="font-medium ml-1 p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
             />
           </div>
@@ -213,6 +265,7 @@
             type="password"
             autocomplete="current-password"
             required
+            bind:value={password}
             class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -227,11 +280,30 @@
           bind:files
         />
       </div>
-
+      <div class="flexRadio flex">
+        <label>
+          <input
+            checked={selected === 10}
+            on:change={onChange}
+            type="radio"
+            name="amount"
+            value="User"
+          /> I Am Buyer
+        </label>
+        <label>
+          <input
+            checked={selected === 20}
+            on:change={onChange}
+            type="radio"
+            name="amount"
+            value="Seller"
+          /> I Am Seller
+        </label>
+      </div>
       <div>
         <button
           type="submit"
-          on:click={uploadFile}
+          on:click={mainFunction}
           class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
           >Sign in</button
         >
