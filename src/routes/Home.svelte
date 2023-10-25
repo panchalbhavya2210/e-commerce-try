@@ -261,7 +261,7 @@
             srcset=""
             class="w-32 h-32 group-hover:w-52 group-hover:h-52 transition-all"
           />
-          <p class="text-lg font-bold">Electronics</p>
+          <p class="text-lg font-medium">Electronics</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -274,7 +274,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Clothing & Fashion</p>
+          <p class="text-lg font-medium">Clothing & Fashion</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -287,7 +287,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Home & Furniture</p>
+          <p class="text-lg font-medium">Home & Furniture</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -300,7 +300,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Books & Media</p>
+          <p class="text-lg font-medium">Books & Media</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -313,7 +313,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-28 group-hover:h-28 transition-all"
           />
-          <p class="text-lg font-bold">Groceries & Food</p>
+          <p class="text-lg font-medium">Groceries & Food</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -326,7 +326,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Health & Wellness</p>
+          <p class="text-lg font-medium">Health & Wellness</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -339,7 +339,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Toys & Games</p>
+          <p class="text-lg font-medium">Toys & Games</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -352,7 +352,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Sports & Outdoors</p>
+          <p class="text-lg font-medium">Sports & Outdoors</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -365,7 +365,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Pet Supplies</p>
+          <p class="text-lg font-medium">Pet Supplies</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -378,7 +378,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Gifts</p>
+          <p class="text-lg font-medium">Gifts</p>
         </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
@@ -391,7 +391,7 @@
             srcset=""
             class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
           />
-          <p class="text-lg font-bold">Miscellaneous</p>
+          <p class="text-lg font-medium">Miscellaneous</p>
         </div>
       </div>
     </div>
