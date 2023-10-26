@@ -113,51 +113,65 @@
       });
       const uid = data.user.id;
       if (selected == "User") {
-        const { data1, error1 } = supabase.storage
-          .from("profiles")
-          .upload(`${uid}/${file}`, fileIt);
+        async function pushData() {
+          const { data1, error1 } = supabase.storage
+            .from("profiles")
+            .upload(`${uid}/${file}`, fileIt);
 
-        const { data } = supabase.storage
-          .from("profiles")
-          .getPublicUrl(`${uid}/${file}`);
+          const { data } = await supabase.storage
+            .from("profiles")
+            .getPublicUrl(`${uid}/${file}`);
 
-        let imageUrl = data.publicUrl;
-        const userDataToInsert = [
-          {
-            user_name: firstName + " " + lastName,
-            user_email: emailVal,
-            user_profile: imageUrl,
-            user_address: "",
-          },
-        ];
-        console.log(userDataToInsert);
-        const { error } = await supabase
-          .from("User Data")
-          .insert(userDataToInsert);
-        console.log(error);
+          let imageUrl = data.publicUrl;
+          const userDataToInsert = [
+            {
+              user_name: firstName + " " + lastName,
+              user_email: emailVal,
+              user_profile: imageUrl,
+              user_address: "",
+            },
+          ];
+          console.log(userDataToInsert);
+          const { error } = await supabase
+            .from("User Data")
+            .insert(userDataToInsert);
+          console.log(error);
+        }
+
+        setTimeout(() => {
+          pushData();
+        });
       } else {
-        const { data1, error1 } = supabase.storage
-          .from("profiles")
-          .upload(`${uid}/${file}`, fileIt);
+        async function pushData() {
+          const { data1, error1 } = supabase.storage
+            .from("profiles")
+            .upload(`${uid}/${file}`, fileIt);
 
-        const { data } = supabase.storage
-          .from("profiles")
-          .getPublicUrl(`${uid}/${file}`);
+          const { data } = supabase.storage
+            .from("profiles")
+            .getPublicUrl(`${uid}/${file}`);
 
-        let imageUrl = data.publicUrl;
-        const sellerDataToInsert = [
-          {
-            seller_name: firstName + " " + lastName,
-            seller_email: emailVal,
-            seller_image: imageUrl,
-            seller_address: "",
-          },
-        ];
-        console.log(sellerDataToInsert);
-        const { error } = await supabase
-          .from("seller_auth")
-          .insert(sellerDataToInsert);
-        console.log(error);
+          let imageUrl = data.publicUrl;
+          const sellerDataToInsert = [
+            {
+              auth_uid: uid,
+              seller_name: firstName + " " + lastName,
+              seller_phone: 9999999999,
+              seller_email: emailVal,
+              seller_image: imageUrl,
+              seller_address: "",
+            },
+          ];
+          console.log(sellerDataToInsert);
+          const { error } = supabase
+            .from("seller_auth_data")
+            .insert(sellerDataToInsert);
+          console.log(error);
+        }
+
+        setTimeout(() => {
+          pushData();
+        });
       }
     } else {
       console.log("Fuck email not valid");
