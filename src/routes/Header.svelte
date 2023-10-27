@@ -1,4 +1,5 @@
 <script>
+  import supabase from "../lib/index";
   let navMobileState, profileView;
 </script>
 

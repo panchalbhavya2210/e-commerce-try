@@ -3,54 +3,12 @@
   import "../../lib/global.css";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import eyeOff from "../../lib/assets/eye-off.svg";
-  import eyeOn from "../../lib/assets/eye-on.svg";
-  import { get } from "svelte/store";
 
   let selected;
   function onChange(event) {
     selected = event.currentTarget.value;
     console.log(selected);
   }
-
-  async function insertData() {
-    try {
-      // Replace 'your_table_name' with the actual name of your table
-      const { data, error } = await supabase
-        .from("seller_auth")
-        .insert(dataToInsert); // You can specify specific columns if needed
-
-      if (error) {
-        console.error("Error fetching data:", error);
-      } else {
-        console.log("Data fetched successfully:", data);
-        // Process or use the data as needed
-      }
-    } catch (error) {
-      console.error("Error:", error.message);
-    }
-  }
-  onMount(() => {
-    // insertData();
-    async function fetchData() {
-      try {
-        // Replace 'your_table_name' with the actual name of your table
-        const { data, error } = await supabase
-          .from("SellerData")
-          .select("seller_category, seller_name, seller_products"); // You can specify specific columns if needed
-
-        if (error) {
-          console.error("Error fetching data:", error);
-        } else {
-          console.log("Data fetched successfully:", data);
-          // Process or use the data as needed
-        }
-      } catch (error) {
-        console.error("Error:", error.message);
-      }
-    }
-    // fetchData();
-  });
   let emailVal;
   let us;
   const validateEmail = (email) => {
@@ -62,42 +20,6 @@
   };
 
   let files, firstName, lastName, password, uid;
-
-  // async function getUid() {
-  //   const userData = await supabase.auth.getUser();
-  //   const getUid = userData.then((response) => {
-  //     uid = response.data.user.id;
-  //   });
-  // }
-  // async function createUser() {
-  //   const { data, error } = await supabase.auth.signUp({
-  //     email: emailVal,
-  //     password: password,
-  //   });
-  // }
-  // async function uploadImage() {
-  //   let fileName = files[0].name;
-  //   let fileIt = files[0];
-  // }
-
-  // function mainFunction() {
-  //   validateEmail(emailVal);
-
-  //   if (us != null) {
-  //     alert(1);
-  //     // createUser()
-  //     const userData = supabase.auth.getUser();
-  //     const getUid = userData.then((response) => {
-  //       let uid = response.data.user.id;
-  //       console.log(uid);
-  //       if (selected == "User") {
-  //       }
-  //     }).catch((err) => {
-  //       console.log(err)
-  //     });
-  //   } else {
-  //   }
-  // }
 
   async function mainFunction() {
     console.log(files[0]);
@@ -125,7 +47,9 @@
           let imageUrl = data.publicUrl;
           const userDataToInsert = [
             {
+              auth_uid: uid,
               user_name: firstName + " " + lastName,
+              user_phone: 99999999,
               user_email: emailVal,
               user_profile: imageUrl,
               user_address: "",
@@ -133,7 +57,7 @@
           ];
           console.log(userDataToInsert);
           const { error } = await supabase
-            .from("User Data")
+            .from("user_auth_data")
             .insert(userDataToInsert);
           console.log(error);
         }
@@ -147,7 +71,7 @@
             .from("profiles")
             .upload(`${uid}/${file}`, fileIt);
 
-          const { data } = supabase.storage
+          const { data } = await supabase.storage
             .from("profiles")
             .getPublicUrl(`${uid}/${file}`);
 
@@ -163,7 +87,7 @@
             },
           ];
           console.log(sellerDataToInsert);
-          const { error } = supabase
+          const { error } = await supabase
             .from("seller_auth_data")
             .insert(sellerDataToInsert);
           console.log(error);
@@ -177,9 +101,24 @@
       console.log("Fuck email not valid");
     }
   }
+
+  // async function signIn() {
+  //   const signIn = await supabase.auth
+  //     .signInWithPassword({
+  //       email: "geraltofrivia8491@gmail.com",
+  //       password: "121212",
+  //     })
+  //     .then((response) => {
+  //       console.log(response);
+  //     });
+  // }
+  // signIn();
 </script>
 
-<div class="flex min-h-full flex-col justify-center px-6 py-6 lg:px-8">
+<div
+  transition:fly={{ y: 200 }}
+  class="flex min-h-full flex-col justify-center px-6 py-6 lg:px-8"
+>
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img
       class="mx-auto h-10 w-auto"
