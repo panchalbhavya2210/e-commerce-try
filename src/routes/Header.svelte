@@ -1,6 +1,35 @@
 <script>
+  import { onMount } from "svelte";
   import supabase from "../lib/index";
   let navMobileState, profileView;
+
+  let img;
+
+  async function getUidData() {
+    let supabaseAuthId = await supabase.auth.getUser().then((response) => {
+      let authId = response.data.user.id;
+
+      async function getData() {
+        const { data, error } = await supabase
+          .from("user_auth_data")
+          .select("*")
+          .eq("auth_uid", authId);
+
+        if (data && data.length > 0) {
+          const rowData = data[0];
+          img = rowData.user_profile;
+          console.log(img);
+          console.log("Fetched row data:", rowData);
+        } else {
+          console.log("Row not found.");
+        }
+      }
+      getData();
+    });
+  }
+  onMount(() => {
+    getUidData();
+  });
 </script>
 
 <nav class="bg-gray-200 shadow-sm">
@@ -76,7 +105,7 @@
               aria-current="page">Sign Up</a
             >
             <a
-              href="#"
+              href="/"
               class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Team</a
             >
@@ -131,11 +160,7 @@
             >
               <span class="absolute -inset-1.5" />
               <span class="sr-only">Open user menu</span>
-              <img
-                class="h-8 w-8 rounded-full"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-              />
+              <img class="h-8 w-8 rounded-full" src={img} alt="" />
             </button>
           </div>
 

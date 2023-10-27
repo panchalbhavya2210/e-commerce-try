@@ -134,42 +134,6 @@
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     <form class="space-y-6">
-      <div class="flexData flex">
-        <div>
-          <label
-            for="fname"
-            class="block text-sm font-medium leading-6 text-gray-900"
-            >Firstname</label
-          >
-          <div class="mt-1">
-            <input
-              id="fname"
-              name="fname"
-              type="text"
-              required
-              bind:value={firstName}
-              class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-        <div>
-          <label
-            for="lname"
-            class="ml-1 block text-sm font-medium leading-6 text-gray-900"
-            >Lastname</label
-          >
-          <div class="mt-1">
-            <input
-              id="lname"
-              name="lname"
-              type="text"
-              required
-              bind:value={lastName}
-              class="font-medium ml-1 p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-      </div>
       <div>
         <label
           for="email"
@@ -196,6 +160,13 @@
             class="block text-sm font-medium leading-6 text-gray-900"
             >Password</label
           >
+          <div class="text-sm underline">
+            <a
+              href="/Forgot"
+              class="font-semibold text-gray-600 hover:text-black"
+              >Forgot password?</a
+            >
+          </div>
         </div>
         <div class="mt-1">
           <input
@@ -208,53 +179,24 @@
             class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
           />
         </div>
-        <label
-          class="mt-3 block text-sm font-medium text-gray-800"
-          for="file_input">Upload file</label
-        >
-        <input
-          class="mt-1 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="file_input"
-          type="file"
-          bind:files
-        />
       </div>
-      <div class="flexRadio flex">
-        <label>
-          <input
-            checked={selected === 10}
-            on:change={onChange}
-            type="radio"
-            name="amount"
-            value="User"
-          /> I Am Buyer
-        </label>
-        <label>
-          <input
-            checked={selected === 20}
-            on:change={onChange}
-            type="radio"
-            name="amount"
-            value="Seller"
-          /> I Am Seller
-        </label>
-      </div>
+
       <div>
         <button
           type="submit"
           on:click={mainFunction}
           class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-          >Sign Up</button
+          >Login</button
         >
       </div>
     </form>
 
     <p class="mt-10 text-center text-sm text-gray-500">
-      Already a ShopAholic?
+      New to ShopAholic?
       <a
-        href="/Login"
+        href="/Auth"
         class="font-semibold leading-6 text-gray-700 hover:text-black underline"
-        >Login</a
+        >Sign Up</a
       >
     </p>
 
