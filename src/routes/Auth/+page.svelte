@@ -102,17 +102,7 @@
     }
   }
 
-  // async function signIn() {
-  //   const signIn = await supabase.auth
-  //     .signInWithPassword({
-  //       email: "geraltofrivia8491@gmail.com",
-  //       password: "121212",
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //     });
-  // }
-  // signIn();
+ 
 </script>
 
 <div

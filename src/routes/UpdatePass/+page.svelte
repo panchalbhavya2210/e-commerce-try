@@ -4,12 +4,27 @@
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
 
-  let emailVal, errorState, successState;
+  let password, errorState, successState, progressLogin;
 
-  async function forgotSent() {
-    await supabase.auth.resetPasswordForEmail(emailVal, {
-      redirectTo: "http://localhost:5173/UpdatePass",
+  async function linkResetRedirect() {
+    const { data, error } = await supabase.auth.updateUser({
+      password: password,
     });
+    if (error == null) {
+      progressLogin = !progressLogin;
+      successState = !successState;
+      setTimeout(() => {
+        successState = !successState;
+      }, 3000);
+      console.log(data);
+    } else {
+      progressLogin = !progressLogin;
+      errorState = !errorState;
+      setTimeout(() => {
+        errorState = !errorState;
+      }, 3000);
+      console.log(error.name, error.message);
+    }
   }
 </script>
 
@@ -26,7 +41,7 @@
     <h2
       class="mt-2 text-center text-2xl font-medium leading-9 tracking-tight text-gray-900"
     >
-      Sign in to your account
+      Reset password of your account
     </h2>
   </div>
 
@@ -34,18 +49,17 @@
     <form class="space-y-6">
       <div>
         <label
-          for="email"
+          for="password"
           class="block text-sm font-medium leading-6 text-gray-900"
-          >Email address</label
+          >New password</label
         >
         <div class="mt-1">
           <input
-            id="email"
-            name="email"
-            type="email"
-            autocomplete="email"
+            id="password"
+            name="password"
+            type="password"
             required
-            bind:value={emailVal}
+            bind:value={password}
             class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
           />
         </div>
@@ -54,9 +68,9 @@
       <div>
         <button
           type="submit"
-          on:click={forgotSent}
+          on:click={linkResetRedirect}
           class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-          >Send Reset Link</button
+          >Set New Password</button
         >
       </div>
     </form>

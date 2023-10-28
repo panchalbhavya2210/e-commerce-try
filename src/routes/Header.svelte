@@ -28,7 +28,9 @@
     });
   }
   onMount(() => {
-    getUidData();
+    setTimeout(() => {
+      getUidData();
+    }, 1500);
   });
 </script>
 
