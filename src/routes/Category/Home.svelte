@@ -1,25 +1,25 @@
 <script>
   import { onMount } from "svelte";
-  import imageOne from "../lib/slider-image/pexels-aline-viana-prado-2465877.webp";
-  import imageTwo from "../lib/slider-image/pexels-daian-gan-102129 (1).webp";
-  import imageThree from "../lib/slider-image/pexels-george-dolgikh-1303082.webp";
-  import imageFour from "../lib/slider-image/pexels-photomix-company-1038628.webp";
-  import imageFive from "../lib/slider-image/pexels-tetyana-kovyrina-12211 (1).webp";
-  import transParent from "../lib/slider-image/—Pngtree—gradient black horizontal vertical_5659215 (1).webp";
-  import acEl from "../lib/category-icons/ac-el.png";
-  import clothEl from "../lib/category-icons/cloth-cl.png";
-  import Furniture from "../lib/category-icons/sofa.png";
-  import Book from "../lib/category-icons/book.png";
-  import Groc from "../lib/category-icons/gro.png";
-  import fatal from "../lib/category-icons/fatal.png";
-  import toy from "../lib/category-icons/toy.png";
-  import sport from "../lib/category-icons/spott.png";
-  import pet from "../lib/category-icons/pet.png";
-  import gift from "../lib/category-icons/gift.png";
-  import misc from "../lib/category-icons/hsh.png";
+  import imageOne from "../../lib/slider-image/pexels-aline-viana-prado-2465877.webp";
+  import imageTwo from "../../lib/slider-image/pexels-daian-gan-102129 (1).webp";
+  import imageThree from "../../lib/slider-image/pexels-george-dolgikh-1303082.webp";
+  import imageFour from "../../lib/slider-image/pexels-photomix-company-1038628.webp";
+  import imageFive from "../../lib/slider-image/pexels-tetyana-kovyrina-12211 (1).webp";
+  import transParent from "../../lib/slider-image/—Pngtree—gradient black horizontal vertical_5659215 (1).webp";
+  import acEl from "../../lib/category-icons/ac-el.png";
+  import clothEl from "../../lib/category-icons/cloth-cl.png";
+  import Furniture from "../../lib/category-icons/sofa.png";
+  import Book from "../../lib/category-icons/book.png";
+  import Groc from "../../lib/category-icons/gro.png";
+  import fatal from "../../lib/category-icons/fatal.png";
+  import toy from "../../lib/category-icons/toy.png";
+  import sport from "../../lib/category-icons/spott.png";
+  import pet from "../../lib/category-icons/pet.png";
+  import gift from "../../lib/category-icons/gift.png";
+  import misc from "../../lib/category-icons/hsh.png";
   import { fade, fly } from "svelte/transition";
 
-  import "../lib/global.css";
+  import "../../lib/global.css";
 </script>
 
 <main transition:fly={{ y: 200 }}>
@@ -252,147 +252,169 @@
       class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
     >
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:w-11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+        <a href="/Category/Electronics" rel="noopener noreferrer">
+          <div
+            class="categoryOne w-11/12 m-auto sm:w-11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={acEl}
+              alt=""
+              srcset=""
+              class="w-32 h-32 group-hover:w-52 group-hover:h-52 transition-all"
+            />
+            <p class="text-lg font-medium">Electronics</p>
+          </div></a
         >
-          <img
-            src={acEl}
-            alt=""
-            srcset=""
-            class="w-32 h-32 group-hover:w-52 group-hover:h-52 transition-all"
-          />
-          <p class="text-lg font-medium">Electronics</p>
-        </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-        >
-          <img
-            src={clothEl}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Clothing & Fashion</p>
-        </div>
+        <a href="/Category/Clothing">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={clothEl}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Clothing & Fashion</p>
+          </div>
+        </a>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-        >
-          <img
-            src={Furniture}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Home & Furniture</p>
-        </div>
+        <a href="/Category/Home">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={Furniture}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Home & Furniture</p>
+          </div>
+        </a>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-        >
-          <img
-            src={Book}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Books & Media</p>
-        </div>
+        <a href="/Category/Books">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={Book}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Books & Media</p>
+          </div>
+        </a>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-        >
-          <img
-            src={Groc}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-28 group-hover:h-28 transition-all"
-          />
-          <p class="text-lg font-medium">Groceries & Food</p>
-        </div>
+        <a href="/Category/Grocery">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={Groc}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-28 group-hover:h-28 transition-all"
+            />
+            <p class="text-lg font-medium">Groceries & Food</p>
+          </div>
+        </a>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+        <a href="/Category/Health">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={fatal}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Health & Wellness</p>
+          </div></a
         >
-          <img
-            src={fatal}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Health & Wellness</p>
-        </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+        <a href="/Category/Toys">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={toy}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Toys & Games</p>
+          </div></a
         >
-          <img
-            src={toy}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Toys & Games</p>
-        </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-        >
-          <img
-            src={sport}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Sports & Outdoors</p>
-        </div>
+        <a href="/Category/Sports">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={sport}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Sports & Outdoors</p>
+          </div>
+        </a>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-        >
-          <img
-            src={pet}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Pet Supplies</p>
-        </div>
+        <a href="/Category/Pets">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={pet}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Pet Supplies</p>
+          </div>
+        </a>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+        <a href="/Category/Gifts">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={gift}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Gifts</p>
+          </div></a
         >
-          <img
-            src={gift}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Gifts</p>
-        </div>
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <div
-          class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+        <a href="/Category/Misc">
+          <div
+            class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+          >
+            <img
+              src={misc}
+              alt=""
+              srcset=""
+              class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
+            />
+            <p class="text-lg font-medium">Miscellaneous</p>
+          </div></a
         >
-          <img
-            src={misc}
-            alt=""
-            srcset=""
-            class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-          />
-          <p class="text-lg font-medium">Miscellaneous</p>
-        </div>
       </div>
     </div>
   </div>
