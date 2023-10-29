@@ -35,9 +35,9 @@
         <!-- Item 1 -->
         <div class="relative duration-700 ease-in-out" data-carousel-item>
           <div class="absolute z-10 overflow-hidden">
-            <img src={transParent} class="-rotate-90 scale-150" alt="" />
+            <img src={transParent} class="-rotate-90 mt-10 scale-125" alt="" />
             <div
-              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
               <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
@@ -45,10 +45,9 @@
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
-                Our library boasts a rich collection of books, spanning diverse
-                genres, from classics to contemporary bestsellers. With
-                thousands of titles, it caters to a wide range of interests and
-                is a treasure.
+                A unique collection of clothing unveils a world of creativity
+                and individuality. These garments defy convention, offering a
+                <br />one-of-a-kind style that stands out in any crowd.
               </p>
 
               <button
@@ -69,9 +68,9 @@
           data-carousel-item
         >
           <div class="absolute z-10 overflow-hidden">
-            <img src={transParent} class="-rotate-90 scale-150" alt="" />
+            <img src={transParent} class="-rotate-90 mt-10 scale-125" alt="" />
             <div
-              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
               <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
@@ -79,9 +78,10 @@
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
-                A unique collection of clothing unveils a world of creativity
-                and individuality. These garments defy convention, offering a
-                <br />one-of-a-kind style that stands out in any crowd.
+                Our library boasts a rich collection of books, spanning diverse
+                genres, from classics to contemporary bestsellers. With
+                thousands of titles, it caters to a wide range of interests and
+                is a treasure.
               </p>
 
               <button
@@ -102,9 +102,9 @@
           data-carousel-item
         >
           <div class="absolute z-10">
-            <img src={transParent} class="-rotate-90 scale-150" alt="" />
+            <img src={transParent} class="-rotate-90 mt-10 scale-125" alt="" />
             <div
-              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
               <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
@@ -136,9 +136,9 @@
           data-carousel-item
         >
           <div class="absolute z-10">
-            <img src={transParent} class="-rotate-90 scale-150" alt="" />
+            <img src={transParent} class="-rotate-90 mt-10 scale-125" alt="" />
             <div
-              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
               <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
@@ -146,8 +146,8 @@
               </h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
-                Our electrical appliances e-commerce platform boasts a rich
-                collection of cutting-edge devices. From smart home solutions to
+                Our electrical appliances boasts a rich collection of
+                cutting-edge devices. From smart home solutions to
                 energy-efficient appliances, we offer a diverse range of
                 products.
               </p>
@@ -170,14 +170,12 @@
           data-carousel-item
         >
           <div class="absolute z-10">
-            <img src={transParent} class="-rotate-90 scale-150" alt="" />
+            <img src={transParent} class="-rotate-90 mt-10 scale-125" alt="" />
             <div
-              class="ml-5 mt-5 w-96 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+              class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
             >
               <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
-                Clothing Collection
-              </h1>
+              <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">KidZone</h1>
 
               <p class="ml-1 mt-4 sm:mt-5">
                 Our collection of toys and kids' games boasts a rich variety of
