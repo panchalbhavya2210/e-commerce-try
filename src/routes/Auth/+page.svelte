@@ -65,7 +65,6 @@
               {
                 auth_uid: uid,
                 user_name: firstName + " " + lastName,
-                user_phone: 99999999,
                 user_email: emailVal,
                 user_profile: imageUrl,
                 user_address: "",
@@ -96,7 +95,6 @@
               {
                 auth_uid: uid,
                 seller_name: firstName + " " + lastName,
-                seller_phone: 9999999999,
                 seller_email: emailVal,
                 seller_image: imageUrl,
                 seller_address: "",
@@ -242,7 +240,7 @@
       <div class="flexRadio flex">
         <label>
           <input
-            checked
+            checked={selected === 10}
             on:change={onChange}
             type="radio"
             name="amount"
@@ -317,8 +315,8 @@
           >
         </div>
         <div>
-          <p class="font-bold">Our privacy policy has changed</p>
-          <p class="text-sm break-all">Make sure you know how</p>
+          <p class="font-bold">Success.</p>
+          <p class="text-sm break-all">Signed Up successfully.</p>
         </div>
       </div>
     </div>
