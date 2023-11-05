@@ -16,15 +16,32 @@
 
   let prdCategory = prd[0].product_category;
 
-  async function addCart(prd) {
-    let cartDataToInsert = {
-      product_id: prd.id,
-    };
-    const { data, error } = await supabase
-      .from("CartData")
-      .insert(cartDataToInsert);
+  let array = [];
+  let prd_qt = [];
 
-    console.log(error, data);
+  async function addCart(prd) {
+    let supabaseAuthId = await supabase.auth.getUser().then((response) => {
+      let authId = response.data.user.id;
+
+      array.push(prd.id);
+      prd_qt.push("1");
+      console.log(array);
+
+      let cartDataToInsert = {
+        auth_id: authId,
+        product_id: [array],
+        product_qty: [prd_qt],
+      };
+      async function road() {
+        const { data, error } = await supabase
+          .from("CartData")
+          .upsert(cartDataToInsert);
+
+        console.log(error, data);
+      }
+      road();
+    });
+
     // console.log(prd);
   }
 </script>
