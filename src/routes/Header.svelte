@@ -107,9 +107,9 @@
               aria-current="page">Sign Up</a
             >
             <a
-              href="/"
+              href="/Cart"
               class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >Team</a
+              >Cart</a
             >
             <a
               href=""

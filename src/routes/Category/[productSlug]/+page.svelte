@@ -29,13 +29,13 @@
 
       let cartDataToInsert = {
         auth_id: authId,
-        product_id: [array],
-        product_qty: [prd_qt],
+        product_id: prd.id,
+        product_qty: 1,
       };
       async function road() {
         const { data, error } = await supabase
           .from("CartData")
-          .upsert(cartDataToInsert);
+          .insert(cartDataToInsert);
 
         console.log(error, data);
       }
