@@ -1,4 +1,5 @@
 <script>
+  import supabase from "../../../lib";
   import "../../../lib/global.css";
   import { fade, fly } from "svelte/transition";
 
@@ -11,8 +12,21 @@
   let product = data;
   //obj to array
   let prd = product.product;
+  console.log(prd);
 
   let prdCategory = prd[0].product_category;
+
+  async function addCart(prd) {
+    let cartDataToInsert = {
+      product_id: prd.id,
+    };
+    const { data, error } = await supabase
+      .from("CartData")
+      .insert(cartDataToInsert);
+
+    console.log(error, data);
+    // console.log(prd);
+  }
 </script>
 
 <main transition:fly={{ y: 200 }}>
@@ -67,53 +81,6 @@
     </ol>
   </nav>
 
-  <!-- {#each prd as product}
-    <div class="product">
-      <h2>{product.product_name}</h2>
-      <p>Category: {product.product_category}</p>
-      <p>Description: {product.product_description}</p>
-      <p>Price: ${product.product_price}</p>
-    </div>
-  {/each} -->
-
-  <!-- <section class="">
-    <div class="container max-w-6xl p-6 mx-auto space-y-6 sm:space-y-12">
-      <div
-        class="grid justify-center grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {#each prd as product}
-          <a
-            rel="noopener noreferrer"
-            href="#"
-            class="max-w-sm mx-auto group hover:no-underline focus:no-underline"
-          >
-            <img
-              role="presentation"
-              class="object-cover w-full rounded h-44 dark:bg-gray-500"
-              src="https://source.unsplash.com/random/480x360?1"
-            />
-            <div class="p-6 space-y-2">
-              <h3
-                class="text-2xl font-semibold group-hover:underline group-focus:underline"
-              >
-                {product.product_name}
-              </h3>
-              <span class="text-xs dark:text-gray-700"
-                >{product.product_category}</span
-              >
-              <p>
-                Mei ex aliquid eleifend forensibus, quo ad dicta apeirian
-                neglegentur, ex has tantas percipit perfecto. At per tempor
-                albucius perfecto, ei probatus consulatu patrioque mea, ei
-                vocent delicata indoctum pri.
-              </p>
-            </div>
-          </a>
-        {/each}
-      </div>
-    </div>
-  </section> -->
-
   <div class="categorymenu w-full sm:w-full sm:p-10 md:p-5">
     <div
       class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
@@ -133,7 +100,29 @@
             <p class="break-words m-1">
               {product.product_description}
             </p>
-            <p class="font-medium m-1">{product.product_price}₹</p>
+            <div class="flex justify-between">
+              <p class="font-medium m-1">{product.product_price}₹</p>
+              <button
+                on:click={() => addCart(product)}
+                type="button"
+                class="text-white -mt-1.5 bg-black focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 hover:bg-gray-700"
+                ><svg
+                  width="20px"
+                  height="20px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg></button
+              >
+            </div>
           </div>
         </div>
       {/each}

@@ -1,6 +1,6 @@
 // const supabase = require("../../../lib/index");
 import supabase from "../../../lib/index";
-export const load = ({ fetch, params }) => {
+export const load = ({ params }) => {
   const fetchData = async (id) => {
     const { data, error } = await supabase
       .from("ProductData")
