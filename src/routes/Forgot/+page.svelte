@@ -8,7 +8,7 @@
 
   async function forgotSent() {
     await supabase.auth.resetPasswordForEmail(emailVal, {
-      redirectTo: "http://localhost:5173/UpdatePass",
+      redirectTo: "http://e-commerce-try.vercel.app/UpdatePass",
     });
   }
 </script>
