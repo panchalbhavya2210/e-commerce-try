@@ -139,7 +139,6 @@
                     </button>
                   </div>
                 </div>
-
                 <div class="mt-8">
                   <div class="flow-root">
                     <ul role="list" class="-my-6 divide-y divide-gray-200">
@@ -155,7 +154,6 @@
                               class="h-full w-full object-cover object-center"
                             />
                           </div>
-
                           <div class="ml-4 flex flex-1 flex-col">
                             <div>
                               <div
@@ -186,13 +184,10 @@
                           </div>
                         </li>
                       {/each}
-
-                      <!-- More products... -->
                     </ul>
                   </div>
                 </div>
               </div>
-
               <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
                 <div
                   class="flex justify-between text-base font-medium text-gray-900"

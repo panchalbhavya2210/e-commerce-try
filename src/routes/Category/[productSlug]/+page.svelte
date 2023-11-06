@@ -8,12 +8,10 @@
    */
 
   export let data = [];
-  // getting value of data and storing
   let product = data;
-  //obj to array
   let prd = product.product;
-  console.log(prd);
-
+  //obj to array
+  let imageDisplayMain = prd[0].product_image[0].publicUrl;
   let prdCategory = prd[0].product_category;
 
   let array = [];
@@ -25,7 +23,6 @@
 
       array.push(prd.id);
       prd_qt.push("1");
-      console.log(array);
 
       let cartDataToInsert = {
         auth_id: authId,
@@ -36,8 +33,6 @@
         const { data, error } = await supabase
           .from("CartData")
           .insert(cartDataToInsert);
-
-        console.log(error, data);
       }
       road();
     });
@@ -106,7 +101,7 @@
         <div class="rowOne cursor-pointer group transition-all">
           <div class="heightOne h-11/12 shadow-lg p-3">
             <img
-              src={product.product_image}
+              src={imageDisplayMain}
               alt=""
               srcset=""
               class="rounded-md group-hover:scale-105 transition-all h-full w-full"
