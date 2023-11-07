@@ -1,10 +1,11 @@
 <script>
+  import { page } from "$app/stores";
   import { onMount } from "svelte";
   import supabase from "../lib/index";
   let navMobileState, profileView;
 
   let img;
-
+  let accordionMenu, navShow;
   async function getUidData() {
     let supabaseAuthId = await supabase.auth.getUser().then((response) => {
       let authId = response.data.user.id;
@@ -44,7 +45,7 @@
           class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
           aria-controls="mobile-menu"
           aria-expanded="false"
-          on:click={() => (navMobileState = !navMobileState)}
+          on:click={() => (navShow = !navShow)}
         >
           <span class="absolute -inset-0.5" />
           <span class="sr-only">Open main menu</span>
@@ -54,17 +55,18 @@
             Menu open: "hidden", Menu closed: "block"
           -->
           <svg
-            class="block h-6 w-6"
-            fill="none"
+            width="35px"
+            height="35px"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            aria-hidden="true"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <rect width="24" height="24" fill="" />
             <path
+              d="M14.5 17L9.5 12L14.5 7"
+              stroke="#000000"
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
             />
           </svg>
           <!--
@@ -214,14 +216,13 @@
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
-  <div
+  <!-- <div
     class="sm:hidden duration-500 transition-all {navMobileState
       ? '-translate-y-0'
       : '-translate-y-52 '}"
     id="mobile-menu"
   >
     <div class="space-y-1 px-2 pb-3 pt-2 {navMobileState ? 'block' : 'hidden'}">
-      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
       <a
         href="#"
         class=" block rounded-md px-3 py-2 text-base font-medium"
@@ -243,5 +244,199 @@
         >Calendar</a
       >
     </div>
+  </div> -->
+
+  <div class="mobileMenu sm:hidden">
+    <div
+      class="fixedMenu mobileMenu fixed top-0 z-50 h-full w-full bg-gray-200 overflow-scroll transition-all duration-500 {navShow
+        ? 'callMenu'
+        : 'fixedMenu'}"
+    >
+      <div class="flex items-center justify-start mt-4">
+        <div class="flex justify-between items-center">
+          <div class="mx-5">
+            <button on:click={() => (navShow = !navShow)}>
+              <svg
+                width="35px"
+                height="35px"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="24" height="24" fill="" />
+                <path
+                  d="M14.5 17L9.5 12L14.5 7"
+                  stroke="#000000"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <a href="/">
+            <img
+              class="h-8 w-auto -mt-2"
+              src="https://raw.githubusercontent.com/panchalbhavya2210/e-commerce-try/main/src/lib/Screenshot_2023-10-15_162702-transformed-removebg-preview.png"
+              alt="ShopAholic's Logo"
+            />
+          </a>
+        </div>
+      </div>
+      <div class="navItems">
+        <h2>
+          <a href="/">
+            <button
+              on:click={() => (navShow = !navShow)}
+              type="button"
+              aria-current={$page.url.pathname === "/" ? "page" : undefined}
+              class="{navShow
+                ? 'showButton'
+                : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            >
+              <span>Home</span>
+            </button>
+          </a>
+        </h2>
+      </div>
+
+      <div id="accordion-collapse" data-accordion="collapse">
+        <h2 id="accordion-collapse-heading-1">
+          <button
+            type="button"
+            class="{navShow
+              ? 'showButton'
+              : ''} buttonClass transition-all duration-500 delay-100 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            data-accordion-target="#accordion-collapse-body-1"
+            aria-expanded="true"
+            aria-controls="accordion-collapse-body-1"
+            on:click={() => (accordionMenu = !accordionMenu)}
+          >
+            <span>Categories</span>
+            <svg
+              data-accordion-icon
+              class="w-3 h-3 rotate-180 shrink-0"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5 5 1 1 5"
+              />
+            </svg>
+          </button>
+        </h2>
+        <div
+          id="accordion-collapse-body-1"
+          class={accordionMenu ? "block" : "hidden"}
+          aria-labelledby="accordion-collapse-heading-1"
+        >
+          <a href="/Category/Electronics">
+            <p
+              aria-current={$page.url.pathname === "/Category/Electronics"
+                ? "page"
+                : undefined}
+              class="aria mb-1 text-black h-16 flex items-center pl-7"
+            >
+              Electronics
+            </p>
+          </a>
+          <a href="/Category/Electronics">
+            <p
+              aria-current={$page.url.pathname === "/Category/"
+                ? "page"
+                : undefined}
+              class="aria mb-1 text-black h-16 flex items-center pl-7"
+            >
+              Electronics
+            </p>
+          </a>
+          <a href="/Category/Electronics">
+            <p
+              aria-current={$page.url.pathname === "/Category/"
+                ? "page"
+                : undefined}
+              class="aria mb-1 text-black h-16 flex items-center pl-7"
+            >
+              Electronics
+            </p>
+          </a>
+        </div>
+        <h2>
+          <a href="/ProductCreator">
+            <button
+              on:click={() => (navShow = !navShow)}
+              type="button"
+              aria-current={$page.url.pathname === "/ProductCreator"
+                ? "page"
+                : undefined}
+              class="{navShow
+                ? 'showButton'
+                : ''} aria buttonClass transition-all duration-500 delay-150 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            >
+              <span>List Your Product</span>
+            </button></a
+          >
+        </h2>
+        <h2>
+          <a href="/Cart">
+            <button
+              on:click={() => (navShow = !navShow)}
+              type="button"
+              aria-current={$page.url.pathname === "/Cart" ? "page" : undefined}
+              class="{navShow
+                ? 'showButton'
+                : ''} aria buttonClass transition-all duration-500 delay-200 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            >
+              <span>Your Cart</span>
+            </button></a
+          >
+        </h2>
+        <h2>
+          <a href="/Profile">
+            <button
+              on:click={() => (navShow = !navShow)}
+              type="button"
+              class="{navShow
+                ? 'showButton'
+                : ''} buttonClass transition-all duration-500 delay-300 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            >
+              <span>Your Profile</span>
+            </button></a
+          >
+        </h2>
+      </div>
+    </div>
   </div>
 </nav>
+
+<style>
+  .mobileMenu::-webkit-scrollbar {
+    display: none;
+  }
+  .aria[aria-current="page"] {
+    color: #ffffff;
+    background-color: #000000;
+  }
+  .fixedMenu {
+    margin-left: -100%;
+    transition: 0.5s;
+  }
+  .callMenu {
+    margin-left: 0;
+  }
+  .buttonClass {
+    transform: translateY(10px);
+    opacity: 0;
+    transition: 1s;
+  }
+  .showButton {
+    transition-delay: 0.3s;
+    transform: translateY(0);
+    opacity: 100;
+  }
+</style>

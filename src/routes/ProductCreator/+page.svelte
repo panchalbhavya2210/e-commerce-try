@@ -4,12 +4,28 @@
   import { fade, fly } from "svelte/transition";
   import { onMount } from "svelte";
 
-  let productName, selected, files, productDesc, productPrice, fileName, file;
-
+  let productName,
+    selected,
+    files,
+    productDesc,
+    productPrice,
+    fileName,
+    file,
+    loaderState,
+    successState,
+    errorState,
+    errName,
+    errBody;
   async function uploadProduct() {
+    loaderState = !loaderState;
+    btn.disabled = true;
+
+    const response = await supabase.auth.getUser();
+    const authId = response.data.user.id;
     let imageArray = [];
 
-    try {
+    // try {
+    if (files != undefined) {
       for (let i = 0; i < files.length; i++) {
         fileName = files[i].name;
         file = files[i];
@@ -25,23 +41,56 @@
         imageArray.push(dataOne);
       }
 
+      console.log(imageArray[0]);
+
       const productDataToInsert = {
         product_category: selected,
         product_name: productName,
         product_description: productDesc,
+        product_image_d: imageArray[0].publicUrl,
         product_image: imageArray,
         product_price: productPrice,
+        seller_id: authId,
       };
 
       const { data, error } = await supabase
         .from("ProductData")
-        .insert(productDataToInsert)
-        .then(() => {});
+        .insert(productDataToInsert);
+
+      if (error == null) {
+        btn.disabled = false;
+        loaderState = !loaderState;
+        successState = !successState;
+        setTimeout(() => {
+          successState = !successState;
+        }, 3000);
+        console.log(data);
+      } else {
+        btn.disabled = false;
+
+        loaderState = !loaderState;
+        errorState = !errorState;
+        errName = error.name;
+        errBody = error.message;
+        setTimeout(() => {
+          errorState = !errorState;
+        }, 3000);
+        console.log(error.name, error.message);
+      }
 
       imageArray = [];
-
-      console.log(data);
-    } catch {}
+    } else {
+      console.log("file is emptyy");
+    }
+    // }
+    // catch {
+    //   btn.disabled = false;
+    //   errorState = !errorState;
+    //   loaderState = !loaderState;
+    //   setTimeout(() => {
+    //     errorState = !errorState;
+    //   }, 3000);
+    // }
   }
 </script>
 
@@ -155,11 +204,12 @@
 
         <div>
           <button
+            id="btn"
             type="submit"
             on:click={uploadProduct}
             class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
           >
-            <div role="status" class=" {'' ? 'block' : 'hidden'}">
+            <div role="status" class=" {loaderState ? 'block' : 'hidden'}">
               <svg
                 aria-hidden="true"
                 class="w-auto h-6 mr-2 text-gray-200 animate-spin dark:text-gray-700 fill-white"
@@ -178,22 +228,13 @@
               </svg>
               <span class="sr-only">Loading...</span>
             </div>
-            {"" ? "Signing Up" : "Sign Up"}</button
+            {"" ? "Creating Product" : "Create Product"}</button
           >
         </div>
       </form>
 
-      <p class="mt-10 text-center text-sm text-gray-500">
-        Already a ShopAholic?
-        <a
-          href="/Login"
-          class="font-semibold leading-6 text-gray-700 hover:text-black underline"
-          >Login</a
-        >
-      </p>
-
       <div
-        class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md w-96 max-w-sm fixed bottom-5 transition-all duration-300 {''
+        class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md w-96 max-w-sm fixed bottom-5 transition-all duration-300 {successState
           ? 'translate-y-0 opacity-100'
           : 'translate-y-24 opacity-0'}"
         role="alert"
@@ -211,12 +252,12 @@
           </div>
           <div>
             <p class="font-bold">Success.</p>
-            <p class="text-sm break-all">Signed Up successfully.</p>
+            <p class="text-sm break-all">Product created.</p>
           </div>
         </div>
       </div>
       <div
-        class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md max-w-sm w-96 fixed bottom-5 transition-all duration-300 {''
+        class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md max-w-sm w-96 fixed bottom-5 transition-all duration-300 {errorState
           ? 'translate-y-0 opacity-100'
           : 'translate-y-24 opacity-0'}"
         role="alert"
@@ -233,8 +274,8 @@
             >
           </div>
           <div>
-            <p class="font-bold">{"h"}</p>
-            <p class="text-sm break-all">{"h"}</p>
+            <p class="font-bold">{errName}</p>
+            <p class="text-sm break-all">{errBody}</p>
           </div>
         </div>
       </div>

@@ -11,8 +11,16 @@
   let product = data;
   let prd = product.product;
   //obj to array
-  let imageDisplayMain = prd[0].product_image[0].publicUrl;
-  let prdCategory = prd[0].product_category;
+  let prdCategory;
+  console.log(data);
+
+  console.log();
+
+  if (data.product.length != 0) {
+    prdCategory = prd[0].product_category;
+  } else {
+    console.log("it is what it is");
+  }
 
   let array = [];
   let prd_qt = [];
@@ -36,8 +44,6 @@
       }
       road();
     });
-
-    // console.log(prd);
   }
 </script>
 
@@ -101,7 +107,7 @@
         <div class="rowOne cursor-pointer group transition-all">
           <div class="heightOne h-11/12 shadow-lg p-3">
             <img
-              src={imageDisplayMain}
+              src={product.product_image_d}
               alt=""
               srcset=""
               class="rounded-md group-hover:scale-105 transition-all h-full w-full"

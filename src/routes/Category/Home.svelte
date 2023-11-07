@@ -400,7 +400,7 @@
         >
       </div>
       <div class="rowOne cursor-pointer group transition-all">
-        <a href="/Category/Misc">
+        <a href="/Category/Miscellaneous">
           <div
             class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
           >
