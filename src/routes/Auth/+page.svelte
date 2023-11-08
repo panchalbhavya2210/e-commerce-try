@@ -68,6 +68,7 @@
                 user_email: emailVal,
                 user_profile: imageUrl,
                 user_address: "",
+                user_type: "User",
               },
             ];
             console.log(userDataToInsert);
@@ -98,6 +99,7 @@
                 seller_email: emailVal,
                 seller_image: imageUrl,
                 seller_address: "",
+                user_type: "Seller",
               },
             ];
             console.log(sellerDataToInsert);

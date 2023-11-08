@@ -2,10 +2,12 @@
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import supabase from "../lib/index";
-  let navMobileState, profileView;
+  let navMobileState, profileView, dropdown;
 
   let img;
   let accordionMenu, navShow;
+  let userType,
+    rowDataif = 1;
   async function getUidData() {
     let supabaseAuthId = await supabase.auth.getUser().then((response) => {
       let authId = response.data.user.id;
@@ -17,11 +19,15 @@
           .eq("auth_uid", authId);
 
         if (data && data.length > 0) {
+          rowDataif = 1;
           const rowData = data[0];
           img = rowData.user_profile;
+          userType = rowData.user_type;
+          console.log(userType);
           console.log(img);
           console.log("Fetched row data:", rowData);
         } else {
+          rowDataif = 0;
           console.log("Row not found.");
         }
       }
@@ -42,18 +48,14 @@
         <!-- Mobile menu button-->
         <button
           type="button"
-          class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+          class="rotate-180 relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
           aria-controls="mobile-menu"
           aria-expanded="false"
           on:click={() => (navShow = !navShow)}
         >
           <span class="absolute -inset-0.5" />
           <span class="sr-only">Open main menu</span>
-          <!--
-            Icon when menu is closed.
 
-            Menu open: "hidden", Menu closed: "block"
-          -->
           <svg
             width="35px"
             height="35px"
@@ -69,25 +71,6 @@
               stroke-linejoin="round"
             />
           </svg>
-          <!--
-            Icon when menu is open.
-
-            Menu open: "block", Menu closed: "hidden"
-          -->
-          <svg
-            class="hidden h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
         </button>
       </div>
       <div class="flex flex-1 items-center justify-center">
@@ -101,28 +84,274 @@
           </a>
         </div>
         <div class="hidden sm:ml-6 sm:block">
-          <div class="flex space-x-4">
-            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+          <div class="flex justify-center space-x-3">
             <a
-              href="/Auth"
+              href="/"
               class=" rounded-md px-3 py-2 text-sm font-medium"
-              aria-current="page">Sign Up</a
+              aria-current="page">Home</a
             >
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            {#if rowDataif == 0}
+              <a
+                href="/Auth"
+                class=" rounded-md px-3 py-2 text-sm font-medium"
+                aria-current="page">Sign Up</a
+              >
+            {:else}
+              <a
+                href="/Profile"
+                class=" rounded-md px-3 py-2 text-sm font-medium"
+                aria-current="page">My Profile</a
+              >
+            {/if}
+            <div class="relative inline-block text-left">
+              <div>
+                <button
+                  type="button"
+                  class="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-medium text-black"
+                  id="menu-button"
+                  aria-expanded="true"
+                  aria-haspopup="true"
+                  on:click={() => (dropdown = !dropdown)}
+                >
+                  Categories
+                  <svg
+                    class="-mr-1 h-5 w-5 text-gray-400 {dropdown
+                      ? 'rotate-180'
+                      : 'rotate-0'} transition-all"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <!--
+                Dropdown menu, show/hide based on menu state.
+            
+                Entering: "transition ease-out duration-100"
+                  From: "transform opacity-0 scale-95"
+                  To: "transform opacity-100 scale-100"
+                Leaving: "transition ease-in duration-75"
+                  From: "transform opacity-100 scale-100"
+                  To: "transform opacity-0 scale-95"
+              -->
+              <div
+                class="absolute {dropdown
+                  ? 'scale-100'
+                  : 'scale-0'} transition-all right-0 z-50 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="menu-button"
+                tabindex="-1"
+              >
+                <div class="py-1" role="none">
+                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+
+                  <a
+                    href="/Category/Electronics"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname ===
+                      "/Category/Electronics"
+                        ? "page"
+                        : undefined}
+                    >
+                      Electronics
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Clothing"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Clothing"
+                        ? "page"
+                        : undefined}
+                    >
+                      Clothing & Fashion
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Home"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Home"
+                        ? "page"
+                        : undefined}
+                    >
+                      Home & Furniture
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Books"
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Books"
+                        ? "page"
+                        : undefined}
+                    >
+                      Books & Media
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Groceries"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Groceries"
+                        ? "page"
+                        : undefined}
+                    >
+                      Groceries & Food
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Health"
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Health"
+                        ? "page"
+                        : undefined}
+                    >
+                      Health & Wellness
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Toys"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Toys"
+                        ? "page"
+                        : undefined}
+                    >
+                      Toys & Games
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Sports"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Sports"
+                        ? "page"
+                        : undefined}
+                    >
+                      Sports & Outdoors
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Pet"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Pet"
+                        ? "page"
+                        : undefined}
+                    >
+                      Pet Supplies
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Gifts"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname === "/Category/Gifts"
+                        ? "page"
+                        : undefined}
+                    >
+                      Gifts
+                    </button>
+                  </a>
+
+                  <a
+                    href="/Category/Miscellaneous"
+                    on:click={() => (dropdown = !dropdown)}
+                    class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+                    id="menu-item-0"
+                  >
+                    <button
+                      class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+                      aria-current={$page.url.pathname ===
+                      "/Category/Miscellaneous"
+                        ? "page"
+                        : undefined}
+                    >
+                      Miscellaneous
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <a
               href="/Cart"
               class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >Cart</a
             >
-            <a
-              href=""
-              class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >Projects</a
-            >
-            <a
-              href="#"
-              class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >Calendar</a
-            >
+
+            {#if userType == "User"}
+              <a
+                href="#"
+                class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Calendar</a
+              >
+            {:else}
+              <a
+                href="/ProductCreator"
+                class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Sell Product</a
+              >
+            {/if}
           </div>
         </div>
       </div>
@@ -151,7 +380,6 @@
           </svg>
         </button>
 
-        <!-- Profile dropdown -->
         <div class="relative ml-3">
           <div>
             <button
@@ -168,16 +396,6 @@
             </button>
           </div>
 
-          <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
           <div
             class="absolute right-0 z-50 mt-2 w-48 transition-all {profileView
               ? 'scale-100'
@@ -214,37 +432,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Mobile menu, show/hide based on menu state. -->
-  <!-- <div
-    class="sm:hidden duration-500 transition-all {navMobileState
-      ? '-translate-y-0'
-      : '-translate-y-52 '}"
-    id="mobile-menu"
-  >
-    <div class="space-y-1 px-2 pb-3 pt-2 {navMobileState ? 'block' : 'hidden'}">
-      <a
-        href="#"
-        class=" block rounded-md px-3 py-2 text-base font-medium"
-        aria-current="page">Dashboard</a
-      >
-      <a
-        href="#"
-        class="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-        >Team</a
-      >
-      <a
-        href="#"
-        class="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-        >Projects</a
-      >
-      <a
-        href="#"
-        class="text-black hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-        >Calendar</a
-      >
-    </div>
-  </div> -->
 
   <div class="mobileMenu sm:hidden">
     <div
@@ -297,6 +484,20 @@
             </button>
           </a>
         </h2>
+        <h2>
+          <a href="/Auth">
+            <button
+              on:click={() => (navShow = !navShow)}
+              type="button"
+              aria-current={$page.url.pathname === "/Auth" ? "page" : undefined}
+              class="{navShow
+                ? 'showButton'
+                : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            >
+              <span>Create Your Account</span>
+            </button>
+          </a>
+        </h2>
       </div>
 
       <div id="accordion-collapse" data-accordion="collapse">
@@ -335,35 +536,178 @@
           class={accordionMenu ? "block" : "hidden"}
           aria-labelledby="accordion-collapse-heading-1"
         >
-          <a href="/Category/Electronics">
-            <p
+          <a
+            href="/Category/Electronics"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
               aria-current={$page.url.pathname === "/Category/Electronics"
                 ? "page"
                 : undefined}
-              class="aria mb-1 text-black h-16 flex items-center pl-7"
             >
               Electronics
-            </p>
+            </button>
           </a>
-          <a href="/Category/Electronics">
-            <p
-              aria-current={$page.url.pathname === "/Category/"
+
+          <a
+            href="/Category/Clothing"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Clothing"
                 ? "page"
                 : undefined}
-              class="aria mb-1 text-black h-16 flex items-center pl-7"
             >
-              Electronics
-            </p>
+              Clothing & Fashion
+            </button>
           </a>
-          <a href="/Category/Electronics">
-            <p
-              aria-current={$page.url.pathname === "/Category/"
+
+          <a
+            href="/Category/Home"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Home"
                 ? "page"
                 : undefined}
-              class="aria mb-1 text-black h-16 flex items-center pl-7"
             >
-              Electronics
-            </p>
+              Home & Furniture
+            </button>
+          </a>
+
+          <a
+            href="/Category/Books"
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Books"
+                ? "page"
+                : undefined}
+            >
+              Books & Media
+            </button>
+          </a>
+
+          <a
+            href="/Category/Groceries"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Groceries"
+                ? "page"
+                : undefined}
+            >
+              Groceries & Food
+            </button>
+          </a>
+
+          <a
+            href="/Category/Health"
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Health"
+                ? "page"
+                : undefined}
+            >
+              Health & Wellness
+            </button>
+          </a>
+
+          <a
+            href="/Category/Toys"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Toys"
+                ? "page"
+                : undefined}
+            >
+              Toys & Games
+            </button>
+          </a>
+
+          <a
+            href="/Category/Sports"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Sports"
+                ? "page"
+                : undefined}
+            >
+              Sports & Outdoors
+            </button>
+          </a>
+
+          <a
+            href="/Category/Pet"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Pet"
+                ? "page"
+                : undefined}
+            >
+              Pet Supplies
+            </button>
+          </a>
+
+          <a
+            href="/Category/Gifts"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Gifts"
+                ? "page"
+                : undefined}
+            >
+              Gifts
+            </button>
+          </a>
+
+          <a
+            href="/Category/Miscellaneous"
+            on:click={() => (navShow = !navShow)}
+            class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
+            id="menu-item-0"
+          >
+            <button
+              class="aria w-full h-full px-3 py-1 text-left rounded-lg"
+              aria-current={$page.url.pathname === "/Category/Miscellaneous"
+                ? "page"
+                : undefined}
+            >
+              Miscellaneous
+            </button>
           </a>
         </div>
         <h2>

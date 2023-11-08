@@ -152,7 +152,7 @@
             <option value="Health">Health & Wellness</option>
             <option value="Toys">Toys & Games</option>
             <option value="Sports">Sports & Outdoors</option>
-            <option value="Pet">Pet Supplies</option>
+            <option value="Pets">Pet Supplies</option>
             <option value="Gifts">Gifts</option>
             <option value="Miscellaneous">Miscellaneous</option>
           </select>

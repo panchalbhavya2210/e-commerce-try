@@ -4,6 +4,5 @@
 
 <div class="">
   <Header />
-
   <slot />
 </div>
