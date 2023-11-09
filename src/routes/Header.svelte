@@ -2,7 +2,13 @@
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import supabase from "../lib/index";
+  import { Router, Route, Link } from "svelte-navigator";
   let navMobileState, profileView, dropdown;
+
+  let slug, Electronics;
+  function gotoSlug(slug) {
+    navigate(`Category/${slug}`);
+  }
 
   let img;
   let accordionMenu, navShow;
@@ -154,8 +160,8 @@
                 <div class="py-1" role="none">
                   <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
 
-                  <a
-                    href="/Category/Electronics"
+                  <Link
+                    to="/Category/Electronics"
                     on:click={() => (dropdown = !dropdown)}
                     class="text-black transition-all block px-4 py-2 text-sm hover:bg-gray-400 aria"
                     id="menu-item-0"
@@ -169,7 +175,7 @@
                     >
                       Electronics
                     </button>
-                  </a>
+                  </Link>
 
                   <a
                     href="/Category/Clothing"

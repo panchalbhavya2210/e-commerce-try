@@ -5,15 +5,16 @@
   import "../../lib/global.css";
 
   let addArr = [];
-  const countMap = {};
   let arrCount = [];
-  arrCount = countMap;
   let totalAmount;
 
   let removerState = false;
 
   async function getCartData() {
     try {
+      const countMap = {};
+      arrCount = countMap;
+
       const response = await supabase.auth.getUser();
       const authId = response.data.user.id;
       const { data: cartData, error } = await supabase
@@ -24,7 +25,7 @@
       const fetchArr = cartData.map((item) => item.product_id);
 
       fetchArr.forEach((element) => {
-        if (countMap[element] && removerState == true) {
+        if (countMap[element] || removerState == true) {
           countMap[element]++;
         } else {
           countMap[element] = 1;
