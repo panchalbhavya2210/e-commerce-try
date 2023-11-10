@@ -2,11 +2,14 @@
   import { onMount } from "svelte";
   import supabase from "../../lib";
   import truck from "../../lib/category-icons/truck.png";
+  import empty from "../../lib/category-icons/cart-mt.png";
   import "../../lib/global.css";
 
   let addArr = [];
   let arrCount = [];
   let totalAmount;
+  let prdId = [];
+  let seller_id = [];
 
   let removerState = false;
 
@@ -43,21 +46,24 @@
         .in("id", fetchArr);
 
       addArr = productData;
-      console.log(addArr);
+
+      for (let i = 0; i < addArr.length; i++) {
+        prdId.push(productData[i].id);
+        seller_id.push(productData[i].seller_id);
+      }
       totalAmount = 0;
       for (const product of addArr) {
         if (countMap[product.id]) {
           totalAmount += product.product_price * countMap[product.id];
         }
       }
-      if (totalAmount < 500) {
+      if (totalAmount < 500 && addArr.length != 0) {
         totalAmount = totalAmount + 50;
       } else {
         totalAmount = totalAmount;
       }
     } catch (error) {}
   }
-
   onMount(() => {
     getCartData();
   });
@@ -75,11 +81,34 @@
 
     getCartData();
   }
+  let recFName, recLName, recEmail, recCity, recAddres, recPin, recPhone;
+  async function order() {
+    for (let i = 0; i < seller_id.length; i++) {
+      const orderDataToInsert = {
+        customer_name: recFName + " " + recLName,
+        customer_address: recAddres,
+        customer_phone: recPhone,
+        seller_id: seller_id[i],
+        product_ids: prdId[i],
+      };
+      const { data, error } = await supabase
+        .from("order_table")
+        .insert(orderDataToInsert);
+
+      for (let i = 0; i < prdId.length; i++) {
+        const { data: deleted } = await supabase
+          .from("CartData")
+          .delete()
+          .eq("product_id", prdId[i]);
+      }
+
+      console.log(data, error);
+    }
+  }
 </script>
 
 <div class="checkout">
   <h1 class="font-medium absolute left-10 mb-4">Products In Cart</h1>
-
   <div class="mt-8 p-10">
     <div class="productDetails">
       <div class="flow-root">
@@ -150,15 +179,26 @@
                 </div>
               </div>
             </li>
-          {:else if totalAmount == 0}
-            Nothing In cartData
+          {:else if totalAmount == 0 && addArr.length == 0}
+            <li class="flex py-6 items-center">
+              <div
+                class="h-40 w-auto flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+              >
+                <img
+                  src={empty}
+                  alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                  class="h-full w-full object-cover object-center"
+                />
+              </div>
+
+              <h1 class="ml-5 font-semibold">Your Cart Is Empty.</h1>
+            </li>
           {:else}
             <h1>Yay! Free Delivery</h1>
           {/if}
         </ul>
       </div>
     </div>
-
     <div
       class="relative z-10 mt-10"
       aria-labelledby="slide-over-title"
@@ -172,97 +212,100 @@
         </div>
       </div>
     </div>
-
     <h2 class="mb-5">Fill Out Your Details.</h2>
-
     <div class="formContainer">
       <div class="form">
-        <div class="formFlex flex justify-between">
-          <div class="inp flex-1">
-            <label for="reciever-first">Recipient's First Name</label>
-            <br />
-            <input
-              name="reciever-first"
-              id="reciever-first"
-              class="w-full mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
-            />
-          </div>
-          <div class="inp flex-1">
-            <label for="reciever-last">Recipient's Last Name</label>
-            <br />
-            <input
-              name="reciever-last"
-              id="reciever-last"
-              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
-            />
-          </div>
-        </div>
-
-        <div class="inp">
+        <div class="inp mb-5">
           <label for="reciever-email">Email</label>
           <br />
           <input
+            bind:value={recEmail}
             name="reciever-email"
             id="reciever-email"
             class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
             type="text"
           />
         </div>
-
+        <div class="formFlex flex justify-between">
+          <div class="inp flex-1">
+            <label for="reciever-first">Recipient's First Name</label>
+            <br />
+            <input
+              bind:value={recFName}
+              name="reciever-first"
+              id="reciever-first"
+              class="w-11/12 mr-5 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="text"
+            />
+          </div>
+          <div class="inp flex-1">
+            <label class="ml-12" for="reciever-last"
+              >Recipient's Last Name</label
+            >
+            <br />
+            <input
+              bind:value={recLName}
+              name="reciever-last"
+              id="reciever-last"
+              class="w-11/12 ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="text"
+            />
+          </div>
+        </div>
         <div class="formFlex flex justify-between mt-4">
           <div class="inp flex-1">
             <label for="address">Address</label>
             <br />
             <input
+              bind:value={recAddres}
               name="address"
               id="address"
-              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
             />
           </div>
           <div class="inp flex-1">
-            <label for="city">City</label>
+            <label class="ml-12" for="city">City</label>
             <br />
             <input
+              bind:value={recCity}
               name="city"
               id="city"
-              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              class="w-11/12 ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
             />
           </div>
         </div>
-
         <div class="formFlex flex justify-between mt-4">
           <div class="inp flex-1">
             <label for="zip">ZIP Code</label>
             <br />
             <input
+              bind:value={recPin}
               name="zip"
               id="zip"
-              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
+              class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="number"
             />
           </div>
           <div class="inp flex-1">
-            <label for="phone">Phone Number</label>
+            <label class="ml-12" for="phone">Phone Number</label>
             <br />
             <input
+              bind:value={recPhone}
               name="phone"
               id="phone"
-              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              class="w-11/12 ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="tel"
             />
           </div>
         </div>
       </div>
-
       <p class="text-red-400 mt-3">Only COD(cash on delivery) Available.</p>
-
       <div class="button">
         <div class="mt-6">
           <a
+            on:click={order}
             href="#"
             class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
             >Checkout {totalAmount}₹</a
