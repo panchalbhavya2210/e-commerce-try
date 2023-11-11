@@ -16,7 +16,7 @@
   async function getCartData() {
     try {
       const countMap = {};
-      arrCount = countMap;
+      arrCount.push(countMap);
 
       const response = await supabase.auth.getUser();
       const authId = response.data.user.id;
@@ -62,6 +62,7 @@
       } else {
         totalAmount = totalAmount;
       }
+      console.log(arrCount[0]);
     } catch (error) {}
   }
   onMount(() => {
@@ -90,6 +91,7 @@
         customer_phone: recPhone,
         seller_id: seller_id[i],
         product_ids: prdId[i],
+        product_qty: arrCount[0],
       };
       const { data, error } = await supabase
         .from("order_table")
