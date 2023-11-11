@@ -3,14 +3,16 @@
   import supabase from "../../lib/index";
   import "../../lib/global.css";
 
-  async function Load() {
+  async function LoadOrder() {
     const { data, error } = await supabase
       .from("order_table")
       .select("*")
       .eq("seller_id", "835f9919-b5b9-4c58-9166-e37505f59a3c");
     console.log(data);
   }
-  onMount(() => {});
+  onMount(() => {
+    LoadOrder();
+  });
 </script>
 
 <!--  -->
@@ -41,8 +43,6 @@
                 <p class="font-medium my-1">Refrigerator</p>
                 <p class="font-medium my-1 text-gray-700">350₹</p>
                 <p class="truncate sm:whitespace-normal sm:w-56">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  feugiat quam in ligula efficitur, ut ultricies felis bibendum.
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                   feugiat quam in ligula efficitur, ut ultricies felis bibendum.
                 </p>
@@ -80,6 +80,23 @@
                 </div>
               </div>
               <div class="lin w-full h-0.5 my-2 bg-gray-400" />
+            </div>
+          </div>
+
+          <div class="progress mt-10">
+            <div
+              class="progressbar hidden sm:block lg:block lg:w-full bg-blue-600 rounded-full h-2"
+            />
+            <div
+              class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
+            />
+            <div
+              class="xname lg:flex lg:justify-between sm:flex sm:justify-between md:flex md:justify-between font-medium"
+            >
+              <p class="my-7 mx-5">Order Received</p>
+              <p class="my-7 mx-5">Processed</p>
+              <p class="my-7 mx-5">Shipped</p>
+              <p class="my-7 mx-5">Delivered</p>
             </div>
           </div>
         </div>
