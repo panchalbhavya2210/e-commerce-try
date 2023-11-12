@@ -10,16 +10,18 @@
   let totalAmount;
   let prdId = [];
   let seller_id = [];
+  let user_id;
 
   let removerState = false;
 
   async function getCartData() {
     try {
       const countMap = {};
-      arrCount.push(countMap);
+      arrCount = countMap;
 
       const response = await supabase.auth.getUser();
       const authId = response.data.user.id;
+      user_id = response.data.user.id;
       const { data: cartData, error } = await supabase
         .from("CartData")
         .select("*")
@@ -39,6 +41,8 @@
         if (countMap[key] > 1) {
         }
       }
+
+      console.log(fetchArr);
 
       const { data: productData } = await supabase
         .from("ProductData")
@@ -91,18 +95,18 @@
         customer_phone: recPhone,
         seller_id: seller_id[i],
         product_ids: prdId[i],
-        product_qty: arrCount[0],
+        user_id: user_id,
       };
       const { data, error } = await supabase
         .from("order_table")
         .insert(orderDataToInsert);
 
-      for (let i = 0; i < prdId.length; i++) {
-        const { data: deleted } = await supabase
-          .from("CartData")
-          .delete()
-          .eq("product_id", prdId[i]);
-      }
+      // for (let i = 0; i < prdId.length; i++) {
+      //   const { data: deleted } = await supabase
+      //     .from("CartData")
+      //     .delete()
+      //     .eq("product_id", prdId[i]);
+      // }
 
       console.log(data, error);
     }
