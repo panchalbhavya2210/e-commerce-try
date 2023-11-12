@@ -10,6 +10,11 @@
   let totalAmount;
   let prdId = [];
   let seller_id = [];
+  let product_name = [],
+    product_desc = [],
+    product_price = [],
+    product_img = [];
+  let user_email;
   let user_id;
 
   let removerState = false;
@@ -42,8 +47,6 @@
         }
       }
 
-      console.log(fetchArr);
-
       const { data: productData } = await supabase
         .from("ProductData")
         .select("*")
@@ -52,6 +55,10 @@
       addArr = productData;
 
       for (let i = 0; i < addArr.length; i++) {
+        product_name.push(productData[i].product_name);
+        product_desc.push(productData[i].product_description);
+        product_price.push(productData[i].product_price);
+        product_img.push(productData[i].product_image_d);
         prdId.push(productData[i].id);
         seller_id.push(productData[i].seller_id);
       }
@@ -93,9 +100,16 @@
         customer_name: recFName + " " + recLName,
         customer_address: recAddres,
         customer_phone: recPhone,
+        customer_city: recCity,
+        customer_pin: recPin,
+        customer_email: recEmail,
         seller_id: seller_id[i],
         product_ids: prdId[i],
         user_id: user_id,
+        product_name: product_name[i],
+        product_desc: product_desc[i],
+        product_image: product_img[i],
+        product_price: product_price[i],
       };
       const { data, error } = await supabase
         .from("order_table")
