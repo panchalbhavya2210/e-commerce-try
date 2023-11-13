@@ -2,6 +2,7 @@
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import supabase from "../lib/index";
+
   let navMobileState, profileView, dropdown;
 
   let img;
@@ -118,9 +119,9 @@
 
             {#if userType == "User"}
               <a
-                href="#"
+                href="/Checkout"
                 class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-                >Calendar</a
+                >Checkout</a
               >
             {:else}
               <a

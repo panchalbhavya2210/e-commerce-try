@@ -4,6 +4,10 @@
   import truck from "../../lib/category-icons/truck.png";
   import empty from "../../lib/category-icons/cart-mt.png";
   import "../../lib/global.css";
+  import done from "../../lib/assets/done-round-svgrepo-com.svg";
+
+  // src/routes/api/sendEmail.js
+  // Your client-side code (e.g., in a Svelte component)
 
   let addArr = [];
   let arrCount = [];
@@ -15,7 +19,7 @@
     product_price = [],
     product_img = [];
   let user_email;
-  let user_id;
+  let user_id, orderConfirmation, ocTemp;
 
   let removerState = false;
 
@@ -93,8 +97,11 @@
 
     getCartData();
   }
+
   let recFName, recLName, recEmail, recCity, recAddres, recPin, recPhone;
   async function order() {
+    const randomDecimal = Math.random();
+    const otp = Math.floor(randomDecimal * 1000000);
     for (let i = 0; i < seller_id.length; i++) {
       const orderDataToInsert = {
         customer_name: recFName + " " + recLName,
@@ -110,19 +117,30 @@
         product_desc: product_desc[i],
         product_image: product_img[i],
         product_price: product_price[i],
+        order_status: "Pending",
+        customer_otp: otp,
       };
       const { data, error } = await supabase
         .from("order_table")
         .insert(orderDataToInsert);
 
-      // for (let i = 0; i < prdId.length; i++) {
-      //   const { data: deleted } = await supabase
-      //     .from("CartData")
-      //     .delete()
-      //     .eq("product_id", prdId[i]);
-      // }
-
+      for (let i = 0; i < prdId.length; i++) {
+        const { data: deleted } = await supabase
+          .from("CartData")
+          .delete()
+          .eq("product_id", prdId[i]);
+      }
+      ocTemp = error;
       console.log(data, error);
+    }
+    if (ocTemp == null) {
+      orderConfirmation = !orderConfirmation;
+
+      setTimeout(() => {
+        orderConfirmation = !orderConfirmation;
+      }, 5000);
+    } else {
+      alert("Something Went Wrong");
     }
   }
 </script>
@@ -332,6 +350,22 @@
           >
         </div>
       </div>
+    </div>
+  </div>
+
+  <div
+    class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
+      ? 'opacity-100 translate-y-0'
+      : 'opacity-0 translate-y-20'}"
+  >
+    <img src={done} class="w-auto h-8 mx-5" alt="" />
+    <div>
+      <p class="font-semibold text-green-700">Thanks! Order Placed.</p>
+      <p class="font-medium text-green-700">
+        View
+        <a href="/OrderStatus" class="underline">Order Status</a>
+        .
+      </p>
     </div>
   </div>
 </div>

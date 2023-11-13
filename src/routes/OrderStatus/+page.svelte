@@ -215,43 +215,55 @@
               <div class="progress mt-10">
                 {#if userRender.order_status == "Received"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600
-                 lg:w-20 rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-20 rounded-full h-2 transition-width duration-1000"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {:else}
                   <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {/if}
                 {#if userRender.order_status == "Processed"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600
-                 lg:w-96 rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-96 rounded-full h-2 transition-width duration-1000"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {:else}
                   <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {/if}
                 {#if userRender.order_status == "Shipped"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600
-                 lg:w-11/12 rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-4/5 rounded-full h-2 transition-all duration-1000"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {:else}
                   <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {/if}
                 {#if userRender.order_status == "Pending"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600
-                 lg:w-4 rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-5 rounded-full h-2 transition-width duration-1000"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {:else}
                   <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
-                  />
+                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
+                  >
+                    <!-- Your content goes here -->
+                  </div>
                 {/if}
                 <div
                   class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
@@ -261,29 +273,36 @@
                 >
                   {#if userRender.order_status == "Received"}
                     <p>Order Received</p>
-                  {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped"}
+                  {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
                     <p>Order Received</p>
+                  {:else if userRender.order_status == "Pending"}
+                    <p>Order Pending</p>
                   {:else}
-                    <p>Null</p>
+                    <p>Unconfirmed Order</p>
                   {/if}
                   {#if userRender.order_status == "Processed"}
                     <p>Order Processed</p>
+                  {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
+                    <p>Order Processed</p>
+                  {:else if userRender.order_status == "Received"}
+                    <p>Order Processing</p>
                   {:else}
-                    <p>Processing Order</p>
+                    <p>Unprocessed Order</p>
                   {/if}
                   {#if userRender.order_status == "Shipped"}
                     <p>Order Shipped</p>
+                  {:else if userRender.order_status == "Processed"}
+                    <p>Shiping Order</p>
                   {:else}
-                    <p>Shipping Order</p>
+                    <p>Unshipped Order</p>
                   {/if}
                   {#if userRender.order_status == "Delivered"}
                     <p>Order Delivered</p>
+                  {:else if userRender.order_status == "Shipped"}
+                    <p>Delivering Order</p>
                   {:else}
-                    <p>Order In Delivery</p>
+                    <p>Undelivered Order</p>
                   {/if}
-                  <!-- <p class="my-5 mx-5">Processed</p>
-                  <p class="my-5 mx-5">Shipped</p>
-                  <p class="my-5 mx-5">Delivered</p> -->
                 </div>
               </div>
             </div>
@@ -436,3 +455,10 @@
     </div>
   {/if}
 </main>
+
+<style>
+  .progressbar {
+    transition: all;
+    transition-duration: 1s;
+  }
+</style>
