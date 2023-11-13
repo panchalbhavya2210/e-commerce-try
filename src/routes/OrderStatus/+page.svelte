@@ -12,7 +12,28 @@
   let renderSellerArr = [];
   let type;
 
-  let processed, shipped, received;
+  async function DataType() {
+    const response = await supabase.auth.getUser();
+    user_id = response.data.user.id;
+
+    const { data: sellerData, error: SellerErit } = await supabase
+      .from("seller_auth_data")
+      .select("*")
+      .eq("auth_uid", user_id);
+
+    const { data: userData, error: erit } = await supabase
+      .from("user_auth_data")
+      .select("*")
+      .eq("auth_uid", user_id);
+
+    if (sellerData.length != 0) {
+      type = "Seller";
+    } else if (userData != 0) {
+      type = "User";
+    } else {
+      type = null;
+    }
+  }
 
   // Asynchronous function to load user orders.
   async function LoadUserOrder() {
@@ -29,19 +50,17 @@
       .select("*")
       .eq("auth_uid", user_id);
 
-    console.log(sellerData, SellerErit);
+    const { data: userData, error: erit } = await supabase
+      .from("user_auth_data")
+      .select("*")
+      .eq("auth_uid", user_id);
 
-    // const { data: userData, error: erit } = await supabase
-    //   .from("user_auth_data")
-    //   .select("*")
-    //   .eq("auth_uid", user_id);
-
-    // console.log(userData, erit);
-
-    if (sellerData.length == 0) {
+    if (sellerData.length != 0) {
+      type = "Seller";
+    } else if (userData != 0) {
       type = "User";
     } else {
-      type = "Seller";
+      type = null;
     }
 
     // Fetching orders from the 'order_table' where the user ID matches.
@@ -53,39 +72,6 @@
     // Storing order data in the render array and logging it.
     renderUserArr = data;
     console.log(renderUserArr);
-
-    // Creating an array of product IDs from the fetched order data.
-    // const fetchArr = data.map((item) => item.product_ids);
-    // console.log(fetchArr);
-
-    /**
-     * TODO: This is the quantity calculation formula
-     * Uncomment the following lines if you want to calculate the quantity of each product.
-     */
-    /*
-  fetchArr.forEach((element) => {
-    if (countMap[element]) {
-      countMap[element]++;
-    } else {
-      countMap[element] = 1;
-    }
-  });
-
-  for (const key in countMap) {
-    if (countMap[key] > 1) {
-      // Do something with products that have a quantity greater than 1.
-    }
-  }
-  */
-
-    // Fetching product data from the 'ProductData' table where the IDs match the order.
-    // const { data: prdData, error: errData } = await supabase
-    //   .from("ProductData")
-    //   .select("*")
-    //   .in("id", fetchArr);
-
-    // productUserArr = prdData;
-    // console.log(productUserArr);
   }
 
   async function LoadSellerOrder() {
@@ -134,11 +120,17 @@
   }
   // Using the `onMount` function to call the `LoadUserOrder` function when the component is mounted.
   onMount(() => {
-    if (type == "User") {
-      LoadUserOrder();
-    } else {
-      LoadSellerOrder();
-    }
+    DataType();
+
+    setTimeout(() => {
+      if (type == "User") {
+        LoadUserOrder();
+      } else if (type == "Seller") {
+        LoadSellerOrder();
+      } else {
+        null;
+      }
+    }, 1000);
   });
 </script>
 
@@ -221,19 +213,77 @@
               </div>
 
               <div class="progress mt-10">
-                <div
-                  class="progressbar hidden sm:block lg:block lg:w-full bg-blue-600 rounded-full h-2"
-                />
+                {#if userRender.order_status == "Received"}
+                  <div
+                    class="progressbar hidden sm:block lg:block bg-blue-600
+                 lg:w-20 rounded-full h-2"
+                  />
+                {:else}
+                  <div
+                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
+                  />
+                {/if}
+                {#if userRender.order_status == "Processed"}
+                  <div
+                    class="progressbar hidden sm:block lg:block bg-blue-600
+                 lg:w-96 rounded-full h-2"
+                  />
+                {:else}
+                  <div
+                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
+                  />
+                {/if}
+                {#if userRender.order_status == "Shipped"}
+                  <div
+                    class="progressbar hidden sm:block lg:block bg-blue-600
+                 lg:w-11/12 rounded-full h-2"
+                  />
+                {:else}
+                  <div
+                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
+                  />
+                {/if}
+                {#if userRender.order_status == "Pending"}
+                  <div
+                    class="progressbar hidden sm:block lg:block bg-blue-600
+                 lg:w-4 rounded-full h-2"
+                  />
+                {:else}
+                  <div
+                    class="progressbar hidden sm:block bg-blue-600 lg:hidden rounded-full h-2"
+                  />
+                {/if}
                 <div
                   class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
                 />
                 <div
                   class="xname lg:flex lg:justify-between sm:flex sm:justify-between md:flex md:justify-between font-medium"
                 >
-                  <p class="my-7 mx-5">Order Received</p>
-                  <p class="my-7 mx-5">Processed</p>
-                  <p class="my-7 mx-5">Shipped</p>
-                  <p class="my-7 mx-5">Delivered</p>
+                  {#if userRender.order_status == "Received"}
+                    <p>Order Received</p>
+                  {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped"}
+                    <p>Order Received</p>
+                  {:else}
+                    <p>Null</p>
+                  {/if}
+                  {#if userRender.order_status == "Processed"}
+                    <p>Order Processed</p>
+                  {:else}
+                    <p>Processing Order</p>
+                  {/if}
+                  {#if userRender.order_status == "Shipped"}
+                    <p>Order Shipped</p>
+                  {:else}
+                    <p>Shipping Order</p>
+                  {/if}
+                  {#if userRender.order_status == "Delivered"}
+                    <p>Order Delivered</p>
+                  {:else}
+                    <p>Order In Delivery</p>
+                  {/if}
+                  <!-- <p class="my-5 mx-5">Processed</p>
+                  <p class="my-5 mx-5">Shipped</p>
+                  <p class="my-5 mx-5">Delivered</p> -->
                 </div>
               </div>
             </div>
@@ -329,23 +379,53 @@
                 >
                   <button
                     on:click={() => markOrder(sellerRender)}
-                    class="bg-gray-300 rounded-lg mt-10 h-10 px-2 text-gray-800"
+                    disabled={sellerRender.order_status == "Received" ||
+                      sellerRender.order_status == "Processed" ||
+                      sellerRender.order_status == "Shipped"}
+                    class=" rounded-lg mt-10 h-10 px-2 {sellerRender.order_status ==
+                      'Received' ||
+                    sellerRender.order_status == 'Processed' ||
+                    sellerRender.order_status == 'Shipped'
+                      ? 'bg-green-300 text-green-700'
+                      : 'bg-gray-300 text-gray-700'}"
                   >
-                    Order Received
+                    {sellerRender.order_status == "Received" ||
+                    sellerRender.order_status == "Processed" ||
+                    sellerRender.order_status == "Shipped"
+                      ? "Order Accepted"
+                      : "Accept Order"}
                   </button>
 
                   <button
                     on:click={() => markProc(sellerRender)}
-                    class="bg-gray-300 rounded-lg mt-10 h-10 px-2 text-gray-800"
+                    disabled={sellerRender.order_status == "Processed" ||
+                      sellerRender.order_status == "Received" ||
+                      sellerRender.order_status == "Shipped"}
+                    class="bg-gray-300 rounded-lg mt-10 h-10 px-2 text-gray-800 {sellerRender.order_status ==
+                      'Processed' ||
+                    sellerRender.order_status == 'Received' ||
+                    sellerRender.order_status == 'Shipped'
+                      ? 'bg-green-300 text-green-700'
+                      : 'bg-gray-300 text-gray-700'}"
                   >
-                    Mark As Processed
+                    {sellerRender.order_status == "Processed" ||
+                    sellerRender.order_status == "Shipped" ||
+                    sellerRender.order_status == "Received"
+                      ? "Order Processed"
+                      : "Process Order"}
                   </button>
 
                   <button
                     on:click={() => markShip(sellerRender)}
-                    class="bg-gray-300 rounded-lg mt-10 h-10 px-2 text-gray-800"
+                    disabled={sellerRender.order_status == "Shipped"}
+                    class="bg-gray-300 rounded-lg mt-10 h-10 px-2 text-gray-800 {sellerRender.order_status ==
+                    'Shipped'
+                      ? 'bg-green-300 text-green-700'
+                      : 'bg-gray-300 text-gray-700'}"
                   >
-                    Ship Order
+                    {sellerRender.order_status == "Shipped"
+                      ? "Order Shipped"
+                      : "Ship Order"}
                   </button>
                 </div>
               </div>
