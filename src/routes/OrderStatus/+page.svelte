@@ -123,6 +123,7 @@
     DataType();
 
     setTimeout(() => {
+      console.log(type);
       if (type == "User") {
         LoadUserOrder();
       } else if (type == "Seller") {
@@ -265,43 +266,82 @@
                     <!-- Your content goes here -->
                   </div>
                 {/if}
-                <div
+
+                <!-- 44 full -->
+
+                {#if userRender.order_status == "Received"}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-5 absolute bg-blue-600 rounded-full"
+                  />
+                {:else}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                  />
+                {/if}
+                {#if userRender.order_status == "Processed"}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-16 absolute bg-blue-600 rounded-full"
+                  />
+                {:else}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                  />
+                {/if}
+                {#if userRender.order_status == "Shipped"}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-32 absolute bg-blue-600 rounded-full"
+                  />
+                {:else}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                  />
+                {/if}
+                {#if userRender.order_status == "Delivered"}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
+                  />
+                {:else}
+                  <div
+                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                  />
+                {/if}
+                <!-- <div
                   class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
-                />
+                /> -->
                 <div
                   class="xname lg:flex lg:justify-between sm:flex sm:justify-between md:flex md:justify-between font-medium"
                 >
                   {#if userRender.order_status == "Received"}
-                    <p>Order Received</p>
+                    <p class="mt-7 ml-5">Order Received</p>
                   {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
-                    <p>Order Received</p>
+                    <p class="mt-7 ml-5">Order Received</p>
                   {:else if userRender.order_status == "Pending"}
-                    <p>Order Pending</p>
+                    <p class="mt-7 ml-5">Order Pending</p>
                   {:else}
-                    <p>Unconfirmed Order</p>
+                    <p class="mt-7 ml-5">Unconfirmed Order</p>
                   {/if}
                   {#if userRender.order_status == "Processed"}
-                    <p>Order Processed</p>
+                    <p class="mt-7 ml-5">Order Processed</p>
                   {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
-                    <p>Order Processed</p>
+                    <p class="mt-7 ml-5">Order Processed</p>
                   {:else if userRender.order_status == "Received"}
-                    <p>Order Processing</p>
+                    <p class="mt-7 ml-5">Order Processing</p>
                   {:else}
-                    <p>Unprocessed Order</p>
+                    <p class="mt-7 ml-5">Unprocessed Order</p>
                   {/if}
                   {#if userRender.order_status == "Shipped"}
-                    <p>Order Shipped</p>
+                    <p class="mt-7 ml-5">Order Shipped</p>
                   {:else if userRender.order_status == "Processed"}
-                    <p>Shiping Order</p>
+                    <p class="mt-7 ml-5">Shiping Order</p>
                   {:else}
-                    <p>Unshipped Order</p>
+                    <p class="mt-7 ml-5">Unshipped Order</p>
                   {/if}
                   {#if userRender.order_status == "Delivered"}
-                    <p>Order Delivered</p>
+                    <p class="mt-7 ml-5">Order Delivered</p>
                   {:else if userRender.order_status == "Shipped"}
-                    <p>Delivering Order</p>
+                    <p class="mt-7 ml-5">Delivering Order</p>
                   {:else}
-                    <p>Undelivered Order</p>
+                    <p class="mt-7 ml-5">Undelivered Order</p>
                   {/if}
                 </div>
               </div>

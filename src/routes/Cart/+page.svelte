@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import supabase from "../../lib";
   import { get } from "svelte/store";
+  import truck from "../../lib/category-icons/truck.png";
+  import empty from "../../lib/category-icons/cart-mt.png";
   import "../../lib/global.css";
 
   let addArr = [];
@@ -43,11 +45,18 @@
         .in("id", fetchArr);
 
       addArr = productData;
+      console.log(addArr);
       totalAmount = 0;
+
       for (const product of addArr) {
         if (countMap[product.id]) {
           totalAmount += product.product_price * countMap[product.id];
         }
+      }
+      if (totalAmount < 500 && addArr.length != 0) {
+        totalAmount = totalAmount + 50;
+      } else {
+        totalAmount = totalAmount;
       }
     } catch (error) {}
   }
@@ -114,6 +123,20 @@
             </div>
           </li>
         {/each}
+
+        {#if totalAmount == 0 && addArr.length == 0}
+          <li class="flex py-6 items-center">
+            <div class="h-40 w-auto flex-shrink-0 overflow-hidden rounded-md">
+              <img
+                src={empty}
+                alt=""
+                class="h-full w-full object-cover object-center"
+              />
+            </div>
+
+            <h1 class="ml-5 font-semibold">Your Cart Is Empty.</h1>
+          </li>
+        {:else}{/if}
       </ul>
     </div>
     <div
@@ -131,11 +154,19 @@
           Shipping and taxes calculated at checkout.
         </p>
         <div class="mt-6">
-          <a
-            href="/Checkout"
-            class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
-            >Checkout</a
-          >
+          {#if totalAmount == 0 && addArr.length == 0}
+            <a
+              href="/"
+              class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+              >Add Product
+            </a>
+          {:else}
+            <a
+              href="/Checkout"
+              class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+              >Checkout
+            </a>
+          {/if}
         </div>
         <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
           <p>

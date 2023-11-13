@@ -5,6 +5,7 @@
   import empty from "../../lib/category-icons/cart-mt.png";
   import "../../lib/global.css";
   import done from "../../lib/assets/done-round-svgrepo-com.svg";
+  import error from "../../lib/assets/error.svg";
 
   // src/routes/api/sendEmail.js
   // Your client-side code (e.g., in a Svelte component)
@@ -19,7 +20,7 @@
     product_price = [],
     product_img = [];
   let user_email;
-  let user_id, orderConfirmation, ocTemp;
+  let user_id, orderConfirmation, ocTemp, orderError;
 
   let removerState = false;
 
@@ -77,7 +78,7 @@
       } else {
         totalAmount = totalAmount;
       }
-      console.log(arrCount[0]);
+      console.log(arrCount);
     } catch (error) {}
   }
   onMount(() => {
@@ -133,11 +134,15 @@
       ocTemp = error;
       console.log(data, error);
     }
-    if (ocTemp == null) {
+    if (ocTemp == null && addArr.length != 0) {
       orderConfirmation = !orderConfirmation;
-
       setTimeout(() => {
         orderConfirmation = !orderConfirmation;
+      }, 5000);
+    } else if (addArr.length == 0) {
+      orderError = !orderError;
+      setTimeout(() => {
+        orderError = !orderError;
       }, 5000);
     } else {
       alert("Something Went Wrong");
@@ -158,7 +163,7 @@
               >
                 <img
                   src={con.product_image_d}
-                  alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                  alt=""
                   class="h-full w-full object-cover object-center"
                 />
               </div>
@@ -168,7 +173,7 @@
                     class="flex justify-between text-base font-medium text-gray-900"
                   >
                     <h3>
-                      <a href="#">{con.product_name}</a>
+                      <p>{con.product_name}</p>
                     </h3>
                     <p class="ml-4">{con.product_price}₹</p>
                   </div>
@@ -197,7 +202,7 @@
               >
                 <img
                   src={truck}
-                  alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                  alt=""
                   class="h-full w-full object-cover object-center"
                 />
               </div>
@@ -219,12 +224,10 @@
             </li>
           {:else if totalAmount == 0 && addArr.length == 0}
             <li class="flex py-6 items-center">
-              <div
-                class="h-40 w-auto flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
-              >
+              <div class="h-40 w-auto flex-shrink-0 overflow-hidden rounded-md">
                 <img
                   src={empty}
-                  alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                  alt=""
                   class="h-full w-full object-cover object-center"
                 />
               </div>
@@ -262,6 +265,7 @@
             id="reciever-email"
             class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
             type="text"
+            required
           />
         </div>
         <div class="formFlex flex justify-between">
@@ -274,10 +278,12 @@
               id="reciever-first"
               class="w-11/12 mr-5 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
+              minlength="3"
+              required
             />
           </div>
           <div class="inp flex-1">
-            <label class="ml-12" for="reciever-last"
+            <label class="ml-2 sm:ml-12 md:ml-12 lg:ml-12" for="reciever-last"
               >Recipient's Last Name</label
             >
             <br />
@@ -285,8 +291,10 @@
               bind:value={recLName}
               name="reciever-last"
               id="reciever-last"
-              class="w-11/12 ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              class="w-11/12 ml-2 sm:ml-12 md:ml-12 lg:ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
+              required
+              minlength="3"
             />
           </div>
         </div>
@@ -300,17 +308,23 @@
               id="address"
               class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
+              minlength="10"
+              required
             />
           </div>
           <div class="inp flex-1">
-            <label class="ml-12" for="city">City</label>
+            <label class="ml-2 sm:ml-12 md:ml-12 lg:ml-12" for="city"
+              >City</label
+            >
             <br />
             <input
               bind:value={recCity}
               name="city"
               id="city"
-              class="w-11/12 ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              class="w-11/12 ml-2 sm:ml-12 md:ml-12 lg:ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
+              required
+              minlength="2"
             />
           </div>
         </div>
@@ -324,17 +338,23 @@
               id="zip"
               class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="number"
+              minlength="3"
+              required
             />
           </div>
           <div class="inp flex-1">
-            <label class="ml-12" for="phone">Phone Number</label>
+            <label class="ml-2 sm:ml-12 md:ml-12 lg:ml-12" for="phone"
+              >Phone Number</label
+            >
             <br />
             <input
               bind:value={recPhone}
               name="phone"
               id="phone"
-              class="w-11/12 ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              class="w-11/12 ml-2 sm:ml-12 md:ml-12 lg:ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="tel"
+              minlength="6"
+              required
             />
           </div>
         </div>
@@ -354,7 +374,7 @@
   </div>
 
   <div
-    class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
+    class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
       ? 'opacity-100 translate-y-0'
       : 'opacity-0 translate-y-20'}"
   >
@@ -365,6 +385,21 @@
         View
         <a href="/OrderStatus" class="underline">Order Status</a>
         .
+      </p>
+    </div>
+  </div>
+  <div
+    class="checkMarkAnimation w-96 h-16 bg-red-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderError
+      ? 'opacity-100 translate-y-0'
+      : 'opacity-0 translate-y-20'}"
+  >
+    <img src={error} class="w-auto h-8 mx-5" alt="" />
+    <div>
+      <p class="font-semibold text-red-700">Nothing In Cart.</p>
+      <p class="font-medium text-red-700">
+        Add
+        <a href="/" class="underline">Products</a>
+        First.
       </p>
     </div>
   </div>
