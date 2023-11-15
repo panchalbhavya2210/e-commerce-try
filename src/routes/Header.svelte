@@ -263,18 +263,37 @@
           </a>
         </h2>
         <h2>
-          <a href="/Auth">
-            <button
-              on:click={() => (navShow = !navShow)}
-              type="button"
-              aria-current={$page.url.pathname === "/Auth" ? "page" : undefined}
-              class="{navShow
-                ? 'showButton'
-                : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
-            >
-              <span>Create Your Account</span>
-            </button>
-          </a>
+          {#if userType == null || userType == undefined}
+            <a href="/Auth">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Auth"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Create Your Account</span>
+              </button>
+            </a>
+          {:else}
+            <a href="/Auth" class="hidden">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Auth"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Create Your Account</span>
+              </button>
+            </a>
+          {/if}
         </h2>
       </div>
 
@@ -313,18 +332,37 @@
           {/if}
         </h2>
         <h2>
-          <a href="/Cart">
-            <button
-              on:click={() => (navShow = !navShow)}
-              type="button"
-              aria-current={$page.url.pathname === "/Cart" ? "page" : undefined}
-              class="{navShow
-                ? 'showButton'
-                : ''} aria buttonClass transition-all duration-500 delay-200 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+          {#if userType == "User"}
+            <a href="/Cart">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Cart"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} aria buttonClass transition-all duration-500 delay-200 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Your Cart</span>
+              </button></a
             >
-              <span>Your Cart</span>
-            </button></a
-          >
+          {:else}
+            <a href="/Cart" class="hidden">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Cart"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} aria buttonClass transition-all duration-500 delay-200 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Your Cart</span>
+              </button></a
+            >
+          {/if}
         </h2>
         <h2>
           <a href="/Profile">
@@ -338,6 +376,35 @@
               <span>Your Profile</span>
             </button></a
           >
+        </h2>
+        <h2>
+          {#if userType == null || userType == undefined}
+            <a href="/Login">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Login"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Login</span>
+              </button>
+            </a>
+          {:else}
+            <button
+              on:click={() => (navShow = !navShow)}
+              type="button"
+              aria-current={$page.url.pathname === "/Auth" ? "page" : undefined}
+              class="{navShow
+                ? 'showButton'
+                : ''} rounded-none aria buttonClass transition-all duration-500 delay-75 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+            >
+              <span>Sign Out</span>
+            </button>
+          {/if}
         </h2>
       </div>
     </div>
