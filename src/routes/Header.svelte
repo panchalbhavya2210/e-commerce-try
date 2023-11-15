@@ -280,20 +280,37 @@
 
       <div>
         <h2>
-          <a href="/ProductCreator">
-            <button
-              on:click={() => (navShow = !navShow)}
-              type="button"
-              aria-current={$page.url.pathname === "/ProductCreator"
-                ? "page"
-                : undefined}
-              class="{navShow
-                ? 'showButton'
-                : ''} aria buttonClass transition-all duration-500 delay-150 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+          {#if userType == "User"}
+            <a href="/Checkout">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Checkout"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} aria buttonClass transition-all duration-500 delay-150 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Checkout</span>
+              </button></a
             >
-              <span>List Your Product</span>
-            </button></a
-          >
+          {:else}
+            <a href="/ProductCreator">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/ProductCreator"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} aria buttonClass transition-all duration-500 delay-150 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>List Your Product</span>
+              </button></a
+            >
+          {/if}
         </h2>
         <h2>
           <a href="/Cart">
