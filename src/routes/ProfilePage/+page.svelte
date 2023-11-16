@@ -97,6 +97,13 @@
 
     console.log(data);
   }
+
+  async function deleteProduct(productRender) {
+    const { error } = await supabase
+      .from("ProductData")
+      .delete()
+      .eq("id", productRender.id);
+  }
 </script>
 
 <main>
@@ -251,6 +258,7 @@
                     <img src={edit} class="w-auto h-6" alt="" /></button
                   >
                   <button
+                    on:click={() => deleteProduct(productRender)}
                     class="w-full p-3 bg-gray-300 m-1 rounded-md flex justify-center items-center lg:absolute lg:right-10 lg:w-20 sm:absolute sm:right-10 sm:w-20 md:absolute md:right-10 md:w-20"
                   >
                     <img src={delet} class="w-auto h-6" alt="" /></button
