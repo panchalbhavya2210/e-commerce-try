@@ -247,6 +247,9 @@
                 <p class="sm:mx-5 md:mx-5 lg:mx-5 mx-3 my-1 font-semibold w-20">
                   {productRender.product_price}₹
                 </p>
+                <p class="sm:mx-5 md:mx-5 lg:mx-5 mx-3 my-1 font-medium w-20">
+                  Qty {productRender.product_qty}
+                </p>
               </div>
 
               <div class="buttonContainer">

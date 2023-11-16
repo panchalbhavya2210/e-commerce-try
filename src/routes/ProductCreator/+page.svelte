@@ -11,6 +11,7 @@
     productPrice,
     fileName,
     file,
+    productQty,
     loaderState,
     successState,
     errorState,
@@ -50,6 +51,7 @@
         product_image_d: imageArray[0].publicUrl,
         product_image: imageArray,
         product_price: productPrice,
+        product_qty: productQty,
         seller_id: authId,
       };
 
@@ -184,6 +186,21 @@
             <input
               type="number"
               bind:value={productPrice}
+              required
+              class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+            />
+          </div>
+          <div class="flex items-center justify-between mt-4">
+            <label
+              for=""
+              class="block text-sm font-medium leading-6 text-gray-900"
+              >Product Quantity</label
+            >
+          </div>
+          <div class="mt-1">
+            <input
+              type="number"
+              bind:value={productQty}
               required
               class="font-medium p-1 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
             />
