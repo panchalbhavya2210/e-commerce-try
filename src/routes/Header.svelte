@@ -111,11 +111,19 @@
               >
             {/if}
 
-            <a
-              href="/Cart"
-              class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >Cart</a
-            >
+            {#if userType == "User"}
+              <a
+                href="/Cart"
+                class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Cart</a
+              >
+            {:else}
+              <a
+                href="/Cart"
+                class="hidden text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Cart</a
+              >
+            {/if}
 
             {#if userType == "User"}
               <a

@@ -85,6 +85,7 @@
     productQty = productRender.product_qty;
   }
   async function uploadProduct(productRender) {
+    loaderState = !loaderState;
     const { data, error } = await supabase
       .from("ProductData")
       .update({
@@ -95,6 +96,20 @@
       })
       .eq("id", prdId);
 
+    if (error == null) {
+      loaderState = !loaderState;
+      successState = !successState;
+
+      setTimeout(() => {
+        successState = !successState;
+      }, 5000);
+    } else {
+      errorState = !errorState;
+      setTimeout(() => {
+        errorState = !errorState;
+      }, 5000);
+    }
+
     console.log(data);
   }
 
@@ -103,6 +118,19 @@
       .from("ProductData")
       .delete()
       .eq("id", productRender.id);
+
+    if (error == null) {
+      successState = !successState;
+
+      setTimeout(() => {
+        successState = !successState;
+      }, 5000);
+    } else {
+      errorState = !errorState;
+      setTimeout(() => {
+        errorState = !errorState;
+      }, 5000);
+    }
   }
 </script>
 
@@ -278,8 +306,8 @@
 
 <div
   class="mt-0 fixed {hiddenState
-    ? 'flex'
-    : 'hidden'} justify-center items-center bg-white w-full top-0 sm:mx-auto sm:w-full sm:max-w-sm"
+    ? 'scale-100 opacity-100'
+    : 'scale-0 opacity-100'} transition-all justify-center items-center bg-white p-10 shadow-xl w-full top-0 sm:mx-auto sm:w-full sm:max-w-sm"
 >
   <form class="space-y-6">
     <div>
@@ -374,51 +402,50 @@
       >
     </div>
   </form>
-
-  <div
-    class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md w-96 max-w-sm fixed bottom-5 transition-all duration-300 {successState
-      ? 'translate-y-0 opacity-100'
-      : 'translate-y-24 opacity-0'}"
-    role="alert"
-  >
-    <div class="flex">
-      <div class="py-1">
-        <svg
-          class="fill-current h-6 w-6 text-teal-500 mr-4"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          ><path
-            d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
-          /></svg
-        >
-      </div>
-      <div>
-        <p class="font-bold">Success.</p>
-        <p class="text-sm break-all">Product updated.</p>
-      </div>
+</div>
+<div
+  class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md w-96 max-w-sm fixed bottom-5 transition-all duration-300 {successState
+    ? 'translate-y-0 opacity-100'
+    : 'translate-y-24 opacity-0'}"
+  role="alert"
+>
+  <div class="flex">
+    <div class="py-1">
+      <svg
+        class="fill-current h-6 w-6 text-teal-500 mr-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        ><path
+          d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+        /></svg
+      >
+    </div>
+    <div>
+      <p class="font-bold">Success.</p>
+      <p class="text-sm break-all">Product updated.</p>
     </div>
   </div>
-  <div
-    class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md max-w-sm w-96 fixed bottom-5 transition-all duration-300 {errorState
-      ? 'translate-y-0 opacity-100'
-      : 'translate-y-24 opacity-0'}"
-    role="alert"
-  >
-    <div class="flex">
-      <div class="py-1">
-        <svg
-          class="fill-current h-6 w-6 text-red-500 mr-4"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          ><path
-            d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
-          /></svg
-        >
-      </div>
-      <div>
-        <p class="font-bold">{errName}</p>
-        <p class="text-sm break-all">{errBody}</p>
-      </div>
+</div>
+<div
+  class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md max-w-sm w-96 fixed bottom-5 transition-all duration-300 {errorState
+    ? 'translate-y-0 opacity-100'
+    : 'translate-y-24 opacity-0'}"
+  role="alert"
+>
+  <div class="flex">
+    <div class="py-1">
+      <svg
+        class="fill-current h-6 w-6 text-red-500 mr-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        ><path
+          d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+        /></svg
+      >
+    </div>
+    <div>
+      <p class="font-bold">{errName}</p>
+      <p class="text-sm break-all">{errBody}</p>
     </div>
   </div>
 </div>
