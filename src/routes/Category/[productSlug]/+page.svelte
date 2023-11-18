@@ -1,6 +1,7 @@
 <script>
   import supabase from "../../../lib";
   import "../../../lib/global.css";
+  import done from "../../../lib/assets/done-round-svgrepo-com.svg";
   import { fade, fly } from "svelte/transition";
 
   /**
@@ -11,10 +12,7 @@
   let product = data;
   let prd = product.product;
   //obj to array
-  let prdCategory;
-  console.log(data);
-
-  console.log();
+  let prdCategory, orderConfirmation;
 
   if (data.product.length != 0) {
     prdCategory = prd[0].product_category;
@@ -41,6 +39,14 @@
         const { data, error } = await supabase
           .from("CartData")
           .insert(cartDataToInsert);
+
+        if (error == null) {
+          orderConfirmation = !orderConfirmation;
+
+          setTimeout(() => {
+            orderConfirmation = !orderConfirmation;
+          }, 3000);
+        }
       }
       road();
     });
@@ -144,6 +150,22 @@
           </div>
         </div>
       {/each}
+    </div>
+
+    <div
+      class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
+        ? 'opacity-100 translate-y-0'
+        : 'opacity-0 translate-y-20'}"
+    >
+      <img src={done} class="w-auto h-8 mx-5" alt="" />
+      <div>
+        <p class="font-semibold text-green-700">Order Added To Cart.</p>
+        <p class="font-medium text-green-700">
+          View
+          <a href="/Cart" class="underline">Cart</a>
+          .
+        </p>
+      </div>
     </div>
   </div>
 </main>

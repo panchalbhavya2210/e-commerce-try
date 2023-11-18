@@ -5,6 +5,10 @@
 
   let navMobileState, profileView, dropdown;
 
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+  }
+
   let img;
   let accordionMenu, navShow;
   let userType,
@@ -322,7 +326,7 @@
                 <span>Checkout</span>
               </button></a
             >
-          {:else}
+          {:else if userType == "Seller"}
             <a href="/ProductCreator">
               <button
                 on:click={() => (navShow = !navShow)}
@@ -355,6 +359,20 @@
                 <span>Your Cart</span>
               </button></a
             >
+            <a href="/OrderStatus">
+              <button
+                on:click={() => (navShow = !navShow)}
+                type="button"
+                aria-current={$page.url.pathname === "/Cart"
+                  ? "page"
+                  : undefined}
+                class="{navShow
+                  ? 'showButton'
+                  : ''} aria buttonClass transition-all duration-500 delay-200 flex items-center justify-between w-full p-5 font-medium text-left text-black border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200"
+              >
+                <span>Your Order</span>
+              </button></a
+            >
           {:else}
             <a href="/Cart" class="hidden">
               <button
@@ -373,7 +391,7 @@
           {/if}
         </h2>
         <h2>
-          <a href="/Profile">
+          <a href="/ProfilePage">
             <button
               on:click={() => (navShow = !navShow)}
               type="button"
@@ -403,7 +421,7 @@
             </a>
           {:else}
             <button
-              on:click={() => (navShow = !navShow)}
+              on:click={signOut}
               type="button"
               aria-current={$page.url.pathname === "/Auth" ? "page" : undefined}
               class="{navShow

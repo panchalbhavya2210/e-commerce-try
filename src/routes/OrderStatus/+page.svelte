@@ -1,13 +1,14 @@
 <script>
   // Importing the `onMount` function from the Svelte framework to perform actions when the component is mounted.
   import { onMount } from "svelte";
+  import done from "../../lib/assets/done-round-svgrepo-com.svg";
 
   // Importing the Supabase client and global styles.
   import supabase from "../../lib/index";
   import "../../lib/global.css";
 
   // Declaring variables to store user ID and an array for rendering user orders.
-  let user_id;
+  let user_id, orderConfirmation;
   let renderUserArr = [];
   let renderSellerArr = [];
   let type;
@@ -118,6 +119,7 @@
       })
       .eq("id", sellerRender.id);
   }
+
   // Using the `onMount` function to call the `LoadUserOrder` function when the component is mounted.
   onMount(() => {
     DataType();
@@ -145,6 +147,9 @@
             <div>
               <h2 class="font-semibold text-gray-700">
                 #Order {userRender.order_id}
+                {#if userRender.order_status == "Shipped"}
+                  | #OTP {userRender.customer_otp}
+                {/if}
               </h2>
             </div>
           </div>
@@ -166,7 +171,9 @@
                     <p class="font-medium my-1 text-gray-700">
                       {userRender.product_price}₹
                     </p>
-                    <p class="truncate sm:whitespace-normal sm:w-56">
+                    <p
+                      class="truncate sm:whitespace-normal sm:w-56 lg:truncate md:truncate sm:truncate"
+                    >
                       {userRender.product_desc}
                     </p>
                   </div>
@@ -216,56 +223,41 @@
               <div class="progress mt-10">
                 {#if userRender.order_status == "Received"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-20 rounded-full h-2 transition-width duration-1000"
+                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-20 md:w-20 lg:w-20 rounded-full h-2 transition-width duration-1000"
                   >
                     <!-- Your content goes here -->
                   </div>
                 {:else}
-                  <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
+                  <!-- Your content goes here -->
                 {/if}
                 {#if userRender.order_status == "Processed"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-96 rounded-full h-2 transition-width duration-1000"
+                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-96 md:w-96 lg:w-96 rounded-full h-2 transition-width duration-1000"
                   >
                     <!-- Your content goes here -->
                   </div>
-                {:else}
-                  <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {/if}
+                {:else}{/if}
                 {#if userRender.order_status == "Shipped"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-4/5 rounded-full h-2 transition-all duration-1000"
+                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-4/5 md:w-4/5 lg:w-4/5 rounded-full h-2 transition-all duration-1000"
                   >
                     <!-- Your content goes here -->
                   </div>
-                {:else}
+                {:else}{/if}
+                {#if userRender.order_status == "Delivered"}
                   <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
+                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-full md:w-full lg:w-full rounded-full h-2 transition-width duration-1000"
                   >
                     <!-- Your content goes here -->
                   </div>
-                {/if}
+                {:else}{/if}
                 {#if userRender.order_status == "Pending"}
                   <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 lg:w-5 rounded-full h-2 transition-width duration-1000"
+                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-5 md:w-5 lg:w-5 rounded-full h-2 transition-width duration-1000"
                   >
                     <!-- Your content goes here -->
                   </div>
-                {:else}
-                  <div
-                    class="progressbar hidden sm:block bg-blue-600 lg:w-0 lg:opacity-0 rounded-full h-2"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {/if}
+                {:else}{/if}
 
                 <!-- 44 full -->
 
@@ -483,7 +475,7 @@
                       : 'bg-gray-300 text-gray-700'}"
                   >
                     {sellerRender.order_status == "Shipped"
-                      ? "Order Shipped"
+                      ? "Order Shipped (In Delivery)"
                       : "Ship Order"}
                   </button>
                 </div>
@@ -494,6 +486,22 @@
       {/each}
     </div>
   {/if}
+
+  <div
+    class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
+      ? 'opacity-100 translate-y-0'
+      : 'opacity-0 translate-y-20'}"
+  >
+    <img src={done} class="w-auto h-8 mx-5" alt="" />
+    <div>
+      <p class="font-semibold text-green-700">Thanks! Order Placed.</p>
+      <p class="font-medium text-green-700">
+        View
+        <a href="/OrderStatus" class="underline">Order Status</a>
+        .
+      </p>
+    </div>
+  </div>
 </main>
 
 <style>

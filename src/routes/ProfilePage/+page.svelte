@@ -193,7 +193,9 @@
   {#if productArr.length == 0}
     <div
       role="status"
-      class="w-full space-y-4 p-10 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 dark:border-gray-700"
+      class="w-full {userType == 'User'
+        ? 'hidden'
+        : 'block'} space-y-4 p-10 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 dark:border-gray-700"
     >
       <div class="flex items-center justify-between">
         <div>
