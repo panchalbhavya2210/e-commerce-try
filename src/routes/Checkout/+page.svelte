@@ -51,6 +51,7 @@
         if (countMap[key] > 1) {
         }
       }
+      console.log(countMap);
 
       const { data: productData } = await supabase
         .from("ProductData")
@@ -58,6 +59,7 @@
         .in("id", fetchArr);
 
       addArr = productData;
+      console.log(addArr);
 
       for (let i = 0; i < addArr.length; i++) {
         product_name.push(productData[i].product_name);
@@ -120,7 +122,10 @@
         product_price: product_price[i],
         order_status: "Pending",
         customer_otp: otp,
+        ordered_qty: arrCount[prdId[i]],
+        invoice_amt: totalAmount,
       };
+      console.log(orderDataToInsert);
       const { data, error } = await supabase
         .from("order_table")
         .insert(orderDataToInsert);

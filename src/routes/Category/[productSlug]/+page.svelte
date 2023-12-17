@@ -9,6 +9,7 @@
    */
 
   export let data = [];
+  console.log(data);
   let product = data;
   let prd = product.product;
   //obj to array
@@ -21,6 +22,7 @@
   }
 
   let array = [];
+  let qtyValue;
   let prd_qt = [];
 
   async function addCart(prd) {
@@ -33,22 +35,38 @@
       let cartDataToInsert = {
         auth_id: authId,
         product_id: prd.id,
-        product_qty: 1,
+        product_qty: qtyValue,
       };
-      async function road() {
-        const { data, error } = await supabase
-          .from("CartData")
-          .insert(cartDataToInsert);
+      if (qtyValue <= 0 || qtyValue == undefined || qtyValue == null) {
+        console.log("add qty first");
+      } else if (qtyValue > prd.product_qty) {
+        console.log("ORder Quantity Cannot be greater than stock Quantity");
+      } else {
+        async function road() {
+          const { data, error } = await supabase
+            .from("CartData")
+            .insert(cartDataToInsert);
 
-        if (error == null) {
-          orderConfirmation = !orderConfirmation;
+          const { data: prod, er } = await supabase
+            .from("ProductData")
+            .update({
+              product_qty: prd.product_qty - qtyValue,
+            })
+            .eq("id", prd.id);
+          console.log(prod, er);
 
-          setTimeout(() => {
+          if (error == null) {
             orderConfirmation = !orderConfirmation;
-          }, 3000);
+
+            setTimeout(() => {
+              orderConfirmation = !orderConfirmation;
+            }, 3000);
+          }
+        }
+        for (let index = 0; index < qtyValue; index++) {
+          road();
         }
       }
-      road();
     });
   }
 </script>
@@ -116,7 +134,7 @@
               src={product.product_image_d}
               alt=""
               srcset=""
-              class="rounded-md group-hover:scale-105 transition-all h-full w-full"
+              class="rounded-md transition-all h-full w-full"
             />
             <p class="font-medium text-lg break-words mt-2 m-1">
               {product.product_name}
@@ -124,6 +142,19 @@
             <p class="break-words m-1">
               {product.product_description}
             </p>
+            <p class="break-words m-1">
+              Available Qty : {product.product_qty}
+            </p>
+            <div class="orderQty">
+              <input
+                type="number"
+                placeholder="Qty"
+                class="border border-black p-1 w-16 rounded-md"
+                bind:value={qtyValue}
+                min="0"
+                max={product.product_qty}
+              />
+            </div>
             <div class="flex justify-between">
               <p class="font-medium m-1">{product.product_price}₹</p>
               <button

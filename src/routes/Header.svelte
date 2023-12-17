@@ -11,8 +11,7 @@
 
   let img;
   let accordionMenu, navShow;
-  let userType,
-    rowDataif = 1;
+  let userType, rowDataif;
   async function getUidData() {
     let supabaseAuthId = await supabase.auth.getUser().then((response) => {
       let authId = response.data.user.id;
@@ -55,7 +54,6 @@
   <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-        <!-- Mobile menu button-->
         <button
           type="button"
           class="rotate-180 relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -100,12 +98,16 @@
               class=" rounded-md px-3 py-2 text-sm font-medium"
               aria-current="page">Home</a
             >
-            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-            {#if rowDataif == 0}
+            {#if userType == undefined}
               <a
                 href="/Auth"
                 class=" rounded-md px-3 py-2 text-sm font-medium"
                 aria-current="page">Sign Up</a
+              >
+              <a
+                href="/Login"
+                class=" rounded-md px-3 py-2 text-sm font-medium"
+                aria-current="page">Login</a
               >
             {:else}
               <a
@@ -121,6 +123,8 @@
                 class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Cart</a
               >
+            {:else if userType == ""}
+              <!--  -->
             {:else}
               <a
                 href="/Cart"
@@ -135,6 +139,13 @@
                 class="text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
                 >Checkout</a
               >
+            {:else if userType == undefined}
+              <a
+                href="/Checkout"
+                class="hidden text-black hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                >Checkout</a
+              >
+              <!--  -->
             {:else}
               <a
                 href="/ProductCreator"

@@ -11,7 +11,7 @@
   let user_id, orderConfirmation;
   let renderUserArr = [];
   let renderSellerArr = [];
-  let type;
+  let type = "User";
 
   async function DataType() {
     const response = await supabase.auth.getUser();
@@ -131,6 +131,7 @@
       } else if (type == "Seller") {
         LoadSellerOrder();
       } else {
+        console.log("notype");
         null;
       }
     }, 1000);
