@@ -326,6 +326,8 @@
                     <p class="mt-7 ml-5">Order Shipped</p>
                   {:else if userRender.order_status == "Processed"}
                     <p class="mt-7 ml-5">Shiping Order</p>
+                  {:else if userRender.order_status == "Delivered"}
+                    <p class="mt-7 ml-5">Order Shipped</p>
                   {:else}
                     <p class="mt-7 ml-5">Unshipped Order</p>
                   {/if}
