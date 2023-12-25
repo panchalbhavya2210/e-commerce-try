@@ -14,18 +14,6 @@
 
   async function signIn() {
     progressLogin = !progressLogin;
-    // const login = await supabase.auth
-    //   .signInWithPassword({
-    //     email: emailVal,
-    //     password: password,
-    //   })
-    //   .then((response) => {
-    //     progressLogin = !progressLogin;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.response);
-    //   });
-
     const { data, error } = await supabase.auth.signInWithPassword({
       email: emailVal,
       password: password,

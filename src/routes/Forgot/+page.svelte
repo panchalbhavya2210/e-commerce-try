@@ -95,8 +95,10 @@
           >
         </div>
         <div>
-          <p class="font-bold">Our privacy policy has changed</p>
-          <p class="text-sm break-all">Make sure you know how</p>
+          <p class="font-bold">An Email Has Been Sent.</p>
+          <p class="text-sm break-all">
+            Click On A Link To Login & Change Password.
+          </p>
         </div>
       </div>
     </div>

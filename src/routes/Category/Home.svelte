@@ -24,39 +24,40 @@
   let userType,
     rowDataif = 1;
   async function getUidData() {
-    let supabaseAuthId = await supabase.auth.getUser().then((response) => {
-      let authId = response.data.user.id;
-      console.log(authId);
-      async function getData() {
-        const { data, error } = await supabase
-          .from("user_auth_data")
-          .select("*")
-          .eq("auth_uid", authId);
-        const { data: seller, error: serror } = await supabase
-          .from("seller_auth_data")
-          .select("*")
-          .eq("auth_uid", authId);
+    let supabaseAuthId = await supabase.auth
+      .getUser()
+      .then((response) => {
+        let authId = response.data.user.id;
+        async function getData() {
+          const { data, error } = await supabase
+            .from("user_auth_data")
+            .select("*")
+            .eq("auth_uid", authId);
+          const { data: seller, error: serror } = await supabase
+            .from("seller_auth_data")
+            .select("*")
+            .eq("auth_uid", authId);
 
-        if (data && data.length > 0) {
-          const rowData = data[0];
-          userType = rowData.user_type;
-        } else if (seller && seller.length > 0) {
-          const rowData = seller[0];
-          console.log(rowData);
-          userType = rowData.user_type;
-        } else {
-          rowDataif = 0;
+          if (data && data.length > 0) {
+            const rowData = data[0];
+            userType = rowData.user_type;
+          } else if (seller && seller.length > 0) {
+            const rowData = seller[0];
+            userType = rowData.user_type;
+          } else {
+            rowDataif = 0;
+          }
         }
-      }
-      getData();
-    });
+        getData();
+      })
+      .catch((error) => {
+        if (error.message == "Cannot read properties of null (reading 'id')") {
+          console.log("User Not Logged In");
+        }
+      });
   }
   onMount(() => {
     getUidData();
-
-    setTimeout(() => {
-      console.log(userType);
-    }, 1500);
   });
 </script>
 
