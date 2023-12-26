@@ -9,6 +9,7 @@
    */
 
   export let data = [];
+  let ratData = [];
   console.log(data);
   let product = data;
   let prd = product.product;
@@ -21,65 +22,7 @@
   } else {
     console.log("it is what it is");
   }
-  // Assuming you have an array of individual ratings
-  const ratings = [
-    4, 5, 3, 2, 4, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5,
-    5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-  ];
-
-  // Calculate the average rating
-  const averageRating =
-    ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
-
-  // Round the average rating to the nearest half-star
-  const roundedRating = Math.min(Math.round(averageRating * 2) / 2, 5);
-
-  // Display the rounded rating
-
-  const ratingCounts = {
-    "1star": 0,
-    "2star": 0,
-    "3star": 0,
-    "4star": 0,
-    "5star": 0,
-  };
-
-  ratings.forEach((rating) => {
-    switch (rating) {
-      case 1:
-        ratingCounts["1star"] += 1;
-        break;
-      case 2:
-        ratingCounts["2star"] += 1;
-        break;
-      case 3:
-        ratingCounts["3star"] += 1;
-        break;
-      case 4:
-        ratingCounts["4star"] += 1;
-        break;
-      case 5:
-        ratingCounts["5star"] += 1;
-        break;
-      default:
-        // Handle invalid ratings if needed
-        break;
-    }
-  });
-
-  const totalRatings = ratings.length;
-  const ratingPercentages = {};
-
-  for (const key in ratingCounts) {
-    ratingPercentages[key] = (ratingCounts[key] / totalRatings) * 100;
-  }
-  console.log(ratingPercentages);
-  console.log(roundedRating);
-  console.log(ratingCounts);
+  let ratings = [];
 
   let array = [];
   let qtyValue;
@@ -111,7 +54,59 @@
       .from("review_table")
       .select("*")
       .eq("prd_id", prdId);
-    console.log(data);
+
+    ratData = data;
+    for (let i = 0; i < ratData.length; i++) {
+      ratings.push(ratData[i].review_stars);
+      console.log(ratings);
+    }
+    setTimeout(() => {
+      CalculateRating();
+    }, 3000);
+  }
+
+  function CalculateRating() {
+    const averageRating =
+      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    const roundedRating = Math.min(Math.round(averageRating * 2) / 2, 5);
+    const ratingCounts = {
+      "1star": 0,
+      "2star": 0,
+      "3star": 0,
+      "4star": 0,
+      "5star": 0,
+    };
+    ratings.forEach((rating) => {
+      switch (rating) {
+        case 1:
+          ratingCounts["1star"] += 1;
+          break;
+        case 2:
+          ratingCounts["2star"] += 1;
+          break;
+        case 3:
+          ratingCounts["3star"] += 1;
+          break;
+        case 4:
+          ratingCounts["4star"] += 1;
+          break;
+        case 5:
+          ratingCounts["5star"] += 1;
+          break;
+        default:
+          break;
+      }
+    });
+
+    const totalRatings = ratings.length;
+    const ratingPercentages = {};
+
+    for (const key in ratingCounts) {
+      ratingPercentages[key] = (ratingCounts[key] / totalRatings) * 100;
+    }
+    console.log(ratingPercentages);
+    console.log(roundedRating);
+    console.log(ratingCounts);
   }
   async function pushReview() {
     console.log(prdId);
@@ -591,6 +586,179 @@
               />
             </div>
             <button on:click={pushReview}>Submit Your Review</button>
+
+            <div class="reviewRender">
+              <div class="flex items-center mb-2">
+                <svg
+                  class="w-4 h-4 text-yellow-300 me-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path
+                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                  />
+                </svg>
+                <svg
+                  class="w-4 h-4 text-yellow-300 me-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path
+                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                  />
+                </svg>
+                <svg
+                  class="w-4 h-4 text-yellow-300 me-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path
+                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                  />
+                </svg>
+                <svg
+                  class="w-4 h-4 text-yellow-300 me-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path
+                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                  />
+                </svg>
+                <svg
+                  class="w-4 h-4 text-gray-300 me-1 dark:text-gray-500"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path
+                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                  />
+                </svg>
+                <p
+                  class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400"
+                >
+                  4.95
+                </p>
+                <p
+                  class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400"
+                >
+                  out of
+                </p>
+                <p
+                  class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400"
+                >
+                  5
+                </p>
+              </div>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                1,745 global ratings
+              </p>
+              <div class="flex items-center mt-4">
+                <a
+                  href="#"
+                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >5 star</a
+                >
+                <div
+                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
+                >
+                  <div
+                    class="h-5 bg-yellow-300 rounded"
+                    style="width: 70%"
+                  ></div>
+                </div>
+                <span
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  >70%</span
+                >
+              </div>
+              <div class="flex items-center mt-4">
+                <a
+                  href="#"
+                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >4 star</a
+                >
+                <div
+                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
+                >
+                  <div
+                    class="h-5 bg-yellow-300 rounded"
+                    style="width: 17%"
+                  ></div>
+                </div>
+                <span
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  >17%</span
+                >
+              </div>
+              <div class="flex items-center mt-4">
+                <a
+                  href="#"
+                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >3 star</a
+                >
+                <div
+                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
+                >
+                  <div
+                    class="h-5 bg-yellow-300 rounded"
+                    style="width: 8%"
+                  ></div>
+                </div>
+                <span
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  >8%</span
+                >
+              </div>
+              <div class="flex items-center mt-4">
+                <a
+                  href="#"
+                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >2 star</a
+                >
+                <div
+                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
+                >
+                  <div
+                    class="h-5 bg-yellow-300 rounded"
+                    style="width: 4%"
+                  ></div>
+                </div>
+                <span
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  >4%</span
+                >
+              </div>
+              <div class="flex items-center mt-4">
+                <a
+                  href="#"
+                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  >1 star</a
+                >
+                <div
+                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
+                >
+                  <div
+                    class="h-5 bg-yellow-300 rounded"
+                    style="width: 1%"
+                  ></div>
+                </div>
+                <span
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  >1%</span
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
