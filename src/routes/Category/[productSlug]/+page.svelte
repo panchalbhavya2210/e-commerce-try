@@ -6,6 +6,8 @@
 
   /**
    * * Now how to convert obj to arry
+   * todo : add the update function when user removes the product from thier cart the product qty gets updates
+   *
    */
 
   export let data = [];
@@ -54,28 +56,40 @@
       .from("review_table")
       .select("*")
       .eq("prd_id", prdId);
-
+    ratings = [];
     ratData = data;
     for (let i = 0; i < ratData.length; i++) {
       ratings.push(ratData[i].review_stars);
-      console.log(ratings);
     }
     setTimeout(() => {
       CalculateRating();
-    }, 3000);
+    }, 2000);
   }
 
+  let ratingPercentages = {};
+  let ratingCounts = {
+    "1star": 0,
+    "2star": 0,
+    "3star": 0,
+    "4star": 0,
+    "5star": 0,
+  };
+  let roundedRating;
   function CalculateRating() {
-    const averageRating =
-      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
-    const roundedRating = Math.min(Math.round(averageRating * 2) / 2, 5);
-    const ratingCounts = {
+    ratingPercentages = {};
+    ratingCounts = {
       "1star": 0,
       "2star": 0,
       "3star": 0,
       "4star": 0,
       "5star": 0,
     };
+    roundedRating;
+    console.log(ratings);
+    const averageRating =
+      ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+    roundedRating = Math.min(Math.round(averageRating * 2) / 2, 5);
+
     ratings.forEach((rating) => {
       switch (rating) {
         case 1:
@@ -99,15 +113,17 @@
     });
 
     const totalRatings = ratings.length;
-    const ratingPercentages = {};
 
     for (const key in ratingCounts) {
-      ratingPercentages[key] = (ratingCounts[key] / totalRatings) * 100;
+      ratingPercentages[key] = Math.floor(
+        (ratingCounts[key] / totalRatings) * 100
+      );
     }
     console.log(ratingPercentages);
     console.log(roundedRating);
     console.log(ratingCounts);
   }
+
   async function pushReview() {
     console.log(prdId);
     const reviewToInsert = {
@@ -287,7 +303,7 @@
       {/each}
     </div>
 
-    <section class="py-20 font-poppins dark:bg-gray-800">
+    <section class="py-20 font-poppins">
       <div class="max-w-6xl px-4 mx-auto">
         <div class="flex flex-wrap mb-24 -mx-4">
           <div class="w-full px-4 mb-8 md:w-1/2 md:mb-0">
@@ -302,7 +318,7 @@
                     width="16"
                     height="16"
                     fill="currentColor"
-                    class="w-5 h-5 text-blue-500 bi bi-chevron-left dark:text-blue-200"
+                    class="w-5 h-5 text-blue-500 bi bi-chevron-left"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -325,7 +341,7 @@
                     width="16"
                     height="16"
                     fill="currentColor"
-                    class="w-5 h-5 text-blue-500 bi bi-chevron-right dark:text-blue-200"
+                    class="w-5 h-5 text-blue-500 bi bi-chevron-right"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -351,9 +367,7 @@
                   </div>
                 {/each}
               </div>
-              <div
-                class="px-6 pb-6 mt-6 border-t border-gray-300 dark:border-gray-400"
-              >
+              <div class="px-6 pb-6 mt-6 border-t border-gray-300">
                 <div class="flex items-center justify-center mt-6">
                   <span class="mr-3">
                     <svg
@@ -361,7 +375,7 @@
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="w-5 h-5 text-blue-700 dark:text-gray-400 bi bi-chat-left-dots-fill"
+                      class="w-5 h-5 text-blue-700 bi bi-chat-left-dots-fill"
                       viewBox="0 0 16 16"
                     >
                       <path
@@ -370,15 +384,10 @@
                     </svg>
                   </span>
                   <div>
-                    <h2
-                      class="text-sm font-bold text-gray-700 lg:text-lg dark:text-gray-400"
-                    >
+                    <h2 class="text-sm font-bold text-gray-700 lg:text-lg">
                       Have question about buying an {prName}
                     </h2>
-                    <a
-                      class="text-xs text-blue-400 lg:text-sm dark:text-blue-200"
-                      href="#"
-                    >
+                    <a class="text-xs text-blue-400 lg:text-sm" href="#">
                       Chat with an {prName} specialist
                     </a>
                   </div>
@@ -389,13 +398,13 @@
           <div class="w-full px-4 md:w-1/2">
             <div class="lg:pl-20">
               <div class="mb-6">
-                <span class="text-red-500 dark:text-red-200">New</span>
+                <span class="text-red-500">New</span>
                 <h2
-                  class="max-w-xl mt-2 mb-4 text-5xl font-bold md:text-6xl font-heading dark:text-gray-300"
+                  class="max-w-xl mt-2 mb-4 text-5xl font-bold md:text-6xl font-heading"
                 >
                   Buy {prName}
                 </h2>
-                <p class="max-w-md mb-4 text-gray-500 dark:text-gray-400">
+                <p class="max-w-md mb-4 text-gray-500">
                   {prdDesc}
                 </p>
               </div>
@@ -408,7 +417,7 @@
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="w-4 h-4 text-gray-700 dark:text-gray-400 bi bi-truck"
+                      class="w-4 h-4 text-gray-700 bi bi-truck"
                       viewBox="0 0 16 16"
                     >
                       <path
@@ -416,18 +425,13 @@
                       ></path>
                     </svg>
                   </span>
-                  <h2
-                    class="text-lg font-bold text-gray-700 dark:text-gray-400"
-                  >
-                    Delivery
-                  </h2>
+                  <h2 class="text-lg font-bold text-gray-700">Delivery</h2>
                 </div>
                 <div class="px-7">
-                  <p class="mb-2 text-sm dark:text-gray-400">In Stock</p>
-                  <p class="mb-2 text-sm dark:text-gray-400">Free Shipping</p>
-                  <a
-                    class="mb-2 text-sm text-blue-400 dark:text-blue-200"
-                    href="#">Get delivery dates</a
+                  <p class="mb-2 text-sm">In Stock</p>
+                  <p class="mb-2 text-sm">Free Shipping</p>
+                  <a class="mb-2 text-sm text-blue-400" href="#"
+                    >Get delivery dates</a
                   >
                 </div>
               </div>
@@ -439,7 +443,7 @@
                       width="16"
                       height="16"
                       fill="currentColor"
-                      class="w-4 h-4 text-gray-700 dark:text-gray-400 bi bi-bag"
+                      class="w-4 h-4 text-gray-700 bi bi-bag"
                       viewBox="0 0 16 16"
                     >
                       <path
@@ -447,16 +451,11 @@
                       ></path>
                     </svg>
                   </span>
-                  <h2
-                    class="text-lg font-bold text-gray-700 dark:text-gray-400"
-                  >
-                    Pickup
-                  </h2>
+                  <h2 class="text-lg font-bold text-gray-700">Pickup</h2>
                 </div>
                 <div class="px-7">
-                  <a
-                    class="mb-2 text-sm text-blue-400 dark:text-blue-200"
-                    href="#">Check availability</a
+                  <a class="mb-2 text-sm text-blue-400" href="#"
+                    >Check availability</a
                   >
                 </div>
               </div>
@@ -469,12 +468,10 @@
               </div>
               <div class="flex items-center mt-6">
                 <div>
-                  <h2
-                    class="mb-2 text-lg font-bold text-gray-700 dark:text-gray-400"
-                  >
+                  <h2 class="mb-2 text-lg font-bold text-gray-700">
                     Still deciding?
                   </h2>
-                  <p class="mb-2 text-sm dark:text-gray-400">
+                  <p class="mb-2 text-sm">
                     Add this item to a list and easily come back to it later
                   </p>
                 </div>
@@ -485,7 +482,7 @@
                     width="16"
                     height="16"
                     fill="currentColor"
-                    class="w-6 h-6 text-blue-500 cursor-pointer hover:text-blue-600 dark:hover:text-blue-300 bi bi-bookmark dark:text-gray-400"
+                    class="w-6 h-6 text-blue-500 cursor-pointer hover:text-blue-600 bi bi-bookmark"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -494,269 +491,262 @@
                   </svg></span
                 >
               </div>
-            </div>
-          </div>
-          <div class="ratingPlatform">
-            <div class="yourReview">
-              <div class="flex">
-                <div class="flex items-center">
-                  <svg
-                    on:click={() => (userRating = 1)}
-                    class="w-4 h-4 {userRating >= 1
-                      ? 'text-yellow-500'
-                      : 'text-gray-600'} ms-1 transition-all duration-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
-                    on:click={() => (userRating = 2)}
-                    class="w-4 h-4 {userRating >= 2
-                      ? 'text-yellow-500'
-                      : 'text-gray-600'} ms-1 transition-all duration-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
-                    on:click={() => (userRating = 3)}
-                    class="w-4 h-4 {userRating >= 3
-                      ? 'text-yellow-500'
-                      : 'text-gray-600'} ms-1 transition-all duration-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
-                    on:click={() => (userRating = 4)}
-                    class="w-4 h-4 {userRating >= 4
-                      ? 'text-yellow-500'
-                      : 'text-gray-600'} ms-1 transition-all duration-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
-                    on:click={() => (userRating = 5)}
-                    class="w-4 h-4 ms-1 {userRating == 5
-                      ? 'text-yellow-500'
-                      : 'text-gray-600'} transition-all duration-500"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
+              <div class="ratingPlatform">
+                <div class="yourReview">
+                  <div>
+                    <h1 class="mb-2 text-xl font-bold text-gray-700">
+                      Add Your Review
+                    </h1>
+                  </div>
+                  <div class="flex">
+                    <div class="flex items-center mb-3">
+                      <svg
+                        on:click={() => (userRating = 1)}
+                        class="w-auto h-6 {userRating >= 1
+                          ? 'text-yellow-500'
+                          : 'text-gray-600'} ms-1 transition-all duration-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        on:click={() => (userRating = 2)}
+                        class="w-auto h-6 {userRating >= 2
+                          ? 'text-yellow-500'
+                          : 'text-gray-600'} ms-1 transition-all duration-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        on:click={() => (userRating = 3)}
+                        class="w-auto h-6 {userRating >= 3
+                          ? 'text-yellow-500'
+                          : 'text-gray-600'} ms-1 transition-all duration-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        on:click={() => (userRating = 4)}
+                        class="w-auto h-6 {userRating >= 4
+                          ? 'text-yellow-500'
+                          : 'text-gray-600'} ms-1 transition-all duration-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        on:click={() => (userRating = 5)}
+                        class="w-auto h-6 ms-1 {userRating == 5
+                          ? 'text-yellow-500'
+                          : 'text-gray-600'} transition-all duration-500"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <p class="ml-2">
+                        {#if userRating == 1}
+                          Poor
+                        {:else if userRating == 2}
+                          Fair
+                        {:else if userRating == 3}
+                          Good
+                        {:else if userRating == 4}
+                          Very Good
+                        {:else if userRating == 5}
+                          Excellent
+                        {/if}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="inpField">
-              <input
-                type="text"
-                placeholder="Enter Review Title"
-                bind:value={reviewTitle}
-              />
-              <input
-                type="text"
-                placeholder="Enter Review Summary"
-                bind:value={reviewSummary}
-              />
-            </div>
-            <button on:click={pushReview}>Submit Your Review</button>
+                <div class="inpField">
+                  <input
+                    type="text"
+                    placeholder="Enter Review Title"
+                    bind:value={reviewTitle}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter Review Summary"
+                    bind:value={reviewSummary}
+                  />
+                </div>
+                <button on:click={pushReview}>Submit Your Review</button>
 
-            <div class="reviewRender">
-              <div class="flex items-center mb-2">
-                <svg
-                  class="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path
-                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                  />
-                </svg>
-                <svg
-                  class="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path
-                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                  />
-                </svg>
-                <svg
-                  class="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path
-                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                  />
-                </svg>
-                <svg
-                  class="w-4 h-4 text-yellow-300 me-1"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path
-                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                  />
-                </svg>
-                <svg
-                  class="w-4 h-4 text-gray-300 me-1 dark:text-gray-500"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 22 20"
-                >
-                  <path
-                    d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                  />
-                </svg>
-                <p
-                  class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400"
-                >
-                  4.95
-                </p>
-                <p
-                  class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400"
-                >
-                  out of
-                </p>
-                <p
-                  class="ms-1 text-sm font-medium text-gray-500 dark:text-gray-400"
-                >
-                  5
-                </p>
-              </div>
-              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                1,745 global ratings
-              </p>
-              <div class="flex items-center mt-4">
-                <a
-                  href="#"
-                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >5 star</a
-                >
-                <div
-                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
-                >
-                  <div
-                    class="h-5 bg-yellow-300 rounded"
-                    style="width: 70%"
-                  ></div>
+                <div class="reviewRender">
+                  <div class="flex items-center mb-2">
+                    <svg
+                      class="w-4 h-4 text-yellow-300 me-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 text-yellow-300 me-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 text-yellow-300 me-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 text-yellow-300 me-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 text-gray-300 me-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <p class="ms-1 text-sm font-medium text-gray-500">
+                      {roundedRating}
+                    </p>
+                    <p class="ms-1 text-sm font-medium text-gray-500">out of</p>
+                    <p class="ms-1 text-sm font-medium text-gray-500">5</p>
+                  </div>
+                  <p class="text-sm font-medium text-gray-500">
+                    1,745 global ratings
+                  </p>
+                  <div class="flex items-center mt-4">
+                    <a
+                      href="#"
+                      class="text-sm font-medium text-blue-600 hover:underline"
+                      >5 star</a
+                    >
+                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                      <div
+                        class="h-5 bg-yellow-300 rounded"
+                        style="width: {ratingPercentages['5star']}%"
+                      ></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500"
+                      >{ratingPercentages["5star"]}%</span
+                    >
+                  </div>
+                  <div class="flex items-center mt-4">
+                    <a
+                      href="#"
+                      class="text-sm font-medium text-blue-600 hover:underline"
+                      >4 star</a
+                    >
+                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                      <div
+                        class="h-5 bg-yellow-300 rounded"
+                        style="width: {ratingPercentages['4star']}%"
+                      ></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500"
+                      >{ratingPercentages["4star"]}%</span
+                    >
+                  </div>
+                  <div class="flex items-center mt-4">
+                    <a
+                      href="#"
+                      class="text-sm font-medium text-blue-600 hover:underline"
+                      >3 star</a
+                    >
+                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                      <div
+                        class="h-5 bg-yellow-300 rounded"
+                        style="width: {ratingPercentages['3star']}%"
+                      ></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500"
+                      >{ratingPercentages["3star"]}%</span
+                    >
+                  </div>
+                  <div class="flex items-center mt-4">
+                    <a
+                      href="#"
+                      class="text-sm font-medium text-blue-600 hover:underline"
+                      >2 star</a
+                    >
+                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                      <div
+                        class="h-5 bg-yellow-300 rounded"
+                        style="width: {ratingPercentages['2star']}%"
+                      ></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500"
+                      >{ratingPercentages["2star"]}%</span
+                    >
+                  </div>
+                  <div class="flex items-center mt-4">
+                    <a
+                      href="#"
+                      class="text-sm font-medium text-blue-600 hover:underline"
+                      >1 star</a
+                    >
+                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                      <div
+                        class="h-5 bg-yellow-300 rounded transition-all duration-500"
+                        style="width: {ratingPercentages['1star']}%"
+                      ></div>
+                    </div>
+                    <span class="text-sm font-medium text-gray-500"
+                      >{ratingPercentages["1star"]}%</span
+                    >
+                  </div>
                 </div>
-                <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >70%</span
-                >
-              </div>
-              <div class="flex items-center mt-4">
-                <a
-                  href="#"
-                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >4 star</a
-                >
-                <div
-                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
-                >
-                  <div
-                    class="h-5 bg-yellow-300 rounded"
-                    style="width: 17%"
-                  ></div>
-                </div>
-                <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >17%</span
-                >
-              </div>
-              <div class="flex items-center mt-4">
-                <a
-                  href="#"
-                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >3 star</a
-                >
-                <div
-                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
-                >
-                  <div
-                    class="h-5 bg-yellow-300 rounded"
-                    style="width: 8%"
-                  ></div>
-                </div>
-                <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >8%</span
-                >
-              </div>
-              <div class="flex items-center mt-4">
-                <a
-                  href="#"
-                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >2 star</a
-                >
-                <div
-                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
-                >
-                  <div
-                    class="h-5 bg-yellow-300 rounded"
-                    style="width: 4%"
-                  ></div>
-                </div>
-                <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >4%</span
-                >
-              </div>
-              <div class="flex items-center mt-4">
-                <a
-                  href="#"
-                  class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                  >1 star</a
-                >
-                <div
-                  class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700"
-                >
-                  <div
-                    class="h-5 bg-yellow-300 rounded"
-                    style="width: 1%"
-                  ></div>
-                </div>
-                <span
-                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                  >1%</span
-                >
               </div>
             </div>
           </div>
