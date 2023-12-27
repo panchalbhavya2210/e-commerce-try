@@ -311,7 +311,7 @@
               <div class="relative mb-6 lg:mb-10">
                 <a
                   class="absolute left-0 transform lg:ml-2 top-1/2 translate-1/2"
-                  href="#"
+                  href="a.com"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -334,7 +334,7 @@
                 />
                 <a
                   class="absolute right-0 transform lg:mr-2 top-1/2 translate-1/2"
-                  href="#"
+                  href="a.com"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -356,7 +356,7 @@
                   <div class="w-1/2 p-2 sm:w-1/4">
                     <a
                       class="block border border-transparent hover:border-blue-400"
-                      href="#"
+                      href="a.com"
                     >
                       <img
                         class="object-cover w-full lg:h-32"
@@ -387,7 +387,7 @@
                     <h2 class="text-sm font-bold text-gray-700 lg:text-lg">
                       Have question about buying an {prName}
                     </h2>
-                    <a class="text-xs text-blue-400 lg:text-sm" href="#">
+                    <a class="text-xs text-blue-400 lg:text-sm" href="a">
                       Chat with an {prName} specialist
                     </a>
                   </div>
@@ -430,7 +430,7 @@
                 <div class="px-7">
                   <p class="mb-2 text-sm">In Stock</p>
                   <p class="mb-2 text-sm">Free Shipping</p>
-                  <a class="mb-2 text-sm text-blue-400" href="#"
+                  <a class="mb-2 text-sm text-blue-400" href="a"
                     >Get delivery dates</a
                   >
                 </div>
@@ -454,7 +454,7 @@
                   <h2 class="text-lg font-bold text-gray-700">Pickup</h2>
                 </div>
                 <div class="px-7">
-                  <a class="mb-2 text-sm text-blue-400" href="#"
+                  <a class="mb-2 text-sm text-blue-400" href="a"
                     >Check availability</a
                   >
                 </div>
@@ -668,7 +668,7 @@
                   </p>
                   <div class="flex items-center mt-4">
                     <a
-                      href="#"
+                      href="a"
                       class="text-sm font-medium text-blue-600 hover:underline"
                       >5 star</a
                     >
@@ -684,7 +684,7 @@
                   </div>
                   <div class="flex items-center mt-4">
                     <a
-                      href="#"
+                      href="a"
                       class="text-sm font-medium text-blue-600 hover:underline"
                       >4 star</a
                     >
@@ -700,7 +700,7 @@
                   </div>
                   <div class="flex items-center mt-4">
                     <a
-                      href="#"
+                      href="a"
                       class="text-sm font-medium text-blue-600 hover:underline"
                       >3 star</a
                     >
@@ -716,7 +716,7 @@
                   </div>
                   <div class="flex items-center mt-4">
                     <a
-                      href="#"
+                      href="a"
                       class="text-sm font-medium text-blue-600 hover:underline"
                       >2 star</a
                     >
@@ -732,7 +732,7 @@
                   </div>
                   <div class="flex items-center mt-4">
                     <a
-                      href="#"
+                      href="a"
                       class="text-sm font-medium text-blue-600 hover:underline"
                       >1 star</a
                     >

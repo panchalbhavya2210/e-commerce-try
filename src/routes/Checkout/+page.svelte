@@ -244,7 +244,7 @@
                     class="flex justify-between text-base font-medium text-gray-900"
                   >
                     <h3>
-                      <a href="#">Delivery Charges</a>
+                      <a href="a">Delivery Charges</a>
                     </h3>
                     <p class="ml-4">50₹</p>
                   </div>
@@ -396,7 +396,7 @@
         <div class="mt-6">
           <a
             on:click={order}
-            href="#"
+            href="a"
             class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
             >Checkout {totalAmount}₹</a
           >
