@@ -38,9 +38,12 @@
     prQty,
     sellerInfo,
     prdImages,
-    userRating = 1,
+    userRating,
     reviewTitle,
-    reviewSummary;
+    reviewSummary,
+    files,
+    fileName,
+    file;
   async function showProd(prdDaata) {
     imgData = prdDaata.product_image;
     prdImages = prdDaata.product_image_d;
@@ -125,21 +128,40 @@
   }
 
   async function pushReview() {
+    let imageArray = [];
+
+    if (files != undefined) {
+      for (let i = 0; i < files.length; i++) {
+        fileName = files[i].name;
+        file = files[i];
+
+        const { data, error } = await supabase.storage
+          .from("review_img")
+          .upload(`review_img/${fileName}`, file);
+
+        const { data: dataOne } = await supabase.storage
+          .from("review_img")
+          .getPublicUrl(`review_img/${fileName}`);
+        imageArray.push(dataOne);
+
+        console.log(dataOne);
+      }
+      const reviewToInsert = {
+        prd_id: prdId,
+        isVerified: "1",
+        review_title: reviewTitle,
+        review_desc: reviewSummary,
+        review_image: imageArray,
+        review_stars: userRating,
+        user_name: "1",
+        user_image: "1",
+      };
+      const { data, error } = await supabase
+        .from("review_table")
+        .insert(reviewToInsert);
+      console.log(data, error);
+    }
     console.log(prdId);
-    const reviewToInsert = {
-      prd_id: prdId,
-      isVerified: "1",
-      review_title: reviewTitle,
-      review_desc: reviewSummary,
-      review_image: "1",
-      review_stars: userRating,
-      user_name: "1",
-      user_image: "1",
-    };
-    const { data, error } = await supabase
-      .from("review_table")
-      .insert(reviewToInsert);
-    console.log(data, error);
   }
   function getLength(s) {
     console.log(s);
@@ -591,14 +613,28 @@
                     type="text"
                     placeholder="Enter Review Title"
                     bind:value={reviewTitle}
+                    class="w-full p-2 border my-1 font-semibold outline-none border-black"
                   />
-                  <input
+                  <br />
+                  <textarea
                     type="text"
                     placeholder="Enter Review Summary"
                     bind:value={reviewSummary}
+                    class="w-full p-2 border my-1 font-medium outline-none border-black"
+                  ></textarea>
+                  <br />
+                  <input
+                    bind:files
+                    type="file"
+                    multiple
+                    class="w-full border font-medium outline-none border-black"
+                    accept="image/jpeg, video/mp4, video/mkv, image/jpg, image/png, image/svg"
                   />
                 </div>
-                <button on:click={pushReview}>Submit Your Review</button>
+                <button
+                  class="w-full p-2 border mt-2 font-medium outline-none border-black bg-black text-white hover:bg-white hover:text-black transition-all duration-500"
+                  on:click={pushReview}>Submit Your Review</button
+                >
 
                 <div class="reviewRender">
                   <div class="flex items-center mb-2">
