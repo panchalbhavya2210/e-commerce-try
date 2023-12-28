@@ -4,7 +4,6 @@
   import supabase from "../lib/index";
 
   let navMobileState, profileView, dropdown;
-
   async function signOut() {
     const { error } = await supabase.auth.signOut();
   }
@@ -17,7 +16,6 @@
       .getUser()
       .then((response) => {
         let authId = response.data.user.id;
-        console.log(authId);
         async function getData() {
           const { data, error } = await supabase
             .from("user_auth_data")

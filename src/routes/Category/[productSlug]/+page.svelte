@@ -3,13 +3,13 @@
   import "../../../lib/global.css";
   import done from "../../../lib/assets/done-round-svgrepo-com.svg";
   import { fade, fly } from "svelte/transition";
+  import { onMount } from "svelte";
 
   /**
    * * Now how to convert obj to arry
    * todo : add the update function when user removes the product from thier cart the product qty gets updates
    *
    */
-
   export let data = [];
   let ratData = [];
   console.log(data);
@@ -129,6 +129,25 @@
     console.log(ratingCounts);
   }
 
+  async function dataC() {
+    const { data: picker, error: errorr } = await supabase.auth.getUser();
+    console.log(picker);
+    const uid = picker.user.id;
+
+    const { data: uData, error: er } = await supabase
+      .from("user_auth_data")
+      .select("user_name", "user_profile", "created_at", "user_email")
+      .eq("auth_uid", uid);
+    console.log(uData);
+
+    if (er) {
+      console.error("Supabase query error:", er);
+    }
+  }
+  onMount(() => {
+    dataC();
+  });
+
   async function pushReview() {
     let imageArray = [];
 
@@ -148,6 +167,7 @@
 
         console.log(dataOne);
       }
+
       const reviewToInsert = {
         prd_id: prdId,
         isVerified: "1",
