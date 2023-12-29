@@ -75,8 +75,11 @@
     files,
     fileName,
     file,
-    btnDecision;
+    btnDecision,
+    modalBring;
   async function showProd(prdDaata) {
+    modalBring = !modalBring;
+    source = prdDaata.product_image_d;
     imgData = prdDaata.product_image;
     prdImages = prdDaata.product_image_d;
     prdId = prdDaata.id;
@@ -274,6 +277,15 @@
   //     }
   //   });
   // }
+
+  let viewLength = 2,
+    source;
+  function loadMoreReview() {
+    viewLength = ratData.length;
+  }
+  function dynamicImgUrl(url) {
+    source = url;
+  }
 </script>
 
 <main transition:fly={{ y: 200 }}>
@@ -333,7 +345,12 @@
       class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
     >
       {#each prd as product}
-        <div class="rowOne cursor-pointer group transition-all">
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div
+          class="rowOne cursor-pointer group transition-all"
+          on:click={() => showProd(product)}
+        >
           <div class="heightOne h-11/12 shadow-lg p-3">
             <img
               src={product.product_image_d}
@@ -388,67 +405,30 @@
       {/each}
     </div>
 
-    <section class="py-20 font-poppins">
+    <section
+      class="py-20 font-poppins absolute {modalBring
+        ? 'block'
+        : 'hidden'} bg-white w-full transition-all duration-300"
+      on:click={() => (modalBring = !modalBring)}
+    >
       <div class="max-w-6xl px-4 mx-auto">
         <div class="flex flex-wrap mb-24 -mx-4">
           <div class="w-full px-4 mb-8 md:w-1/2 md:mb-0">
             <div class="sticky top-0 z-50 overflow-hidden">
               <div class="relative mb-6 lg:mb-10">
-                <a
-                  class="absolute left-0 transform lg:ml-2 top-1/2 translate-1/2"
-                  href="a.com"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="w-5 h-5 text-blue-500 bi bi-chevron-left"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
-                    ></path>
-                  </svg>
-                </a>
-                <img
-                  class="object-cover w-full lg:h-1/2"
-                  src={prdImages}
-                  alt=""
-                />
-                <a
-                  class="absolute right-0 transform lg:mr-2 top-1/2 translate-1/2"
-                  href="a.com"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="w-5 h-5 text-blue-500 bi bi-chevron-right"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                    ></path>
-                  </svg>
-                </a>
+                <img class="object-cover w-full lg:h-1/2" src={source} alt="" />
               </div>
               <div class="flex-wrap hidden -mx-2 md:flex">
                 {#each imgData as img}
                   <div class="w-1/2 p-2 sm:w-1/4">
-                    <a
-                      class="block border border-transparent hover:border-blue-400"
-                      href="a.com"
-                    >
-                      <img
-                        class="object-cover w-full lg:h-32"
-                        src={img.publicUrl}
-                        alt=""
-                      />
-                    </a>
+                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <img
+                      class="object-cover w-full lg:h-32 transition-all"
+                      src={img.publicUrl}
+                      alt=""
+                      on:click={dynamicImgUrl(img.publicUrl)}
+                    />
                   </div>
                 {/each}
               </div>
@@ -483,9 +463,8 @@
           <div class="w-full px-4 md:w-1/2">
             <div class="lg:pl-20">
               <div class="mb-6">
-                <span class="text-red-500">New</span>
                 <h2
-                  class="max-w-xl mt-2 mb-4 text-5xl font-bold md:text-6xl font-heading"
+                  class="max-w-xl mt-4 mb-4 text-5xl font-bold md:text-6xl font-heading"
                 >
                   Buy {prName}
                 </h2>
@@ -706,9 +685,11 @@
                 >
 
                 <div class="reviewRender">
-                  <div class="flex items-center mb-2">
+                  <div class="flex items-center mb-2 mt-2">
                     <svg
-                      class="w-4 h-4 text-yellow-300 me-1"
+                      class="w-4 h-4 {roundedRating >= 1
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'} me-1"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -719,7 +700,9 @@
                       />
                     </svg>
                     <svg
-                      class="w-4 h-4 text-yellow-300 me-1"
+                      class="w-4 h-4 {roundedRating >= 2
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'} me-1"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -730,7 +713,9 @@
                       />
                     </svg>
                     <svg
-                      class="w-4 h-4 text-yellow-300 me-1"
+                      class="w-4 h-4 {roundedRating >= 3
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'} me-1"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -741,7 +726,9 @@
                       />
                     </svg>
                     <svg
-                      class="w-4 h-4 text-yellow-300 me-1"
+                      class="w-4 h-4 {roundedRating >= 4
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'} me-1"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -752,7 +739,9 @@
                       />
                     </svg>
                     <svg
-                      class="w-4 h-4 text-gray-300 me-1"
+                      class="w-4 h-4 {roundedRating == 5
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'} me-1"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -854,7 +843,7 @@
                 </div>
               </div>
 
-              {#each ratData as rating}
+              {#each ratData.slice(0, viewLength) as rating}
                 <article>
                   <div class="flex items-center mb-4">
                     <img
@@ -945,9 +934,13 @@
                       {rating.review_title}
                     </h3>
                   </div>
-                  <div class="img">
+                  <div class="img flex overflow-x-scroll">
                     {#each rating.review_image as i}
-                      <img src={i.publicUrl} alt="" />
+                      <img
+                        src={i.publicUrl}
+                        alt=""
+                        class="w-auto h-24 mx-2 rounded-md shadow-md"
+                      />
                     {/each}
                     <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
                   </div>
@@ -964,6 +957,33 @@
                 </article>
                 <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
               {/each}
+              <button
+                class={viewLength == ratData.length ? "hidden" : "block"}
+                on:click={loadMoreReview}>Load More</button
+              >
+
+              <div
+                class="fixed w-full -bottom-20 left-0 h-20 flex justify-center items-center"
+              >
+                <button>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g><g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z"
+                        fill="#0F0F0F"
+                      ></path>
+                    </g></svg
+                  >
+                  <span class="opacity-0">hello</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
