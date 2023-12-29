@@ -25,7 +25,38 @@
     console.log("it is what it is");
   }
   let ratings = [];
+  let uimglink, uname, udate, uemail, formattedDate, auth_id;
+  async function dataC() {
+    let supabaseId = await supabase.auth
+      .getUser()
+      .then((response) => {
+        auth_id = response.data.user.id;
+        async function getData() {
+          const { data, error } = await supabase
+            .from("user_auth_data")
+            .select("*")
+            .eq("auth_uid", auth_id);
 
+          uimglink = data[0].user_profile;
+          uname = data[0].user_name;
+          udate = data[0].created_at;
+          const date = new Date(udate);
+
+          // Format the date as dd/mm/yyyy
+          formattedDate = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+          console.log(uimglink, uname, formattedDate);
+        }
+        getData();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  onMount(() => {
+    dataC();
+  });
   let array = [];
   let qtyValue;
   let prd_qt = [];
@@ -43,7 +74,8 @@
     reviewSummary,
     files,
     fileName,
-    file;
+    file,
+    btnDecision;
   async function showProd(prdDaata) {
     imgData = prdDaata.product_image;
     prdImages = prdDaata.product_image_d;
@@ -60,10 +92,22 @@
       .select("*")
       .eq("prd_id", prdId);
     ratings = [];
+    btnDecision;
 
     ratData = data;
+    if (ratData.length == 0) {
+      btnDecision = false;
+    }
     console.log(ratData);
     for (let i = 0; i < ratData.length; i++) {
+      let checkUserReview = ratData[i].u_id;
+      if (checkUserReview == auth_id) {
+        btnDecision = true;
+        console.log(btnDecision);
+      } else {
+        btnDecision = false;
+        console.log(btnDecision);
+      }
       ratings.push(ratData[i].review_stars);
     }
     setTimeout(() => {
@@ -129,24 +173,18 @@
     console.log(ratingCounts);
   }
 
-  async function dataC() {
-    const { data: picker, error: errorr } = await supabase.auth.getUser();
-    console.log(picker);
-    const uid = picker.user.id;
-
-    const { data: uData, error: er } = await supabase
-      .from("user_auth_data")
-      .select("user_name", "user_profile", "created_at", "user_email")
-      .eq("auth_uid", uid);
-    console.log(uData);
-
-    if (er) {
-      console.error("Supabase query error:", er);
-    }
-  }
-  onMount(() => {
-    dataC();
-  });
+  let date = new Date();
+  let month = date.getMonth() + 1;
+  let dateDecider =
+    date.getDate() +
+    "/" +
+    month +
+    "/" +
+    date.getFullYear() +
+    " " +
+    date.getHours() +
+    ":" +
+    date.getMinutes();
 
   async function pushReview() {
     let imageArray = [];
@@ -171,12 +209,15 @@
       const reviewToInsert = {
         prd_id: prdId,
         isVerified: "1",
+        u_id: auth_id,
         review_title: reviewTitle,
         review_desc: reviewSummary,
         review_image: imageArray,
         review_stars: userRating,
-        user_name: "1",
-        user_image: "1",
+        user_name: uname,
+        user_image: uimglink,
+        user_joined: formattedDate,
+        review_date_time: dateDecider,
       };
       const { data, error } = await supabase
         .from("review_table")
@@ -654,8 +695,14 @@
                   />
                 </div>
                 <button
-                  class="w-full p-2 border mt-2 font-medium outline-none border-black bg-black text-white hover:bg-white hover:text-black transition-all duration-500"
-                  on:click={pushReview}>Submit Your Review</button
+                  class="w-full p-2 border mt-2 font-medium outline-none border-black bg-black text-white transition-all duration-500 {btnDecision
+                    ? 'bg-gray-500'
+                    : 'hover:bg-white hover:text-black'}"
+                  on:click={pushReview}
+                  disabled={btnDecision}
+                  >{btnDecision
+                    ? "Review Already Submitted"
+                    : "Submit Your Review"}</button
                 >
 
                 <div class="reviewRender">
@@ -722,7 +769,7 @@
                     <p class="ms-1 text-sm font-medium text-gray-500">5</p>
                   </div>
                   <p class="text-sm font-medium text-gray-500">
-                    1,745 global ratings
+                    {ratData.length} total ratings
                   </p>
                   <div class="flex items-center mt-4">
                     <a
@@ -812,15 +859,16 @@
                   <div class="flex items-center mb-4">
                     <img
                       class="w-10 h-10 me-4 rounded-full"
-                      src="/docs/images/people/profile-picture-5.jpg"
+                      src={rating.user_image}
                       alt=""
                     />
                     <div class="font-medium dark:text-white">
                       <p>
-                        Jese Leos <time
+                        {rating.user_name}
+                        <time
                           datetime="2014-08-16 19:00"
                           class="block text-sm text-gray-500 dark:text-gray-400"
-                          >Joined on August 2014</time
+                          >Joined on {rating.user_joined}</time
                         >
                       </p>
                     </div>
@@ -905,37 +953,16 @@
                   </div>
                   <footer class="mb-5 text-sm text-gray-900">
                     <p>
-                      Reviewed in the United Kingdom on <time
-                        datetime="2017-03-03 19:00">March 3, 2017</time
+                      Reviewed at <time datetime="2017-03-03 19:00"
+                        >{rating.review_date_time}</time
                       >
                     </p>
                   </footer>
                   <p class="mb-2 text-gray-500 dark:text-gray-400">
                     {rating.review_desc}
                   </p>
-                  <a
-                    href="#"
-                    class="block mb-5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-                    >Read more</a
-                  >
-                  <aside>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                      19 people found this helpful
-                    </p>
-                    <div class="flex items-center mt-3">
-                      <a
-                        href="#"
-                        class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-xs px-2 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                        >Helpful</a
-                      >
-                      <a
-                        href="#"
-                        class="ps-4 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 border-gray-200 ms-4 border-s md:mb-0 dark:border-gray-600"
-                        >Report abuse</a
-                      >
-                    </div>
-                  </aside>
                 </article>
+                <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
               {/each}
             </div>
           </div>
