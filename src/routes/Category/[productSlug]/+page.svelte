@@ -78,7 +78,7 @@
     btnDecision,
     modalBring;
   async function showProd(prdDaata) {
-    modalBring = !modalBring;
+    modalBring = true;
     source = prdDaata.product_image_d;
     imgData = prdDaata.product_image;
     prdImages = prdDaata.product_image_d;
@@ -409,7 +409,7 @@
       class="py-20 font-poppins absolute {modalBring
         ? 'block'
         : 'hidden'} bg-white w-full transition-all duration-300"
-      on:click={() => (modalBring = !modalBring)}
+      on:click={() => (modalBring = false)}
     >
       <div class="max-w-6xl px-4 mx-auto">
         <div class="flex flex-wrap mb-24 -mx-4">
