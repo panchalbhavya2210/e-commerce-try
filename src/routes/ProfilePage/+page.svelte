@@ -26,13 +26,20 @@
   async function getUidData() {
     let supabaseAuthId = await supabase.auth.getUser().then((response) => {
       let authId = response.data.user.id;
+
       userid = authId;
+
       console.log(authId);
       async function getData() {
         const { data, error } = await supabase
           .from("user_auth_data")
           .select("*")
           .eq("auth_uid", authId);
+        const { data: rev, error: er } = await supabase
+          .from("review_table")
+          .select("*")
+          .eq("u_id", userid);
+        console.log(rev);
         const { data: seller, error: serror } = await supabase
           .from("seller_auth_data")
           .select("*")
@@ -66,6 +73,7 @@
       getData();
     });
   }
+
   onMount(() => {
     setTimeout(() => {
       getUidData();
