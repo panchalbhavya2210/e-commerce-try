@@ -78,6 +78,7 @@
     btnDecision,
     modalBring;
   async function showProd(prdDaata) {
+    viewLength = 2;
     modalBring = true;
     source = prdDaata.product_image_d;
     imgData = prdDaata.product_image;
@@ -367,16 +368,7 @@
             <p class="break-words m-1">
               Available Qty : {product.product_qty}
             </p>
-            <div class="orderQty">
-              <input
-                type="number"
-                placeholder="Qty"
-                class="border border-black p-1 w-16 rounded-md"
-                bind:value={qtyValue}
-                min="0"
-                max={product.product_qty}
-              />
-            </div>
+
             <div class="flex justify-between">
               <p class="font-medium m-1">{product.product_price}₹</p>
               <button
@@ -405,26 +397,52 @@
       {/each}
     </div>
 
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <section
-      class="py-20 font-poppins absolute {modalBring
-        ? 'block'
-        : 'hidden'} bg-white w-full transition-all duration-300"
-      on:click={() => (modalBring = false)}
+      class="font-poppins fixed overflow-auto h-full left-0 bg-white w-full transition-all duration-500 {modalBring
+        ? ' -bottom-0'
+        : ' -bottom-full'}"
     >
+      <div
+        class="sticky w-full top-0 left-0 h-20 flex justify-center items-start z-50 lg:ml-5 md:ml-5"
+      >
+        <svg
+          on:click={() => (modalBring = !modalBring)}
+          viewBox="0 0 24 24"
+          fill="none"
+          class="w-auto h-16 bg-gray-300 p-3 rounded-bl-full rounded-br-full cursor-pointer z-50"
+          xmlns="http://www.w3.org/2000/svg"
+          ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g><g id="SVGRepo_iconCarrier">
+            <path
+              d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z"
+              fill="#0F0F0F"
+            ></path>
+          </g></svg
+        >
+      </div>
       <div class="max-w-6xl px-4 mx-auto">
         <div class="flex flex-wrap mb-24 -mx-4">
           <div class="w-full px-4 mb-8 md:w-1/2 md:mb-0">
             <div class="sticky top-0 z-50 overflow-hidden">
               <div class="relative mb-6 lg:mb-10">
-                <img class="object-cover w-full lg:h-1/2" src={source} alt="" />
+                <img
+                  class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md"
+                  src={source}
+                  alt=""
+                />
               </div>
-              <div class="flex-wrap hidden -mx-2 md:flex">
+              <div class="flex-wrap hidden -mx-2 md:flex -z-0">
                 {#each imgData as img}
                   <div class="w-1/2 p-2 sm:w-1/4">
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <img
-                      class="object-cover w-full lg:h-32 transition-all"
+                      class="rounded-md object-cover w-full lg:h-32 transition-all"
                       src={img.publicUrl}
                       alt=""
                       on:click={dynamicImgUrl(img.publicUrl)}
@@ -683,307 +701,292 @@
                     ? "Review Already Submitted"
                     : "Submit Your Review"}</button
                 >
-
-                <div class="reviewRender">
-                  <div class="flex items-center mb-2 mt-2">
-                    <svg
-                      class="w-4 h-4 {roundedRating >= 1
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'} me-1"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {roundedRating >= 2
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'} me-1"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {roundedRating >= 3
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'} me-1"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {roundedRating >= 4
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'} me-1"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {roundedRating == 5
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'} me-1"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <p class="ms-1 text-sm font-medium text-gray-500">
-                      {roundedRating}
+                {#if ratData.length == 0 || ratData == undefined}
+                  <p class="hidden">Nothing TO disp;au</p>
+                {:else}
+                  <div class="reviewRender">
+                    <div class="flex items-center mb-2 mt-2">
+                      <svg
+                        class="w-4 h-4 {roundedRating >= 1
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'} me-1"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {roundedRating >= 2
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'} me-1"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {roundedRating >= 3
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'} me-1"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {roundedRating >= 4
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'} me-1"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {roundedRating == 5
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'} me-1"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <p class="ms-1 text-sm font-medium text-gray-500">
+                        {roundedRating}
+                      </p>
+                      <p class="ms-1 text-sm font-medium text-gray-500">
+                        out of
+                      </p>
+                      <p class="ms-1 text-sm font-medium text-gray-500">5</p>
+                    </div>
+                    <p class="text-sm font-medium text-gray-500">
+                      {ratData.length} total ratings
                     </p>
-                    <p class="ms-1 text-sm font-medium text-gray-500">out of</p>
-                    <p class="ms-1 text-sm font-medium text-gray-500">5</p>
-                  </div>
-                  <p class="text-sm font-medium text-gray-500">
-                    {ratData.length} total ratings
-                  </p>
-                  <div class="flex items-center mt-4">
-                    <a
-                      href="a"
-                      class="text-sm font-medium text-blue-600 hover:underline"
-                      >5 star</a
-                    >
-                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
-                      <div
-                        class="h-5 bg-yellow-300 rounded"
-                        style="width: {ratingPercentages['5star']}%"
-                      ></div>
+                    <div class="flex items-center mt-4">
+                      <a
+                        href="a"
+                        class="text-sm font-medium text-blue-600 hover:underline"
+                        >5 star</a
+                      >
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                        <div
+                          class="h-5 bg-yellow-300 rounded"
+                          style="width: {ratingPercentages['5star']}%"
+                        ></div>
+                      </div>
+                      <span class="text-sm font-medium text-gray-500"
+                        >{ratingPercentages["5star"]}%</span
+                      >
                     </div>
-                    <span class="text-sm font-medium text-gray-500"
-                      >{ratingPercentages["5star"]}%</span
-                    >
-                  </div>
-                  <div class="flex items-center mt-4">
-                    <a
-                      href="a"
-                      class="text-sm font-medium text-blue-600 hover:underline"
-                      >4 star</a
-                    >
-                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
-                      <div
-                        class="h-5 bg-yellow-300 rounded"
-                        style="width: {ratingPercentages['4star']}%"
-                      ></div>
+                    <div class="flex items-center mt-4">
+                      <a
+                        href="a"
+                        class="text-sm font-medium text-blue-600 hover:underline"
+                        >4 star</a
+                      >
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                        <div
+                          class="h-5 bg-yellow-300 rounded"
+                          style="width: {ratingPercentages['4star']}%"
+                        ></div>
+                      </div>
+                      <span class="text-sm font-medium text-gray-500"
+                        >{ratingPercentages["4star"]}%</span
+                      >
                     </div>
-                    <span class="text-sm font-medium text-gray-500"
-                      >{ratingPercentages["4star"]}%</span
-                    >
-                  </div>
-                  <div class="flex items-center mt-4">
-                    <a
-                      href="a"
-                      class="text-sm font-medium text-blue-600 hover:underline"
-                      >3 star</a
-                    >
-                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
-                      <div
-                        class="h-5 bg-yellow-300 rounded"
-                        style="width: {ratingPercentages['3star']}%"
-                      ></div>
+                    <div class="flex items-center mt-4">
+                      <a
+                        href="a"
+                        class="text-sm font-medium text-blue-600 hover:underline"
+                        >3 star</a
+                      >
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                        <div
+                          class="h-5 bg-yellow-300 rounded"
+                          style="width: {ratingPercentages['3star']}%"
+                        ></div>
+                      </div>
+                      <span class="text-sm font-medium text-gray-500"
+                        >{ratingPercentages["3star"]}%</span
+                      >
                     </div>
-                    <span class="text-sm font-medium text-gray-500"
-                      >{ratingPercentages["3star"]}%</span
-                    >
-                  </div>
-                  <div class="flex items-center mt-4">
-                    <a
-                      href="a"
-                      class="text-sm font-medium text-blue-600 hover:underline"
-                      >2 star</a
-                    >
-                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
-                      <div
-                        class="h-5 bg-yellow-300 rounded"
-                        style="width: {ratingPercentages['2star']}%"
-                      ></div>
+                    <div class="flex items-center mt-4">
+                      <a
+                        href="a"
+                        class="text-sm font-medium text-blue-600 hover:underline"
+                        >2 star</a
+                      >
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                        <div
+                          class="h-5 bg-yellow-300 rounded"
+                          style="width: {ratingPercentages['2star']}%"
+                        ></div>
+                      </div>
+                      <span class="text-sm font-medium text-gray-500"
+                        >{ratingPercentages["2star"]}%</span
+                      >
                     </div>
-                    <span class="text-sm font-medium text-gray-500"
-                      >{ratingPercentages["2star"]}%</span
-                    >
-                  </div>
-                  <div class="flex items-center mt-4">
-                    <a
-                      href="a"
-                      class="text-sm font-medium text-blue-600 hover:underline"
-                      >1 star</a
-                    >
-                    <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
-                      <div
-                        class="h-5 bg-yellow-300 rounded transition-all duration-500"
-                        style="width: {ratingPercentages['1star']}%"
-                      ></div>
+                    <div class="flex items-center mt-4">
+                      <a
+                        href="a"
+                        class="text-sm font-medium text-blue-600 hover:underline"
+                        >1 star</a
+                      >
+                      <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded">
+                        <div
+                          class="h-5 bg-yellow-300 rounded transition-all duration-500"
+                          style="width: {ratingPercentages['1star']}%"
+                        ></div>
+                      </div>
+                      <span class="text-sm font-medium text-gray-500"
+                        >{ratingPercentages["1star"]}%</span
+                      >
                     </div>
-                    <span class="text-sm font-medium text-gray-500"
-                      >{ratingPercentages["1star"]}%</span
-                    >
                   </div>
-                </div>
+                {/if}
               </div>
-
-              {#each ratData.slice(0, viewLength) as rating}
-                <article>
-                  <div class="flex items-center mb-4">
-                    <img
-                      class="w-10 h-10 me-4 rounded-full"
-                      src={rating.user_image}
-                      alt=""
-                    />
-                    <div class="font-medium dark:text-white">
+              {#if ratData.length == 0 || ratData == undefined}
+                <p>Be THe First One TO Review</p>
+              {:else}
+                {#each ratData.slice(0, viewLength) as rating}
+                  <article>
+                    <div class="flex items-center mb-4">
+                      <img
+                        class="w-10 h-10 me-4 rounded-full"
+                        src={rating.user_image}
+                        alt=""
+                      />
+                      <div class="font-medium dark:text-white">
+                        <p>
+                          {rating.user_name}
+                          <time
+                            datetime="2014-08-16 19:00"
+                            class="block text-sm text-gray-500 dark:text-gray-400"
+                            >Joined on {rating.user_joined}</time
+                          >
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="flex items-center mb-1 space-x-1 rtl:space-x-reverse"
+                    >
+                      <svg
+                        class="w-4 h-4 {rating.review_stars >= 1
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'}"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {rating.review_stars >= 2
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'}"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {rating.review_stars >= 3
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'}"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {rating.review_stars >= 4
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'}"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <svg
+                        class="w-4 h-4 {rating.review_stars == 5
+                          ? 'text-yellow-400'
+                          : 'text-gray-500'}"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 22 20"
+                      >
+                        <path
+                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                        />
+                      </svg>
+                      <h3 class="ms-2 text-sm font-semibold text-gray-900">
+                        {rating.review_title}
+                      </h3>
+                    </div>
+                    <div class="img flex overflow-x-scroll">
+                      {#each rating.review_image as i}
+                        <img
+                          src={i.publicUrl}
+                          alt=""
+                          class="w-auto h-24 mx-2 rounded-md shadow-md"
+                        />
+                      {/each}
+                      <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
+                    </div>
+                    <footer class="mb-5 text-sm text-gray-900">
                       <p>
-                        {rating.user_name}
-                        <time
-                          datetime="2014-08-16 19:00"
-                          class="block text-sm text-gray-500 dark:text-gray-400"
-                          >Joined on {rating.user_joined}</time
+                        Reviewed at <time datetime="2017-03-03 19:00"
+                          >{rating.review_date_time}</time
                         >
                       </p>
-                    </div>
-                  </div>
-                  <div
-                    class="flex items-center mb-1 space-x-1 rtl:space-x-reverse"
-                  >
-                    <svg
-                      class="w-4 h-4 {rating.review_stars >= 1
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'}"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {rating.review_stars >= 2
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'}"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {rating.review_stars >= 3
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'}"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {rating.review_stars >= 4
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'}"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <svg
-                      class="w-4 h-4 {rating.review_stars == 5
-                        ? 'text-yellow-400'
-                        : 'text-gray-500'}"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 22 20"
-                    >
-                      <path
-                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                      />
-                    </svg>
-                    <h3 class="ms-2 text-sm font-semibold text-gray-900">
-                      {rating.review_title}
-                    </h3>
-                  </div>
-                  <div class="img flex overflow-x-scroll">
-                    {#each rating.review_image as i}
-                      <img
-                        src={i.publicUrl}
-                        alt=""
-                        class="w-auto h-24 mx-2 rounded-md shadow-md"
-                      />
-                    {/each}
-                    <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
-                  </div>
-                  <footer class="mb-5 text-sm text-gray-900">
-                    <p>
-                      Reviewed at <time datetime="2017-03-03 19:00"
-                        >{rating.review_date_time}</time
-                      >
+                    </footer>
+                    <p class="mb-2 text-gray-500 dark:text-gray-400">
+                      {rating.review_desc}
                     </p>
-                  </footer>
-                  <p class="mb-2 text-gray-500 dark:text-gray-400">
-                    {rating.review_desc}
-                  </p>
-                </article>
-                <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
-              {/each}
+                  </article>
+                  <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
+                {/each}
+              {/if}
               <button
-                class={viewLength == ratData.length ? "hidden" : "block"}
+                class={viewLength >= ratData.length ? "hidden" : "block"}
                 on:click={loadMoreReview}>Load More</button
               >
-
-              <div
-                class="fixed w-full -bottom-20 left-0 h-20 flex justify-center items-center"
-              >
-                <button>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></g><g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M20.7457 3.32851C20.3552 2.93798 19.722 2.93798 19.3315 3.32851L12.0371 10.6229L4.74275 3.32851C4.35223 2.93798 3.71906 2.93798 3.32854 3.32851C2.93801 3.71903 2.93801 4.3522 3.32854 4.74272L10.6229 12.0371L3.32856 19.3314C2.93803 19.722 2.93803 20.3551 3.32856 20.7457C3.71908 21.1362 4.35225 21.1362 4.74277 20.7457L12.0371 13.4513L19.3315 20.7457C19.722 21.1362 20.3552 21.1362 20.7457 20.7457C21.1362 20.3551 21.1362 19.722 20.7457 19.3315L13.4513 12.0371L20.7457 4.74272C21.1362 4.3522 21.1362 3.71903 20.7457 3.32851Z"
-                        fill="#0F0F0F"
-                      ></path>
-                    </g></svg
-                  >
-                  <span class="opacity-0">hello</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
