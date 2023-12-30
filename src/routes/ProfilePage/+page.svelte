@@ -17,7 +17,9 @@
     errBody,
     errName,
     productQty,
-    hiddenState;
+    hiddenState,
+    revData,
+    prdData;
   let userType,
     rowDataif = 1,
     loadData = true,
@@ -39,7 +41,18 @@
           .from("review_table")
           .select("*")
           .eq("u_id", userid);
-        console.log(rev);
+
+        revData = rev;
+        console.log(revData);
+
+        for (let i = 0; i < rev.length; i++) {
+          const { data, error } = await supabase
+            .from("ProductData")
+            .select("*")
+            .eq("id", rev[i].prd_id);
+
+          prdData = data;
+        }
         const { data: seller, error: serror } = await supabase
           .from("seller_auth_data")
           .select("*")
@@ -195,6 +208,46 @@
           <p class="ml-10 font-normal">{userid}</p>
         </div>
       </div>
+    </div>
+    <div
+      class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
+    >
+      {#each prdData as product (product.id)}
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="rowOne cursor-pointer group transition-all">
+          <div class="heightOne h-11/12 shadow-lg p-3">
+            <img
+              src={product.product_image_d}
+              alt=""
+              srcset=""
+              class="rounded-md transition-all h-full w-full"
+            />
+            <p class="font-medium text-lg break-words mt-2 m-1">
+              {product.product_name}
+            </p>
+            <p class="break-words m-1">
+              {product.product_description}
+            </p>
+            <p class="break-words m-1">
+              Available Qty : {product.product_qty}
+            </p>
+
+            {#if revData.find((review) => review.prd_id === product.id)}
+              <!-- Render review data -->
+              {#each revData as review (review.id)}
+                <p>{review}</p>
+                {#if review.productId === product.id}
+                  <p>{review}</p>
+                {/if}
+              {/each}
+            {:else}
+              <!-- Handle case where there is no review data for the product -->
+              <p>No reviews available</p>
+            {/if}
+          </div>
+        </div>
+      {/each}
     </div>
   {/if}
 
