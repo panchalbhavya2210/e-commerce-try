@@ -24,3 +24,41 @@
 * {
   font-family: "Clash Display", sans-serif;
 }
+
+/* Hide the default scrollbar for both vertical and horizontal scrolling */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 8px; /* Height of the scrollbar */
+}
+
+/* Track for vertical scrolling */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Background color of the track */
+}
+
+/* Handle for vertical scrolling */
+::-webkit-scrollbar-thumb {
+  background: #4b4b4b; /* Foreground color of the handle (black in this case) */
+  border-radius: 3px; /* Make the scrollbar handle rounded */
+}
+
+/* Handle on hover for vertical scrolling */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Foreground color of the handle on hover (dark gray in this case) */
+}
+
+/* Track for horizontal scrolling */
+::-webkit-scrollbar-track-piece:end {
+  background-color: #f1f1f1; /* Background color of the track for horizontal scrolling */
+}
+
+/* Handle for horizontal scrolling */
+::-webkit-scrollbar-thumb:horizontal {
+  background: #4b4b4b; /* Foreground color of the handle for horizontal scrolling (black in this case) */
+  border-radius: 3px; /* Make the scrollbar handle rounded */
+}
+
+/* Handle on hover for horizontal scrolling */
+::-webkit-scrollbar-thumb:hover:horizontal {
+  background: #555; /* Foreground color of the handle on hover for horizontal scrolling (dark gray in this case) */
+}

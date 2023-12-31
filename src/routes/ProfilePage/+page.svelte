@@ -19,7 +19,8 @@
     productQty,
     hiddenState,
     revData,
-    prdData;
+    prdData,
+    successText;
   let userType,
     rowDataif = 1,
     loadData = true,
@@ -44,15 +45,15 @@
 
         revData = rev;
         console.log(revData);
+        const fetchArr = revData.map((item) => item.prd_id);
+        console.log(fetchArr);
+        const { data: prdD, error: an } = await supabase
+          .from("ProductData")
+          .select("*")
+          .in("id", fetchArr);
+        prdData = prdD;
+        console.log(prdD);
 
-        for (let i = 0; i < rev.length; i++) {
-          const { data, error } = await supabase
-            .from("ProductData")
-            .select("*")
-            .eq("id", rev[i].prd_id);
-
-          prdData = data;
-        }
         const { data: seller, error: serror } = await supabase
           .from("seller_auth_data")
           .select("*")
@@ -90,7 +91,7 @@
   onMount(() => {
     setTimeout(() => {
       getUidData();
-    }, 1500);
+    }, 500);
   });
 
   let prdId;
@@ -120,7 +121,7 @@
     if (error == null) {
       loaderState = !loaderState;
       successState = !successState;
-
+      successText = "Product Updated";
       setTimeout(() => {
         successState = !successState;
       }, 5000);
@@ -142,7 +143,7 @@
 
     if (error == null) {
       successState = !successState;
-
+      successText = "Product Deleted";
       setTimeout(() => {
         successState = !successState;
       }, 5000);
@@ -151,6 +152,23 @@
       setTimeout(() => {
         errorState = !errorState;
       }, 5000);
+    }
+  }
+
+  async function deleteReview(s) {
+    const { data, error } = await supabase
+      .from("review_table")
+      .delete()
+      .eq("id", s);
+    console.log(data, error);
+
+    if (error === null) {
+      successState = !successState;
+
+      setTimeout(() => {
+        successState = !successState;
+      }, 3500);
+      successText = "Review Deleted";
     }
   }
 </script>
@@ -209,6 +227,9 @@
         </div>
       </div>
     </div>
+    <div class="ml-5 mt-3">
+      <h1 class="text-2xl font-bold">Your Reviews</h1>
+    </div>
     <div
       class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
     >
@@ -229,17 +250,149 @@
             <p class="break-words m-1">
               {product.product_description}
             </p>
-            <p class="break-words m-1">
-              Available Qty : {product.product_qty}
-            </p>
 
-            {#if revData.find((review) => review.prd_id === product.id)}
+            {#if revData.filter((review) => review.prd_id === product.id).length > 0}
               <!-- Render review data -->
-              {#each revData as review (review.id)}
-                <p>{review}</p>
-                {#if review.productId === product.id}
-                  <p>{review}</p>
-                {/if}
+              {#each revData.filter((review) => review.prd_id === product.id) as rating (rating.id)}
+                <article>
+                  <div class="flex items-center mb-4">
+                    <img
+                      class="w-10 h-10 me-4 rounded-full"
+                      src={rating.user_image}
+                      alt=""
+                    />
+                    <div class="font-medium dark:text-white">
+                      <p>
+                        {rating.user_name}
+                        <time
+                          datetime="2014-08-16 19:00"
+                          class="block text-sm text-gray-500 dark:text-gray-400"
+                          >Joined on {rating.user_joined}</time
+                        >
+                      </p>
+                    </div>
+                  </div>
+                  <footer class="mb-5 text-sm text-gray-900">
+                    <p>
+                      Reviewed at <time datetime="2017-03-03 19:00"
+                        >{rating.review_date_time}</time
+                      >
+                    </p>
+                  </footer>
+                  <div
+                    class="flex items-center mb-1 space-x-1 rtl:space-x-reverse"
+                  >
+                    <svg
+                      class="w-4 h-4 {rating.review_stars >= 1
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'}"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 {rating.review_stars >= 2
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'}"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 {rating.review_stars >= 3
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'}"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 {rating.review_stars >= 4
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'}"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-4 h-4 {rating.review_stars == 5
+                        ? 'text-yellow-400'
+                        : 'text-gray-500'}"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 22 20"
+                    >
+                      <path
+                        d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                      />
+                    </svg>
+                    <h3 class="ms-2 text-sm font-semibold text-gray-900">
+                      {rating.review_title}
+                    </h3>
+                  </div>
+                  <div class="img flex overflow-x-auto">
+                    {#each rating.review_image as i}
+                      <img
+                        src={i.publicUrl}
+                        alt=""
+                        class="w-auto h-24 mx-2 rounded-md shadow-md my-2"
+                      />
+                    {/each}
+                    <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
+                  </div>
+
+                  <p class="mb-2 text-gray-500 dark:text-gray-400">
+                    {rating.review_desc}
+                  </p>
+                  <div class="flex">
+                    <button
+                      on:click={deleteReview(rating.id)}
+                      class="bg-red-300 w-full p-1 flex justify-center items-center hover:bg-red-400 transition-all m-2 rounded-md"
+                    >
+                      <svg
+                        class="w-auto h-7"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                          id="SVGRepo_tracerCarrier"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        ></g><g id="SVGRepo_iconCarrier">
+                          <path
+                            d="M10 12L14 16M14 12L10 16M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6"
+                            stroke="#242424"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          ></path>
+                        </g></svg
+                      >
+                    </button>
+                  </div>
+                </article>
+                <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
               {/each}
             {:else}
               <!-- Handle case where there is no review data for the product -->
@@ -485,7 +638,7 @@
     </div>
     <div>
       <p class="font-bold">Success.</p>
-      <p class="text-sm break-all">Product updated.</p>
+      <p class="text-sm break-all">{successText}</p>
     </div>
   </div>
 </div>
