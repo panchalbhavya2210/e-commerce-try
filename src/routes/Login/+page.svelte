@@ -19,6 +19,7 @@
       password: password,
     });
     if (error == null) {
+      window.location.href = "/";
       progressLogin = !progressLogin;
       successState = !successState;
       setTimeout(() => {

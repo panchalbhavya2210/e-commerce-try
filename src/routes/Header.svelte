@@ -6,6 +6,7 @@
   let navMobileState, profileView, dropdown;
   async function signOut() {
     const { error } = await supabase.auth.signOut();
+    console.log(error);
   }
 
   let img;

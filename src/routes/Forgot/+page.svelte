@@ -7,16 +7,18 @@
   let emailVal, errorState, successState;
 
   async function forgotSent() {
-    await supabase.auth
-      .resetPasswordForEmail(emailVal, {
-        redirectTo: "https://e-commerce-try.vercel.app/Forgot",
-      })
-      .then(() => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(
+      emailVal,
+      {
+        redirectTo: "http://localhost:5173/UpdatePass",
+      }
+    );
+    console.log(data, error).then(() => {
+      successState = !successState;
+      setTimeout(() => {
         successState = !successState;
-        setTimeout(() => {
-          successState = !successState;
-        }, 3000);
-      });
+      }, 3000);
+    });
   }
 </script>
 
