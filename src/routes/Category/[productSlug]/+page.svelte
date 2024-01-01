@@ -114,9 +114,33 @@
       }
       ratings.push(ratData[i].review_stars);
     }
-    setTimeout(() => {
+    if (ratData.length > 0) {
       CalculateRating();
-    }, 2000);
+    }
+  }
+
+  async function channelSet() {
+    const channel = supabase
+      .channel("review_table")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "review_table",
+        },
+        (payload) => {
+          ratData = ratData;
+          ratData.push(payload.new);
+          ratings.push(payload.new.review_stars);
+          console.log(ratings);
+        }
+      )
+      .subscribe();
+    if (ratData.length != 0 || ratData != undefined) {
+      CalculateRating();
+    }
+    return () => channel.unsubscribe();
   }
 
   let ratingPercentages = {};
@@ -128,6 +152,7 @@
     "5star": 0,
   };
   let roundedRating;
+
   function CalculateRating() {
     ratingPercentages = {};
     ratingCounts = {
@@ -232,29 +257,15 @@
         .insert(reviewToInsert);
       console.log(data, error);
 
-      const channel = await supabase
-        .channel("review_table")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "review_table",
-          },
-          (payload) => {
-            ratData.push(payload.new);
-          }
-        )
-        .subscribe();
-
       if (error == null || error.length == 0) {
+        channelSet();
+        setTimeout(() => {
+          CalculateRating();
+        }, 500);
         reviewState = !reviewState;
       }
     }
     console.log(prdId);
-  }
-  function getLength(s) {
-    console.log(s);
   }
 
   // async function addCart(prd) {
@@ -302,7 +313,7 @@
   //   });
   // }
 
-  let viewLength = 2,
+  let viewLength = ratData.length,
     source;
   function loadMoreReview() {
     viewLength = ratData.length;
