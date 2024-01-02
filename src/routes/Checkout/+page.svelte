@@ -168,6 +168,7 @@
 
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       window.location.replace(data.url);
     } else {
       // Handle error or display an appropriate message

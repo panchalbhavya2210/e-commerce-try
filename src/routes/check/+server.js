@@ -1,5 +1,4 @@
 import { stripe } from "../stripe";
-import { env } from "$env/dynamic/private";
 
 export const POST = async ({ request }) => {
   try {
@@ -7,37 +6,54 @@ export const POST = async ({ request }) => {
     const cartItems = data.items;
 
     // Create session for redirecting users
-    // const lineItems = cartItems.map((item) => {
-    //   return {
-    //     price_data: {
-    //       currency: "USD",
-    //       product_data: {
-    //         name: item.name,
-    //         images: [],
-    //       },
-    //       unit_amount: item.price * 100,
-    //     },
-    //     quantity: item.amount,
-    //   };
-    // });
+    const lineItems = cartItems.map((item) => {
+      return {
+        price_data: {
+          currency: "INR",
+          product_data: {
+            name: item.product_name,
+            images: [item.product_image_d],
+          },
+          unit_amount: item.product_price * 100,
+        },
+        quantity: 3,
+      };
+    });
 
     // Create session
-    // const session = await stripe.checkout.sessions.create({
-    //   line_items: lineItems,
-    //   shipping_address_collection: {
-    //     allowed_countries: ["NO"],
-    //   },
-    //   mode: "payment",
-    //   success_url: `${env.BASE}/success`,
-    //   cancel_url: `${env.BASE}/cancel`,
-    //   phone_number_collection: {
-    //     enabled: true,
-    //   },
-    // });
+    const session = await stripe.checkout.sessions.create({
+      line_items: lineItems,
+      shipping_address_collection: {
+        allowed_countries: ["IN"],
+      },
+      mode: "payment",
+      success_url: `http://localhost:5173/success`,
+      cancel_url: `http://localhost:5173/cancel`,
+    });
 
-    return {};
+    return new Response(
+      JSON.stringify({
+        url: session.url,
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error during checkout:", error);
-    return {};
+    return new Response(
+      JSON.stringify({
+        error: "Internal Server Error",
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   }
 };
