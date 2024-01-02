@@ -58,7 +58,7 @@
     dataC();
   });
   let array = [];
-  let qtyValue;
+  let qtyValue = 2;
   let prd_qt = [];
   let imgData = [],
     prdId,
@@ -94,7 +94,8 @@
     const { data, error } = await supabase
       .from("review_table")
       .select("*")
-      .eq("prd_id", prdId);
+      .eq("prd_id", prdId)
+      .order("review_date_time", { ascending: false });
     ratings = [];
     btnDecision;
 
@@ -258,7 +259,12 @@
       console.log(data, error);
 
       if (error == null || error.length == 0) {
+        reviewTitle = "";
+        userRating = 0;
+        reviewSummary = "";
+
         channelSet();
+        btnDecision = true;
         setTimeout(() => {
           CalculateRating();
         }, 500);
@@ -268,50 +274,49 @@
     console.log(prdId);
   }
 
-  // async function addCart(prd) {
-  //   let supabaseAuthId = await supabase.auth.getUser().then((response) => {
-  //     let authId = response.data.user.id;
+  async function addCart() {
+    let supabaseAuthId = await supabase.auth.getUser().then((response) => {
+      let authId = response.data.user.id;
+      array.push(prdId);
+      // array.push(prd.id);
+      prd_qt.push("1");
 
-  //     array.push(prd.id);
-  //     prd_qt.push("1");
+      let cartDataToInsert = {
+        auth_id: authId,
+        product_id: prdId,
+        product_qty: qtyValue,
+      };
+      if (qtyValue <= 0 || qtyValue == undefined || qtyValue == null) {
+        console.log("add qty first");
+      } else if (qtyValue > prd.product_qty) {
+        console.log("ORder Quantity Cannot be greater than stock Quantity");
+      } else {
+        async function road() {
+          const { data, error } = await supabase
+            .from("CartData")
+            .insert(cartDataToInsert);
 
-  //     let cartDataToInsert = {
-  //       auth_id: authId,
-  //       product_id: prd.id,
-  //       product_qty: qtyValue,
-  //     };
-  //     if (qtyValue <= 0 || qtyValue == undefined || qtyValue == null) {
-  //       console.log("add qty first");
-  //     } else if (qtyValue > prd.product_qty) {
-  //       console.log("ORder Quantity Cannot be greater than stock Quantity");
-  //     } else {
-  //       async function road() {
-  //         const { data, error } = await supabase
-  //           .from("CartData")
-  //           .insert(cartDataToInsert);
+          const { data: prod, er } = await supabase
+            .from("ProductData")
+            .update({
+              product_qty: prQty - qtyValue,
+            })
+            .eq("id", prdId);
+          console.log(prod, er);
 
-  //         const { data: prod, er } = await supabase
-  //           .from("ProductData")
-  //           .update({
-  //             product_qty: prd.product_qty - qtyValue,
-  //           })
-  //           .eq("id", prd.id);
-  //         console.log(prod, er);
-
-  //         if (error == null) {
-  //           orderConfirmation = !orderConfirmation;
-
-  //           setTimeout(() => {
-  //             orderConfirmation = !orderConfirmation;
-  //           }, 3000);
-  //         }
-  //       }
-  //       for (let index = 0; index < qtyValue; index++) {
-  //         road();
-  //       }
-  //     }
-  //   });
-  // }
+          if (error == null) {
+            orderConfirmation = true;
+          }
+        }
+        for (let index = 0; index < qtyValue; index++) {
+          road();
+        }
+        setTimeout(() => {
+          orderConfirmation = false;
+        }, 3400);
+      }
+    });
+  }
 
   let viewLength = ratData.length,
     source;
@@ -377,7 +382,9 @@
 
   <div class="categorymenu w-full sm:w-full sm:p-10 md:p-5">
     <div
-      class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
+      class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 {modalBring
+        ? 'hidden'
+        : 'block'}"
     >
       {#each prd as product}
         <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -434,7 +441,7 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <section
-      class="font-poppins fixed overflow-auto h-full left-0 bg-white w-full transition-all duration-500 {modalBring
+      class="font-poppins fixed overflow-x-hidden h-full left-0 bg-white w-full transition-all duration-500 {modalBring
         ? ' -bottom-0'
         : ' -bottom-full'}"
     >
@@ -470,13 +477,13 @@
                   alt=""
                 />
               </div>
-              <div class="flex-wrap hidden -mx-2 md:flex -z-0">
+              <div class="flex-wrap flex -mx-2 md:flex -z-0">
                 {#each imgData as img}
-                  <div class="w-1/2 p-2 sm:w-1/4">
+                  <div class="w-auto p-2 sm:w-1/4 lg:w-auto md:w-auto">
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <img
-                      class="rounded-md object-cover w-full lg:h-32 transition-all"
+                      class="rounded-md object-cover w-auto h-20 lg:h-32 transition-all cursor-pointer"
                       src={img.publicUrl}
                       alt=""
                       on:click={dynamicImgUrl(img.publicUrl)}
@@ -484,32 +491,7 @@
                   </div>
                 {/each}
               </div>
-              <div class="px-6 pb-6 mt-6 border-t border-gray-300">
-                <div class="flex items-center justify-center mt-6">
-                  <span class="mr-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="w-5 h-5 text-blue-700 bi bi-chat-left-dots-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4.414a1 1 0 0 0-.707.293L.854 15.146A.5.5 0 0 1 0 14.793V2zm5 4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
-                      ></path>
-                    </svg>
-                  </span>
-                  <div>
-                    <h2 class="text-sm font-bold text-gray-700 lg:text-lg">
-                      Have question about buying an {prName}
-                    </h2>
-                    <a class="text-xs text-blue-400 lg:text-sm" href="a">
-                      Chat with an {prName} specialist
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <div class="px-6 pb-6 mt-6 border-t border-gray-300"></div>
             </div>
           </div>
           <div class="w-full px-4 md:w-1/2">
@@ -577,6 +559,7 @@
               </div>
               <div class="mt-6">
                 <button
+                  on:click={addCart}
                   class="w-full px-4 py-2 font-bold text-white bg-blue-400 lg:w-96 hover:bg-blue-500"
                 >
                   Continue
@@ -707,29 +690,30 @@
                     type="text"
                     placeholder="Enter Review Title"
                     bind:value={reviewTitle}
-                    class="w-full p-2 border my-1 font-semibold outline-none border-black"
+                    class="w-full lg:w-96 p-2 border my-1 font-semibold outline-none border-black"
                   />
                   <br />
                   <textarea
                     type="text"
                     placeholder="Enter Review Summary"
                     bind:value={reviewSummary}
-                    class="w-full p-2 border my-1 font-medium outline-none border-black"
+                    class="w-full lg:w-96 p-2 border my-1 font-medium outline-none border-black"
                   ></textarea>
                   <br />
                   <input
                     bind:files
                     type="file"
                     multiple
-                    class="w-full border font-medium outline-none border-black"
+                    class="w-full lg:w-96 border font-medium outline-none border-black"
                     accept="image/jpeg, video/mkv, image/jpg, image/png, image/svg"
                   />
                 </div>
                 <!--                   disabled={btnDecision || reviewState} -->
                 <button
-                  class="w-full flex justify-center items-center p-2 border mt-2 font-medium outline-none border-black bg-black text-white transition-all duration-500 {btnDecision
+                  class="w-full lg:w-96 flex justify-center items-center p-2 border mt-2 font-medium outline-none border-black bg-black text-white transition-all duration-500 {btnDecision
                     ? 'bg-gray-500'
                     : 'hover:bg-white hover:text-black'}"
+                  disabled={reviewState || btnDecision}
                   on:click={pushReview}
                 >
                   <div
@@ -754,12 +738,16 @@
                     </svg>
                     <span class="sr-only">Loading...</span>
                   </div>
-                  {btnDecision
-                    ? "Review Already Submitted"
-                    : "Submit Your Review"}</button
-                >
+                  {#if btnDecision}
+                    Review Already Submitted
+                  {:else if reviewState}
+                    Submitting Your Review
+                  {:else}
+                    Submit Your Review
+                  {/if}
+                </button>
                 {#if ratData.length == 0 || ratData == undefined}
-                  <p class="hidden">Nothing TO disp;au</p>
+                  <p class="hidden">No Review Yet.</p>
                 {:else}
                   <div class="reviewRender">
                     <div class="flex items-center mb-2 mt-2">
@@ -923,7 +911,7 @@
                 {/if}
               </div>
               {#if ratData.length == 0 || ratData == undefined}
-                <p>Be THe First One TO Review</p>
+                <p class="mt-2">Be the first one to review</p>
               {:else}
                 {#each ratData.slice(0, viewLength) as rating}
                   <article>
@@ -1051,7 +1039,7 @@
     </section>
 
     <div
-      class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
+      class="checkMarkAnimation w-96 h-16 z-50 bg-green-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
         ? 'opacity-100 translate-y-0'
         : 'opacity-0 translate-y-20'}"
     >

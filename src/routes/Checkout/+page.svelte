@@ -6,6 +6,7 @@
   import "../../lib/global.css";
   import done from "../../lib/assets/done-round-svgrepo-com.svg";
   import error from "../../lib/assets/error.svg";
+  import { loadStripe } from "@stripe/stripe-js";
 
   // src/routes/api/sendEmail.js
   // Your client-side code (e.g., in a Svelte component)
@@ -151,6 +152,26 @@
       }, 5000);
     } else {
       alert("Something Went Wrong");
+    }
+  }
+
+  async function checkout() {
+    const response = await fetch("/check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        items: addArr,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      window.location.replace(data.url);
+    } else {
+      // Handle error or display an appropriate message
+      console.error("Error during checkout:", response.statusText);
     }
   }
 
@@ -395,8 +416,8 @@
       <div class="button">
         <div class="mt-6">
           <a
-            on:click={order}
-            href="a"
+            on:click={checkout}
+            href=""
             class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
             >Checkout {totalAmount}₹</a
           >
