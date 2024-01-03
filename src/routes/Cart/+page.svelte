@@ -45,7 +45,6 @@
         .in("id", fetchArr);
 
       addArr = productData;
-      console.log(addArr);
       totalAmount = 0;
 
       for (const product of addArr) {

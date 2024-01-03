@@ -19,7 +19,8 @@
   let product_name = [],
     product_desc = [],
     product_price = [],
-    product_img = [];
+    product_img = [],
+    prdQty = [];
   let user_email;
   let user_id, orderConfirmation, ocTemp, orderError;
 
@@ -61,7 +62,6 @@
 
       addArr = productData;
       console.log(addArr);
-
       for (let i = 0; i < addArr.length; i++) {
         product_name.push(productData[i].product_name);
         product_desc.push(productData[i].product_description);
@@ -70,6 +70,7 @@
         prdId.push(productData[i].id);
         seller_id.push(productData[i].seller_id);
       }
+
       totalAmount = 0;
       for (const product of addArr) {
         if (countMap[product.id]) {
@@ -163,12 +164,14 @@
       },
       body: JSON.stringify({
         items: addArr,
+        countMap: arrCount, // Include countMap in the request
       }),
     });
 
     if (response.ok) {
       const data = await response.json();
       console.log(data);
+      order();
       window.location.replace(data.url);
     } else {
       // Handle error or display an appropriate message

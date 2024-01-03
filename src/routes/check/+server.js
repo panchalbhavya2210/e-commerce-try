@@ -4,21 +4,44 @@ export const POST = async ({ request }) => {
   try {
     const data = await request.json();
     const cartItems = data.items;
+    const countMap = data.countMap;
+    const countMapInt = {};
+    for (const key in countMap) {
+      countMapInt[parseInt(key)] = countMap[key];
+    }
+
+    // Merge cartItems and countMap based on the product ID
+    const mergedArray = cartItems.map((item) => ({
+      ...item,
+      quantity: countMapInt[item.id] || 1,
+    }));
+
+    const lineItems = mergedArray.map((item) => ({
+      price_data: {
+        currency: "INR",
+        product_data: {
+          name: item.product_name,
+          images: [item.product_image_d],
+        },
+        unit_amount: item.product_price * 100,
+      },
+      quantity: item.quantity,
+    }));
 
     // Create session for redirecting users
-    const lineItems = cartItems.map((item) => {
-      return {
-        price_data: {
-          currency: "INR",
-          product_data: {
-            name: item.product_name,
-            images: [item.product_image_d],
-          },
-          unit_amount: item.product_price * 100,
-        },
-        quantity: 3,
-      };
-    });
+    // const lineItems = cartItems.map((item) => {
+    //   return {
+    //     price_data: {
+    //       currency: "INR",
+    //       product_data: {
+    //         name: item.product_name,
+    //         images: [item.product_image_d],
+    //       },
+    //       unit_amount: item.product_price * 100,
+    //     },
+    //     quantity: 3,
+    //   };
+    // });
 
     // Create session
     const session = await stripe.checkout.sessions.create({
