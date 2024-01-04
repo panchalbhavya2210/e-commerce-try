@@ -3,6 +3,12 @@ import { stripe } from "../stripe";
 export const POST = async ({ request }) => {
   try {
     const data = await request.json();
+    const {
+      address,
+      city,
+      state,
+      postalCode /* add other fields as needed */,
+    } = request;
     const cartItems = data.items;
     const countMap = data.countMap;
     const countMapInt = {};
