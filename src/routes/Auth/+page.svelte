@@ -3,6 +3,9 @@
   import "../../lib/global.css";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
+  import { writable } from "svelte/store";
+
+  const emailValueGl = writable("");
 
   let selected, progressSignUp, successState, errorState, errBody, errTitle;
   function onChange(event) {
