@@ -3,9 +3,6 @@
   import "../../lib/global.css";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import { writable } from "svelte/store";
-
-  const emailValueGl = writable("");
 
   let selected, progressSignUp, successState, errorState, errBody, errTitle;
   function onChange(event) {
@@ -62,7 +59,7 @@
             const { data } = await supabase.storage
               .from("profiles")
               .getPublicUrl(`${uid}/${file}`);
-
+            console.log(data);
             let imageUrl = data.publicUrl;
             const userDataToInsert = [
               {
@@ -79,8 +76,10 @@
               .from("user_auth_data")
               .insert(userDataToInsert);
             console.log(error);
+            setTimeout(() => {
+              window.location.href = "/Verify";
+            }, 1000);
           }
-
           setTimeout(() => {
             pushData();
           });
@@ -110,6 +109,10 @@
               .from("seller_auth_data")
               .insert(sellerDataToInsert);
             console.log(error);
+
+            setTimeout(() => {
+              window.location.href = "/Verify";
+            }, 1000);
           }
 
           setTimeout(() => {
@@ -245,7 +248,7 @@
       <div class="flexRadio flex">
         <label>
           <input
-            checked={selected === 10}
+            checked
             on:change={onChange}
             type="radio"
             name="amount"

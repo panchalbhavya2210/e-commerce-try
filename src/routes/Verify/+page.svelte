@@ -1,4 +1,5 @@
-<script context="module">
+<script>
+  import "../../lib/global.css";
 </script>
 
 <!-- component -->
