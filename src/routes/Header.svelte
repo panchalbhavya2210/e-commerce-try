@@ -4,10 +4,6 @@
   import supabase from "../lib/index";
 
   let navMobileState, profileView, dropdown;
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    console.log(error);
-  }
 
   let img;
   let accordionMenu, navShow;
@@ -54,6 +50,12 @@
       getUidData();
     }, 1500);
   });
+
+  async function signOut() {
+    userType = undefined;
+    const { error } = await supabase.auth.signOut();
+    console.log(error);
+  }
 </script>
 
 <nav class="bg-gray-200 shadow-sm">
@@ -385,7 +387,7 @@
               <button
                 on:click={() => (navShow = !navShow)}
                 type="button"
-                aria-current={$page.url.pathname === "/Cart"
+                aria-current={$page.url.pathname === "/OrderStatus"
                   ? "page"
                   : undefined}
                 class="{navShow

@@ -59,22 +59,62 @@
   onMount(() => {
     getUidData();
   });
+
+  let currentIndex = 0;
+
+  const slides = [
+    {
+      text: "Discover Great Deals",
+      backgroundImage: imageOne,
+    },
+    {
+      text: "Explore Exciting Offers",
+      backgroundImage: imageTwo,
+    },
+    {
+      text: "Shop with Confidence",
+      backgroundImage: imageThree,
+    },
+    {
+      text: "Shop with Confidence",
+      backgroundImage: imageFour,
+    },
+    {
+      text: "Shop with Confidence",
+      backgroundImage: imageFive,
+    },
+  ];
+  let time;
+
+  function setInt() {
+    time = setInterval(() => {
+      currentIndex = (currentIndex + 1) % slides.length;
+    }, 5000);
+  }
+  onMount(() => {
+    setInt();
+  });
+
+  function setSlide(index) {
+    currentIndex = index;
+    clearInterval(time);
+    setInt();
+  }
 </script>
 
 {#if userType == "User" || userType == null || userType == undefined}
   <main transition:fly={{ y: 200 }}>
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css"
-      rel="stylesheet"
-    />
-
-    <div class="carouselMain p-4 sm:p-10 h-full">
-      <div id="default-carousel" class="relative" data-carousel="slide">
-        <!-- Carousel wrapper -->
-        <div class="relative h-96 overflow-hidden rounded-lg md:h-96">
-          <!-- Item 1 -->
-          <div class="relative duration-700 ease-in-out" data-carousel-item>
+    <!-- <div class="slider">
+      <div
+        class="slider-inner"
+        style="transform: translateX({-currentIndex * 100}%)"
+      >
+        {#each slides as { text, backgroundImage }, i (i)}
+          <div
+            class="slide h-96 relative duration-700 ease-in-out overflow-hidden"
+          >
             <div class="absolute z-10 overflow-hidden">
+              <p>{text}</p>
               <img
                 src={transParent}
                 class="-rotate-90 mt-10 scale-125"
@@ -101,205 +141,82 @@
               </div>
             </div>
             <img
-              src={imageTwo}
-              class="absolute block w-full top-0 left-0 object-cover h-96"
+              src={backgroundImage}
+              class="absolute block w-full top-0 left-0 object-cover h-full"
               alt="..."
             />
           </div>
-          <!-- Item 2 -->
-          <div
-            class="relative hidden duration-700 ease-in-out"
-            data-carousel-item
-          >
-            <div class="absolute z-10 overflow-hidden">
-              <img
-                src={transParent}
-                class="-rotate-90 mt-10 scale-125"
-                alt=""
-              />
-              <div
-                class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
-              >
-                <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-                <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
-                  Great Book Collection
-                </h1>
+        {/each}
+      </div>
 
-                <p class="ml-1 mt-4 sm:mt-5">
-                  Our library boasts a rich collection of books, spanning
-                  diverse genres, from classics to contemporary bestsellers.
-                  With thousands of titles, it caters to a wide range of
-                  interests and is a treasure.
-                </p>
-
-                <button
-                  class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                  >Explore</button
+      <div class="radio-group">
+        {#each slides as _, i (i)}
+          <input
+            type="radio"
+            bind:group={currentIndex}
+            value={i}
+            class="radio-button"
+            on:change={() => setSlide(i)}
+          />
+        {/each}
+      </div>
+    </div> -->
+    <div class="carouselMain p-4 sm:p-10 h-full">
+      <div id="default-carousel" class="relative" data-carousel="slide">
+        <div class="relative h-96 overflow-hidden rounded-lg md:h-96">
+          {#each slides as { text, backgroundImage }, i (i)}
+            <div
+              class="relative transition-all duration-1000 ease-in-out {i ===
+              currentIndex
+                ? 'opacity-100'
+                : 'opacity-0'}"
+            >
+              <div class="absolute z-10 overflow-hidden">
+                <img
+                  src={transParent}
+                  class="-rotate-90 mt-10 scale-125"
+                  alt=""
+                />
+                <div
+                  class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
                 >
+                  <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
+                  <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">{text}</h1>
+                  <!-- Add your additional text content here -->
+
+                  <button
+                    class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
+                    >Explore</button
+                  >
+                </div>
               </div>
-            </div>
-            <img
-              src={imageOne}
-              class="absolute block w-full top-0 left-0 object-cover h-96"
-              alt="..."
-            />
-          </div>
-          <!-- Item 3 -->
-          <div
-            class="relative hidden duration-700 ease-in-out"
-            data-carousel-item
-          >
-            <div class="absolute z-10">
               <img
-                src={transParent}
-                class="-rotate-90 mt-10 scale-125"
-                alt=""
+                src={backgroundImage}
+                class="absolute block w-full top-0 left-0 object-cover h-96"
+                alt="..."
               />
-              <div
-                class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
-              >
-                <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-                <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
-                  Exotic Gifting Collection
-                </h1>
-
-                <p class="ml-1 mt-4 sm:mt-5">
-                  Our rich collection of gifts offers a diverse array of
-                  thoughtful and unique presents for every occasion. From
-                  elegant jewelry and personalized keepsakes to tech gadgets and
-                  gourmet treats.
-                </p>
-
-                <button
-                  class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                  >Explore</button
-                >
-              </div>
             </div>
-            <img
-              src={imageThree}
-              class="absolute block w-full top-0 left-0 object-cover h-96"
-              alt="..."
-            />
-          </div>
-          <!-- Item 4 -->
-          <div
-            class="relative hidden duration-700 ease-in-out"
-            data-carousel-item
-          >
-            <div class="absolute z-10">
-              <img
-                src={transParent}
-                class="-rotate-90 mt-10 scale-125"
-                alt=""
-              />
-              <div
-                class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
-              >
-                <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-                <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
-                  Blazing Electric Collection
-                </h1>
-
-                <p class="ml-1 mt-4 sm:mt-5">
-                  Our electrical appliances boasts a rich collection of
-                  cutting-edge devices. From smart home solutions to
-                  energy-efficient appliances, we offer a diverse range of
-                  products.
-                </p>
-
-                <button
-                  class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                  >Explore</button
-                >
-              </div>
-            </div>
-            <img
-              src={imageFour}
-              class="absolute block w-full top-0 left-0 object-cover h-96"
-              alt="..."
-            />
-          </div>
-          <!-- Item 5 -->
-          <div
-            class="relative hidden duration-700 ease-in-out"
-            data-carousel-item
-          >
-            <div class="absolute z-10">
-              <img
-                src={transParent}
-                class="-rotate-90 mt-10 scale-125"
-                alt=""
-              />
-              <div
-                class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
-              >
-                <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-                <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">KidZone</h1>
-
-                <p class="ml-1 mt-4 sm:mt-5">
-                  Our collection of toys and kids' games boasts a rich variety
-                  of options to ignite children's imaginations. From educational
-                  puzzles and interactive board games to cuddly stuffed animals
-                  and creative building sets.
-                </p>
-
-                <button
-                  class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                  >Explore</button
-                >
-              </div>
-            </div>
-            <img
-              src={imageFive}
-              class="absolute block w-full top-0 left-0 object-cover h-96"
-              alt="..."
-            />
-          </div>
-        </div>
-        <!-- Slider indicators -->
-        <div
-          class="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2"
-        >
-          <button
-            type="button"
-            class="w-3 h-3 rounded-full"
-            aria-current="true"
-            aria-label="Slide 1"
-            data-carousel-slide-to="0"
-          />
-          <button
-            type="button"
-            class="w-3 h-3 rounded-full"
-            aria-current="false"
-            aria-label="Slide 2"
-            data-carousel-slide-to="1"
-          />
-          <button
-            type="button"
-            class="w-3 h-3 rounded-full"
-            aria-current="false"
-            aria-label="Slide 3"
-            data-carousel-slide-to="2"
-          />
-          <button
-            type="button"
-            class="w-3 h-3 rounded-full"
-            aria-current="false"
-            aria-label="Slide 4"
-            data-carousel-slide-to="3"
-          />
-          <button
-            type="button"
-            class="w-3 h-3 rounded-full"
-            aria-current="false"
-            aria-label="Slide 5"
-            data-carousel-slide-to="4"
-          />
+          {/each}
         </div>
       </div>
+
+      <div
+        class="absolute z-30 flex space-x-3 -translate-x-1/2 md:bottom-24 lg:bottom-24 bottom-32 left-1/2"
+      >
+        {#each slides as _, i (i)}
+          <input
+            type="radio"
+            id="radio-{i}"
+            bind:group={currentIndex}
+            value={i}
+            class="hidden"
+            on:change={() => setSlide(i)}
+          />
+          <label for="radio-{i}"></label>
+        {/each}
+      </div>
     </div>
-    <div>
+    <div class="mt-10 lg:mt-0 md:mt-0">
       <h1 class="text-3xl mb-5 sm:text-4xl font-bold ml-4 sm:mt-16">
         Shop By Category
       </h1>
@@ -487,3 +404,92 @@
     sell.
   </p>
 {/if}
+
+<style>
+  .slider {
+    overflow: hidden;
+    max-width: 90%;
+    margin: auto;
+  }
+
+  .slider-inner {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .slide {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    position: relative;
+    height: 400px; /* Adjust the height as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px; /* Adjust padding as needed */
+    margin: 0 20px; /* Adjust margin as needed */
+  }
+
+  .radio-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .radio-button {
+    appearance: none;
+    border: 2px solid #000;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    margin: 0 5px;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .radio-button:checked {
+    background-color: #000;
+  }
+  input[type="radio"] {
+    display: none;
+  }
+
+  label {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border: 2px solid #718096; /* Change this color to your desired border color */
+    border-radius: 50%;
+    transition:
+      background-color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  input:checked + label {
+    background-color: #000000; /* Change this color to your desired active color */
+    border-color: #000000;
+  }
+
+  label:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+
+  input:checked + label:after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+</style>

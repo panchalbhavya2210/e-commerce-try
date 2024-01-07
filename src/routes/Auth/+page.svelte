@@ -76,9 +76,11 @@
               .from("user_auth_data")
               .insert(userDataToInsert);
             console.log(error);
-            setTimeout(() => {
-              window.location.href = "/Verify";
-            }, 1000);
+            if (error == null) {
+              setTimeout(() => {
+                window.location.href = "/Verify";
+              }, 1000);
+            }
           }
           setTimeout(() => {
             pushData();
@@ -110,9 +112,11 @@
               .insert(sellerDataToInsert);
             console.log(error);
 
-            setTimeout(() => {
-              window.location.href = "/Verify";
-            }, 1000);
+            if (error == null) {
+              setTimeout(() => {
+                window.location.href = "/Verify";
+              }, 1000);
+            }
           }
 
           setTimeout(() => {
