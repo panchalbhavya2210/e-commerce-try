@@ -64,24 +64,34 @@
 
   const slides = [
     {
-      text: "Discover Great Deals",
+      text: "Page-Turner Paradise - Dive into Worlds Unseen!",
+      link: "Category/Books",
       backgroundImage: imageOne,
+      desc: "Immerse yourself in captivating stories, from gripping mysteries to heartwarming tales. Our vast collection caters to all literary tastes, ensuring every reader finds their perfect escape.",
     },
     {
-      text: "Explore Exciting Offers",
+      text: "Chic Threads & Trendy Threads - Flaunt Your Style!",
+      link: "Category/Clothing",
       backgroundImage: imageTwo,
+      desc: "Elevate your wardrobe with our chic and trendy apparel, curated to reflect the latest fashion trends. Unleash your unique style and make a statement with every outfit.",
     },
     {
-      text: "Shop with Confidence",
+      text: "Heartfelt Surprises - Unwrap the Joy of Giving!",
+      link: "Category/Gifts",
       backgroundImage: imageThree,
+      desc: "Explore a treasure trove of heartfelt surprises, perfect for every occasion. Whether it's birthdays, anniversaries, or celebrations, our curated gifts add a personal touch to your special moments, making them unforgettable.",
     },
     {
-      text: "Shop with Confidence",
+      text: "Gizmo Galaxy - Power Up Your Tech Game!",
+      link: "Category/Electronics",
       backgroundImage: imageFour,
+      desc: "Enter the Gizmo Galaxy, where cutting-edge technology meets your needs. From sleek smartphones to powerful laptops, our electronic selection ensures you stay connected and ahead in the digital realm.",
     },
     {
-      text: "Shop with Confidence",
+      text: "Playtime Wonderland - Spark Imagination with Every Toy",
+      link: "Category/Toys",
       backgroundImage: imageFive,
+      desc: "Dive into a Playtime Wonderland filled with imagination and joy. Our curated toy collection sparks creativity in every child, offering a range of options that entertain, educate, and bring endless smiles.",
     },
   ];
   let time;
@@ -100,71 +110,72 @@
     clearInterval(time);
     setInt();
   }
+
+  const categroyItems = [
+    {
+      text: "Electronics",
+      img: acEl,
+      link: "/Category/Electronics",
+    },
+    {
+      text: "Clothing & Fashion",
+      img: clothEl,
+      link: "/Category/Clothing",
+    },
+    {
+      text: "Home & Furniture",
+      img: Furniture,
+      link: "/Category/Home",
+    },
+    {
+      text: "Books & Media",
+      img: Book,
+      link: "/Category/Books",
+    },
+    {
+      text: "Groceries & Food",
+      img: Groc,
+      link: "/Category/Groceries",
+    },
+    {
+      text: "Health & Wellness",
+      img: fatal,
+      link: "/Category/Health",
+    },
+    {
+      text: "Toys & Games",
+      img: toy,
+      link: "/Category/Toys",
+    },
+    {
+      text: "Sport & Outdoors",
+      img: sport,
+      link: "/Category/Sport",
+    },
+    {
+      text: "Pet Supplies",
+      img: pet,
+      link: "/Category/Pets",
+    },
+    {
+      text: "Gifts",
+      img: gift,
+      link: "/Category/Gifts",
+    },
+    {
+      text: "Miscellaneous",
+      img: misc,
+      link: "/Category/Miscellaneous",
+    },
+  ];
 </script>
 
 {#if userType == "User" || userType == null || userType == undefined}
   <main transition:fly={{ y: 200 }}>
-    <!-- <div class="slider">
-      <div
-        class="slider-inner"
-        style="transform: translateX({-currentIndex * 100}%)"
-      >
-        {#each slides as { text, backgroundImage }, i (i)}
-          <div
-            class="slide h-96 relative duration-700 ease-in-out overflow-hidden"
-          >
-            <div class="absolute z-10 overflow-hidden">
-              <p>{text}</p>
-              <img
-                src={transParent}
-                class="-rotate-90 mt-10 scale-125"
-                alt=""
-              />
-              <div
-                class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
-              >
-                <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-                <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">
-                  Cool Clothing Collection
-                </h1>
-
-                <p class="ml-1 mt-4 sm:mt-5">
-                  A unique collection of clothing unveils a world of creativity
-                  and individuality. These garments defy convention, offering a
-                  <br />one-of-a-kind style that stands out in any crowd.
-                </p>
-
-                <button
-                  class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                  >Explore</button
-                >
-              </div>
-            </div>
-            <img
-              src={backgroundImage}
-              class="absolute block w-full top-0 left-0 object-cover h-full"
-              alt="..."
-            />
-          </div>
-        {/each}
-      </div>
-
-      <div class="radio-group">
-        {#each slides as _, i (i)}
-          <input
-            type="radio"
-            bind:group={currentIndex}
-            value={i}
-            class="radio-button"
-            on:change={() => setSlide(i)}
-          />
-        {/each}
-      </div>
-    </div> -->
     <div class="carouselMain p-4 sm:p-10 h-full">
       <div id="default-carousel" class="relative" data-carousel="slide">
         <div class="relative h-96 overflow-hidden rounded-lg md:h-96">
-          {#each slides as { text, backgroundImage }, i (i)}
+          {#each slides as { text, backgroundImage, desc, link }, i (i)}
             <div
               class="relative transition-all duration-1000 ease-in-out {i ===
               currentIndex
@@ -178,15 +189,19 @@
                   alt=""
                 />
                 <div
-                  class="ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12"
+                  class="md:w-96 ml-5 mt-5 w-72 sm:ml-16 sm:mt-10 absolute text-white top-0 left-0 sm:w-5/12 lg:w-5/12"
                 >
-                  <h1 class="sm:text-3xl font-bold">ShopAholic's</h1>
-                  <h1 class="-ml-1 sm:mt-2 text-4xl font-bold">{text}</h1>
+                  <h1 class="sm:text-3xl mt-5 font-bold">ShopAholic's</h1>
+                  <h1 class="sm:mt-2 lg:text-4xl md:text-4xl font-bold text-xl">
+                    {text}
+                  </h1>
+                  <p>{desc}</p>
                   <!-- Add your additional text content here -->
 
-                  <button
-                    class="bg-orange-400 p-1 mt-2 ml-1.5 rounded-lg text-black"
-                    >Explore</button
+                  <a href={link}>
+                    <button class="bg-orange-400 p-1 mt-2 rounded-lg text-black"
+                      >Explore</button
+                    ></a
                   >
                 </div>
               </div>
@@ -201,7 +216,7 @@
       </div>
 
       <div
-        class="absolute z-30 flex space-x-3 -translate-x-1/2 md:bottom-24 lg:bottom-24 bottom-32 left-1/2"
+        class="absolute z-30 flex space-x-3 -translate-x-1/2 md:bottom-24 lg:bottom-24 bottom-64 left-1/2"
       >
         {#each slides as _, i (i)}
           <input
@@ -221,181 +236,29 @@
         Shop By Category
       </h1>
     </div>
-    <div class="categorymenu w-full sm:w-full sm:p-10 md:p-5">
+    <div class="categorymenu w-full sm:w-full sm:p-10 md:p-5 mb-5">
       <div
         class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
       >
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Electronics" rel="noopener noreferrer">
-            <div
-              class="categoryOne w-11/12 m-auto sm:w-11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+        {#each categroyItems as categData}
+          <div class="rowOne cursor-pointer group transition-all">
+            <a href={categData.link} rel="noopener noreferrer">
+              <div
+                class="categoryOne w-11/12 m-auto sm:w-11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
+              >
+                <img
+                  src={categData.img}
+                  alt=""
+                  srcset=""
+                  class="w-24 h-24 group-hover:w-32 group-hover:h-32 transition-all"
+                />
+                <p class="text-lg font-medium">{categData.text}</p>
+              </div></a
             >
-              <img
-                src={acEl}
-                alt=""
-                srcset=""
-                class="w-32 h-32 group-hover:w-52 group-hover:h-52 transition-all"
-              />
-              <p class="text-lg font-medium">Electronics</p>
-            </div></a
-          >
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Clothing">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={clothEl}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Clothing & Fashion</p>
-            </div>
-          </a>
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Home">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={Furniture}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Home & Furniture</p>
-            </div>
-          </a>
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Books">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={Book}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Books & Media</p>
-            </div>
-          </a>
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Groceries">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={Groc}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-28 group-hover:h-28 transition-all"
-              />
-              <p class="text-lg font-medium">Groceries & Food</p>
-            </div>
-          </a>
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Health">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={fatal}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Health & Wellness</p>
-            </div></a
-          >
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Toys">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={toy}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Toys & Games</p>
-            </div></a
-          >
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Sports">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={sport}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Sports & Outdoors</p>
-            </div>
-          </a>
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Pets">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={pet}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Pet Supplies</p>
-            </div>
-          </a>
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Gifts">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={gift}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Gifts</p>
-            </div></a
-          >
-        </div>
-        <div class="rowOne cursor-pointer group transition-all">
-          <a href="/Category/Miscellaneous">
-            <div
-              class="categoryOne w-11/12 m-auto sm:11/12 rounded-lg h-20 bg-gradient-to-l from-violet-300 to-red-100 flex justify-start items-center"
-            >
-              <img
-                src={misc}
-                alt=""
-                srcset=""
-                class="ml-2 w-20 h-20 group-hover:w-32 group-hover:h-32 transition-all"
-              />
-              <p class="text-lg font-medium">Miscellaneous</p>
-            </div></a
-          >
-        </div>
+          </div>
+        {/each}
       </div>
     </div>
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"
-    ></script>
   </main>
 {:else}
   <p class="m-5">
@@ -406,53 +269,6 @@
 {/if}
 
 <style>
-  .slider {
-    overflow: hidden;
-    max-width: 90%;
-    margin: auto;
-  }
-
-  .slider-inner {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-  }
-
-  .slide {
-    flex: 0 0 100%;
-    box-sizing: border-box;
-    position: relative;
-    height: 400px; /* Adjust the height as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    padding: 20px; /* Adjust padding as needed */
-    margin: 0 20px; /* Adjust margin as needed */
-  }
-
-  .radio-group {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-
-  .radio-button {
-    appearance: none;
-    border: 2px solid #000;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    margin: 0 5px;
-    outline: none;
-    cursor: pointer;
-    background-color: transparent;
-    transition: background-color 0.3s ease-in-out;
-  }
-
-  .radio-button:checked {
-    background-color: #000;
-  }
   input[type="radio"] {
     display: none;
   }

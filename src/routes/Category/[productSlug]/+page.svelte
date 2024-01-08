@@ -4,6 +4,7 @@
   import done from "../../../lib/assets/done-round-svgrepo-com.svg";
   import { fade, fly } from "svelte/transition";
   import { onMount } from "svelte";
+  import noProd from "../../../lib/category-icons/no prod.png";
 
   /**
    * * Now how to convert obj to arry
@@ -14,6 +15,7 @@
   let ratData = [];
   console.log(data);
   let product = data;
+  console.log(product.product);
   let prd = product.product;
 
   //obj to array
@@ -78,6 +80,7 @@
     btnDecision,
     modalBring;
   async function showProd(prdDaata) {
+    qtyValue = 0;
     viewLength = 2;
     modalBring = true;
     source = prdDaata.product_image_d;
@@ -330,6 +333,7 @@
 
 <main transition:fly={{ y: 200 }}>
   <!-- Breadcrumb -->
+
   <nav
     class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 m-3 shadow-md hover:shadow-sm transition-all"
     aria-label="Breadcrumb"
@@ -379,64 +383,84 @@
       </li>
     </ol>
   </nav>
-
   <div class="categorymenu w-full sm:w-full sm:p-10 md:p-5">
-    <div
-      class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 {modalBring
-        ? 'hidden'
-        : 'block'}"
-    >
-      {#each prd as product}
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div
-          class="rowOne cursor-pointer group transition-all"
-          on:click={() => showProd(product)}
-        >
-          <div class="heightOne h-11/12 shadow-lg p-3">
-            <img
-              src={product.product_image_d}
-              alt=""
-              srcset=""
-              class="rounded-md transition-all h-full w-full"
-            />
-            <p class="font-medium text-lg break-words mt-2 m-1">
-              {product.product_name}
-            </p>
-            <p class="break-words m-1">
-              {product.product_description}
-            </p>
-            <p class="break-words m-1">
-              Available Qty : {product.product_qty}
-            </p>
+    {#if product.product.length == 0}
+      <div class="flex items-center justify-center w-full h-full">
+        <div class="text-center">
+          <img
+            src={noProd}
+            alt="No Category Icon"
+            class="mx-auto w-auto h-44 mb-4"
+          />
 
-            <div class="flex justify-between">
-              <p class="font-medium m-1">{product.product_price}₹</p>
-              <button
-                on:click={() => showProd(product)}
-                type="button"
-                class="text-white -mt-1.5 bg-black focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 hover:bg-gray-700"
-                ><svg
-                  width="20px"
-                  height="20px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+          <h2 class="text-2xl font-semibold mb-2">
+            No products available for this category
+          </h2>
+          <p class="text-gray-600">
+            Check back later or explore <a href="/" class="underline"
+              >other categories.</a
+            >
+          </p>
+        </div>
+      </div>
+    {:else}
+      <div
+        class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 {modalBring
+          ? 'hidden'
+          : 'block'}"
+      >
+        {#each prd as product}
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div
+            class="rowOne cursor-pointer group transition-all"
+            on:click={() => showProd(product)}
+          >
+            <div class="heightOne h-11/12 shadow-lg p-3">
+              <img
+                src={product.product_image_d}
+                alt=""
+                srcset=""
+                class="rounded-md transition-all h-full w-full"
+              />
+              <p class="font-medium text-lg break-words mt-2 m-1">
+                {product.product_name}
+              </p>
+              <p class="break-words m-1">
+                {product.product_description}
+              </p>
+              <p class="break-words m-1">
+                Available Qty : {product.product_qty}
+              </p>
+
+              <div class="flex justify-between">
+                <p class="font-medium m-1">{product.product_price}₹</p>
+                <button
+                  on:click={() => showProd(product)}
+                  type="button"
+                  class="text-white -mt-1.5 bg-black focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 hover:bg-gray-700"
+                  ><svg
+                    width="20px"
+                    height="20px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
+                      stroke="#ffffff"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg></button
                 >
-                  <path
-                    d="M6.29977 5H21L19 12H7.37671M20 16H8L6 3H3M9 20C9 20.5523 8.55228 21 8 21C7.44772 21 7 20.5523 7 20C7 19.4477 7.44772 19 8 19C8.55228 19 9 19.4477 9 20ZM20 20C20 20.5523 19.5523 21 19 21C18.4477 21 18 20.5523 18 20C18 19.4477 18.4477 19 19 19C19.5523 19 20 19.4477 20 20Z"
-                    stroke="#ffffff"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg></button
-              >
+              </div>
             </div>
           </div>
-        </div>
-      {/each}
-    </div>
+        {/each}
+      </div>
+    {/if}
 
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -559,16 +583,17 @@
               </div>
               <!-- Input Number -->
               <div
-                class="py-2 px-3 bg-gray-100 rounded-lg"
+                class="py-2 px-3 bg-gray-100 w-56 rounded-lg"
                 data-hs-input-number
               >
                 <div class="w-full flex justify-between items-center gap-x-5">
                   <div class="grow">
                     <input
-                      class="w-full p-0 bg-transparent border-0 text-gray-800 focus:ring-0"
+                      class="w-full p-0 bg-transparent border-0 text-gray-800 focus:ring-0 font-bold"
                       type="number"
                       bind:value={qtyValue}
                       max={prQty}
+                      readonly
                       data-hs-input-number-input
                       min="0"
                     />
