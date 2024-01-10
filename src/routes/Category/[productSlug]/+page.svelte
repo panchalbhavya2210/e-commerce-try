@@ -329,6 +329,69 @@
   function dynamicImgUrl(url) {
     source = url;
   }
+
+  let img, lens, output, x, y, cx, cy;
+
+  onMount(() => {
+    img = document.getElementById("box");
+    output = document.getElementById("box2");
+    lens = document.querySelector("#box .square");
+
+    let imgUrl = window.getComputedStyle(img).backgroundImage;
+
+    cx = output.offsetWidth / lens.offsetWidth;
+    cy = output.offsetHeight / lens.offsetHeight;
+
+    output.style.display = "none";
+
+    output.style.backgroundImage = imgUrl;
+    output.style.backgroundSize =
+      cx * img.offsetWidth + "px " + cy * img.offsetHeight + "px";
+
+    const commandFunc = (e) => {
+      output.style.display = "initial";
+
+      x = e.pageX - img.getBoundingClientRect().left - lens.offsetWidth / 2;
+      y = e.pageY - img.getBoundingClientRect().top - lens.offsetHeight / 2;
+
+      if (x < 0) {
+        x = 0;
+      }
+
+      if (y < 0) {
+        y = 0;
+      }
+
+      if (x > img.offsetWidth - lens.offsetWidth) {
+        x = img.offsetWidth - lens.offsetWidth;
+      }
+
+      if (y > img.offsetHeight - lens.offsetHeight) {
+        y = img.offsetHeight - lens.offsetHeight;
+      }
+
+      lens.style.top = y + "px";
+      lens.style.left = x + "px";
+
+      output.style.backgroundPositionY = -(y * cy) + "px";
+      output.style.backgroundPositionX = -(x * cx) + "px";
+    };
+
+    const hideZoomImage = () => {
+      output.style.display = "none";
+    };
+
+    img.addEventListener("mousemove", commandFunc);
+    img.addEventListener("mouseout", hideZoomImage);
+    img.addEventListener("touchmove", commandFunc);
+
+    return () => {
+      // Cleanup event listeners on component destroy
+      img.removeEventListener("mousemove", commandFunc);
+      img.removeEventListener("mouseout", hideZoomImage);
+      img.removeEventListener("touchmove", commandFunc);
+    };
+  });
 </script>
 
 <main transition:fly={{ y: 200 }}>
@@ -466,8 +529,8 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <section
       class="font-poppins fixed overflow-x-hidden h-full left-0 bg-white w-full transition-all duration-500 {modalBring
-        ? ' -bottom-0'
-        : ' -bottom-full'}"
+        ? ' -bottom-0 opacity-100'
+        : ' -bottom-full opacity-0'}"
     >
       <div
         class="sticky w-full top-0 left-0 h-20 flex justify-center items-start z-50 lg:ml-5 md:ml-5"
@@ -501,6 +564,13 @@
                   alt=""
                 />
               </div>
+
+              <div id="box" class="boxHai" style="background: url({source});">
+                <span class="square"></span>
+              </div>
+
+              <div id="box2" class="dusraBox" />
+
               <div class="flex-wrap flex -mx-2 md:flex -z-0">
                 {#each imgData as img}
                   <div class="w-auto p-2 sm:w-1/4 lg:w-auto md:w-auto">
@@ -515,6 +585,7 @@
                   </div>
                 {/each}
               </div>
+
               <div class="px-6 pb-6 mt-6 border-t border-gray-300"></div>
             </div>
           </div>
@@ -524,9 +595,12 @@
                 <h2
                   class="max-w-xl mt-4 mb-4 text-5xl font-bold md:text-6xl font-heading"
                 >
-                  Buy {prName}
+                  {prName}
                 </h2>
-                <p class="max-w-md mb-4 text-gray-500">
+                <p class="max-w-md mb-4 text-gray-800 font-medium text-4xl">
+                  ₹ {prPrice}
+                </p>
+                <p class="max-w-md mb-4 text-gray-800">
                   {prdDesc}
                 </p>
               </div>
@@ -557,30 +631,7 @@
                   >
                 </div>
               </div>
-              <div class="mt-6">
-                <div class="flex flex-wrap items-center">
-                  <span class="mr-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="w-4 h-4 text-gray-700 bi bi-bag"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"
-                      ></path>
-                    </svg>
-                  </span>
-                  <h2 class="text-lg font-bold text-gray-700">Pickup</h2>
-                </div>
-                <div class="px-7">
-                  <a class="mb-2 text-sm text-blue-400" href="a"
-                    >Check availability</a
-                  >
-                </div>
-              </div>
+
               <!-- Input Number -->
               <div
                 class="py-2 px-3 bg-gray-100 w-56 rounded-lg"
@@ -1141,3 +1192,38 @@
     </div>
   </div>
 </main>
+
+<style>
+  .boxHai#box {
+    background: url();
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+    height: 500px;
+    width: 600px;
+    margin: 10px;
+    position: relative;
+    float: left;
+  }
+
+  .boxHai#box .square {
+    display: block;
+    position: absolute;
+
+    height: 200px;
+    width: 200px; /* 200px  relative to the parent width*/
+    background-color: #8b1b0d;
+    opacity: 0.4;
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+
+  .dusraBox#box2 {
+    height: 800px;
+    width: 600px;
+    margin: 10px;
+    position: relative;
+    float: left;
+    overflow: hidden;
+    transition: all 0.1s ease-in-out;
+  }
+</style>
