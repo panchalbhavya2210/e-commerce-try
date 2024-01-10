@@ -13,9 +13,9 @@
    */
   export let data = [];
   let ratData = [];
-  console.log(data);
+  // console.log(data);
   let product = data;
-  console.log(product.product);
+  // console.log(product.product);
   let prd = product.product;
 
   //obj to array
@@ -24,7 +24,7 @@
   if (data.product.length != 0) {
     prdCategory = prd[0].product_category;
   } else {
-    console.log("it is what it is");
+    // console.log("it is what it is");
   }
   let ratings = [];
   let uimglink, uname, udate, uemail, formattedDate, auth_id;
@@ -48,7 +48,7 @@
           formattedDate = `${date.getDate()}/${
             date.getMonth() + 1
           }/${date.getFullYear()}`;
-          console.log(uimglink, uname, formattedDate);
+          // console.log(uimglink, uname, formattedDate);
         }
         getData();
       })
@@ -106,21 +106,22 @@
     if (ratData.length == 0) {
       btnDecision = false;
     }
-    console.log(ratData);
+    // console.log(ratData);
     for (let i = 0; i < ratData.length; i++) {
       let checkUserReview = ratData[i].u_id;
       if (checkUserReview == auth_id) {
         btnDecision = true;
-        console.log(btnDecision);
+        // console.log(btnDecision);
       } else {
         btnDecision = false;
-        console.log(btnDecision);
+        // console.log(btnDecision);
       }
       ratings.push(ratData[i].review_stars);
     }
     if (ratData.length > 0) {
       CalculateRating();
     }
+    imageZoom("myimage", "myresult");
   }
 
   async function channelSet() {
@@ -137,7 +138,7 @@
           ratData = ratData;
           ratData.push(payload.new);
           ratings.push(payload.new.review_stars);
-          console.log(ratings);
+          // console.log(ratings);
         }
       )
       .subscribe();
@@ -167,7 +168,7 @@
       "5star": 0,
     };
     roundedRating;
-    console.log(ratings);
+    // console.log(ratings);
     const averageRating =
       ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
     roundedRating = Math.min(Math.round(averageRating * 2) / 2, 5);
@@ -201,9 +202,9 @@
         (ratingCounts[key] / totalRatings) * 100
       );
     }
-    console.log(ratingPercentages);
-    console.log(roundedRating);
-    console.log(ratingCounts);
+    // console.log(ratingPercentages);
+    // console.log(roundedRating);
+    // console.log(ratingCounts);
   }
 
   let date = new Date();
@@ -240,7 +241,7 @@
           .getPublicUrl(`review_img/${fileName}`);
         imageArray.push(dataOne);
 
-        console.log(dataOne);
+        // console.log(dataOne);
       }
 
       const reviewToInsert = {
@@ -259,7 +260,7 @@
       const { data, error } = await supabase
         .from("review_table")
         .insert(reviewToInsert);
-      console.log(data, error);
+      // console.log(data, error);
 
       if (error == null || error.length == 0) {
         reviewTitle = "";
@@ -274,7 +275,7 @@
         reviewState = !reviewState;
       }
     }
-    console.log(prdId);
+    // console.log(prdId);
   }
 
   async function addCart() {
@@ -328,70 +329,92 @@
   }
   function dynamicImgUrl(url) {
     source = url;
+    imageZoom();
   }
 
-  let img, lens, output, x, y, cx, cy;
+  function imageZoom() {
+    // console.log(imgID, resultID);
+    var img, lens, result, cx, cy;
+    img = document.getElementById("myimage");
+    result = document.getElementById("myresult");
+    lens = document.getElementById("lensId");
+    console.log(lens);
+    img.parentElement.insertBefore(lens, img);
+    cx = result.offsetWidth / lens.offsetWidth;
+    cy = result.offsetHeight / lens.offsetHeight;
+    result.style.backgroundImage = "url('" + source + "')";
+    result.style.backgroundSize =
+      img.width * cx + "px " + img.height * cy + "px";
+    /*execute a function when someone moves the cursor over the image, or the lens:*/
+    lens.addEventListener("mousemove", moveLens);
+    img.addEventListener("mousemove", moveLens);
 
-  onMount(() => {
-    img = document.getElementById("box");
-    output = document.getElementById("box2");
-    lens = document.querySelector("#box .square");
+    lens.addEventListener("mouseout", (e) => {
+      console.log(e);
+      lens.style.display = "none";
+      result.style.display = "none";
+    });
+    img.addEventListener("mouseenter", (e) => {
+      lens.style.display = "block";
+      result.style.display = "block";
+    });
+    // lens.onmousemove(moveLens);
+    // img.onmousemove(moveLens);
 
-    let imgUrl = window.getComputedStyle(img).backgroundImage;
+    /*and also for touch screens:*/
+    lens.addEventListener("touchmove", moveLens);
+    img.addEventListener("touchmove", moveLens);
 
-    cx = output.offsetWidth / lens.offsetWidth;
-    cy = output.offsetHeight / lens.offsetHeight;
-
-    output.style.display = "none";
-
-    output.style.backgroundImage = imgUrl;
-    output.style.backgroundSize =
-      cx * img.offsetWidth + "px " + cy * img.offsetHeight + "px";
-
-    const commandFunc = (e) => {
-      output.style.display = "initial";
-
-      x = e.pageX - img.getBoundingClientRect().left - lens.offsetWidth / 2;
-      y = e.pageY - img.getBoundingClientRect().top - lens.offsetHeight / 2;
-
+    // img.addEventListener("mouseout", function () {
+    //   // Add your code here to handle the mouseout event
+    //   // For example, you can hide the lens and result elements
+    //   lens.style.display = "none";
+    //   result.style.display = "none";
+    // });
+    function moveLens(e) {
+      var pos, x, y;
+      /*prevent any other actions that may occur when moving over the image:*/
+      e.preventDefault();
+      /*get the cursor's x and y positions:*/
+      pos = getCursorPos(e);
+      /*calculate the position of the lens:*/
+      x = pos.x - lens.offsetWidth / 2;
+      y = pos.y - lens.offsetHeight / 2;
+      /*prevent the lens from being positioned outside the image:*/
+      if (x > img.width - lens.offsetWidth) {
+        x = img.width - lens.offsetWidth - 1;
+      }
       if (x < 0) {
         x = 0;
       }
-
+      if (y > img.height - lens.offsetHeight) {
+        y = img.height - lens.offsetHeight - 1;
+      }
       if (y < 0) {
         y = 0;
       }
-
-      if (x > img.offsetWidth - lens.offsetWidth) {
-        x = img.offsetWidth - lens.offsetWidth;
-      }
-
-      if (y > img.offsetHeight - lens.offsetHeight) {
-        y = img.offsetHeight - lens.offsetHeight;
-      }
-
-      lens.style.top = y + "px";
+      /*set the position of the lens:*/
       lens.style.left = x + "px";
-
-      output.style.backgroundPositionY = -(y * cy) + "px";
-      output.style.backgroundPositionX = -(x * cx) + "px";
-    };
-
-    const hideZoomImage = () => {
-      output.style.display = "none";
-    };
-
-    img.addEventListener("mousemove", commandFunc);
-    img.addEventListener("mouseout", hideZoomImage);
-    img.addEventListener("touchmove", commandFunc);
-
-    return () => {
-      // Cleanup event listeners on component destroy
-      img.removeEventListener("mousemove", commandFunc);
-      img.removeEventListener("mouseout", hideZoomImage);
-      img.removeEventListener("touchmove", commandFunc);
-    };
-  });
+      lens.style.top = y + "px";
+      /*display what the lens "sees":*/
+      result.style.backgroundPosition = "-" + x * cx + "px -" + y * cy + "px";
+    }
+    function getCursorPos(e) {
+      var a,
+        x = 0,
+        y = 0;
+      e = e || window.event;
+      /*get the x and y positions of the image:*/
+      a = img.getBoundingClientRect();
+      /*calculate the cursor's x and y coordinates, relative to the image:*/
+      x = e.pageX - a.left;
+      y = e.pageY - a.top;
+      /*consider any page scrolling:*/
+      x = x - window.pageXOffset;
+      y = y - window.pageYOffset;
+      return { x: x, y: y };
+    }
+  }
 </script>
 
 <main transition:fly={{ y: 200 }}>
@@ -557,19 +580,15 @@
         <div class="flex flex-wrap mb-24 -mx-4">
           <div class="w-full px-4 mb-8 md:w-1/2 md:mb-0">
             <div class="sticky top-0 z-50 overflow-hidden">
-              <div class="relative mb-6 lg:mb-10">
-                <img
-                  class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md"
-                  src={source}
-                  alt=""
-                />
+              <div class="img-zoom-container">
+                <!-- class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md" -->
+                <div class="img-zoom-lens" id="lensId"></div>
+                <img id="myimage" src={source} alt="" />
+                <div
+                  id="myresult"
+                  class="img-zoom-result bg-no-repeat absolute"
+                ></div>
               </div>
-
-              <div id="box" class="boxHai" style="background: url({source});">
-                <span class="square"></span>
-              </div>
-
-              <div id="box2" class="dusraBox" />
 
               <div class="flex-wrap flex -mx-2 md:flex -z-0">
                 {#each imgData as img}
@@ -1194,36 +1213,26 @@
 </main>
 
 <style>
-  .boxHai#box {
-    background: url();
-    -webkit-background-size: 100% 100%;
-    background-size: 100% 100%;
-    height: 500px;
-    width: 600px;
-    margin: 10px;
-    position: relative;
-    float: left;
+  * {
+    box-sizing: border-box;
   }
 
-  .boxHai#box .square {
-    display: block;
+  .img-zoom-container {
+    position: relative;
+  }
+
+  .img-zoom-lens {
     position: absolute;
-
-    height: 200px;
-    width: 200px; /* 200px  relative to the parent width*/
-    background-color: #8b1b0d;
-    opacity: 0.4;
-    border: 2px solid #fff;
-    cursor: pointer;
+    border: 1px solid #d4d4d4;
+    /*set the size of the lens:*/
+    width: 40px;
+    height: 40px;
   }
 
-  .dusraBox#box2 {
-    height: 800px;
-    width: 600px;
-    margin: 10px;
-    position: relative;
-    float: left;
-    overflow: hidden;
-    transition: all 0.1s ease-in-out;
+  .img-zoom-result {
+    border: 1px solid #d4d4d4;
+    /*set the size of the result div:*/
+    width: 300px;
+    height: 300px;
   }
 </style>
