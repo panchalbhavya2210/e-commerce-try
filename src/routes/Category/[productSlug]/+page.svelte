@@ -329,98 +329,6 @@
   }
   function dynamicImgUrl(url) {
     source = url;
-    imageZoom();
-  }
-
-  function imageZoom() {
-    // console.log(imgID, resultID);
-    var img, lens, result, cx, cy;
-    img = document.getElementById("myimage");
-    result = document.getElementById("myresult");
-    lens = document.getElementById("lensId");
-    console.log(lens);
-    img.parentElement.insertBefore(lens, img);
-    cx = result.offsetWidth / lens.offsetWidth;
-    cy = result.offsetHeight / lens.offsetHeight;
-    result.style.backgroundImage = "url('" + source + "')";
-    result.style.backgroundSize =
-      (img.width * cx) / 1 + "px " + (img.height * cy) / 1 + "px";
-    /*execute a function when someone moves the cursor over the image, or the lens:*/
-    // lens.addEventListener("mousemove", moveLens);
-    img.addEventListener("mousemove", moveLens);
-
-    lens.addEventListener("mouseout", (e) => {
-      console.log("Leave");
-      lens.style.display = "none";
-      result.style.display = "none";
-    });
-
-    img.addEventListener("mouseout", (e) => {
-      console.log("Leave");
-      lens.style.display = "none";
-      result.style.display = "none";
-    });
-
-    img.addEventListener("mouseenter", (e) => {
-      lens.style.display = "block";
-      result.style.display = "block";
-    });
-    // lens.onmousemove(moveLens);
-    // img.onmousemove(moveLens);
-
-    /*and also for touch screens:*/
-    // lens.addEventListener("touchmove", moveLens);
-    img.addEventListener("touchmove", moveLens);
-
-    // img.addEventListener("mouseout", function () {
-    //   // Add your code here to handle the mouseout event
-    //   // For example, you can hide the lens and result elements
-    //   lens.style.display = "none";
-    //   result.style.display = "none";
-    // });
-    function moveLens(e) {
-      var pos, x, y;
-      /*prevent any other actions that may occur when moving over the image:*/
-      e.preventDefault();
-      /*get the cursor's x and y positions:*/
-      pos = getCursorPos(e);
-      /*calculate the position of the lens:*/
-      x = pos.x - lens.offsetWidth / 1;
-      y = pos.y - lens.offsetHeight / 1;
-      /*prevent the lens from being positioned outside the image:*/
-      if (x > img.width - lens.offsetWidth) {
-        x = img.width - lens.offsetWidth - 10;
-      }
-      if (x < 0) {
-        x = 0;
-      }
-      if (y > img.height - lens.offsetHeight) {
-        y = img.height - lens.offsetHeight - 10;
-      }
-      if (y < 0) {
-        y = 0;
-      }
-      /*set the position of the lens:*/
-      lens.style.left = x + "px";
-      lens.style.top = y + "px";
-      /*display what the lens "sees":*/
-      result.style.backgroundPosition = "-" + x * cx + "px -" + y * cy + "px";
-    }
-    function getCursorPos(e) {
-      var a,
-        x = 0,
-        y = 0;
-      e = e || window.event;
-      /*get the x and y positions of the image:*/
-      a = img.getBoundingClientRect();
-      /*calculate the cursor's x and y coordinates, relative to the image:*/
-      x = e.pageX - a.left;
-      y = e.pageY - a.top;
-      /*consider any page scrolling:*/
-      x = x - window.pageXOffset;
-      y = y - window.pageYOffset;
-      return { x: x, y: y };
-    }
   }
 </script>
 
@@ -589,15 +497,8 @@
             <div class="sticky top-0 z-50 overflow-hidden">
               <div class="img-zoom-container relative">
                 <!-- class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md" -->
-                <div
-                  class="img-zoom-lens absolute w-10 h-10 opacity-50 border-white bg-white rounded-full"
-                  id="lensId"
-                ></div>
+
                 <img id="myimage" src={source} alt="" />
-                <div
-                  id="myresult"
-                  class="img-zoom-result bg-no-repeat fixed top-24 right-40 w-96 h-96 pointer-events-none"
-                ></div>
               </div>
 
               <div class="flex-wrap flex -mx-2 md:flex -z-0">
