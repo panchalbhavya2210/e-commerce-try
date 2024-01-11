@@ -121,7 +121,6 @@
     if (ratData.length > 0) {
       CalculateRating();
     }
-    imageZoom("myimage", "myresult");
   }
 
   async function channelSet() {
@@ -498,10 +497,10 @@
               <div class="img-zoom-container relative">
                 <!-- class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md" -->
 
-                <img id="myimage" src={source} alt="" />
+                <img class="rounded-md shadow-lg" src={source} alt="" />
               </div>
 
-              <div class="flex-wrap flex -mx-2 md:flex -z-0">
+              <div class="mt-2 flex-wrap flex -mx-2 md:flex -z-0">
                 {#each imgData as img}
                   <div class="w-auto p-2 sm:w-1/4 lg:w-auto md:w-auto">
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -551,14 +550,14 @@
                       ></path>
                     </svg>
                   </span>
-                  <h2 class="text-lg font-bold text-gray-700">Delivery</h2>
+                  <h2 class="text-lg font-bold">Delivery</h2>
                 </div>
                 <div class="px-7">
-                  <p class="mb-2 text-sm">In Stock</p>
-                  <p class="mb-2 text-sm">Free Shipping</p>
-                  <a class="mb-2 text-sm text-blue-400" href="a"
-                    >Get delivery dates</a
-                  >
+                  <p class="mb-2 text-sm text-gray-900">In Stock</p>
+                  <p class="mb-2 text-sm text-gray-900">
+                    Available qty: {prQty}
+                  </p>
+                  <p class="mb-2 text-sm text-gray-900">Free Shipping</p>
                 </div>
               </div>
 
@@ -604,7 +603,8 @@
                       type="button"
                       class="w-6 h-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
                       data-hs-input-number-increment
-                      on:click={() => qtyValue++}
+                      on:click={() =>
+                        qtyValue == prQty ? (qtyValue = prQty) : qtyValue++}
                     >
                       <svg
                         class="flex-shrink-0 w-3.5 h-3.5"
@@ -627,7 +627,7 @@
               <div class="mt-6">
                 <button
                   on:click={addCart}
-                  class="w-full px-4 py-2 font-bold text-white bg-blue-400 lg:w-96 hover:bg-blue-500"
+                  class="w-full px-4 py-2 font-bold rounded-full text-white bg-blue-400 lg:w-96 hover:bg-blue-500"
                 >
                   Continue
                 </button>
@@ -757,27 +757,27 @@
                     type="text"
                     placeholder="Enter Review Title"
                     bind:value={reviewTitle}
-                    class="w-full lg:w-96 p-2 border my-1 font-semibold outline-none border-black"
+                    class="rounded-md w-full lg:w-96 p-2 border my-1 font-semibold outline-none border-black"
                   />
                   <br />
                   <textarea
                     type="text"
                     placeholder="Enter Review Summary"
                     bind:value={reviewSummary}
-                    class="w-full lg:w-96 p-2 border my-1 font-medium outline-none border-black"
+                    class="rounded-md w-full lg:w-96 p-2 border my-1 font-medium outline-none border-black"
                   ></textarea>
                   <br />
                   <input
                     bind:files
                     type="file"
                     multiple
-                    class="w-full lg:w-96 border font-medium outline-none border-black"
+                    class="rounded-md w-full lg:w-96 border font-medium outline-none border-black"
                     accept="image/jpeg, video/mkv, image/jpg, image/png, image/svg"
                   />
                 </div>
                 <!--                   disabled={btnDecision || reviewState} -->
                 <button
-                  class="w-full lg:w-96 flex justify-center items-center p-2 border mt-2 font-medium outline-none border-black bg-black text-white transition-all duration-500 {btnDecision
+                  class="rounded-full w-full lg:w-96 flex justify-center items-center p-2 border mt-2 font-medium outline-none border-black bg-black text-white transition-all duration-500 {btnDecision
                     ? 'bg-gray-500'
                     : 'hover:bg-white hover:text-black'}"
                   disabled={reviewState || btnDecision}
