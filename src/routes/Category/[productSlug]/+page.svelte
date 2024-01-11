@@ -344,16 +344,23 @@
     cy = result.offsetHeight / lens.offsetHeight;
     result.style.backgroundImage = "url('" + source + "')";
     result.style.backgroundSize =
-      img.width * cx + "px " + img.height * cy + "px";
+      (img.width * cx) / 1 + "px " + (img.height * cy) / 1 + "px";
     /*execute a function when someone moves the cursor over the image, or the lens:*/
-    lens.addEventListener("mousemove", moveLens);
+    // lens.addEventListener("mousemove", moveLens);
     img.addEventListener("mousemove", moveLens);
 
     lens.addEventListener("mouseout", (e) => {
-      console.log(e);
+      console.log("Leave");
       lens.style.display = "none";
       result.style.display = "none";
     });
+
+    img.addEventListener("mouseout", (e) => {
+      console.log("Leave");
+      lens.style.display = "none";
+      result.style.display = "none";
+    });
+
     img.addEventListener("mouseenter", (e) => {
       lens.style.display = "block";
       result.style.display = "block";
@@ -362,7 +369,7 @@
     // img.onmousemove(moveLens);
 
     /*and also for touch screens:*/
-    lens.addEventListener("touchmove", moveLens);
+    // lens.addEventListener("touchmove", moveLens);
     img.addEventListener("touchmove", moveLens);
 
     // img.addEventListener("mouseout", function () {
@@ -378,17 +385,17 @@
       /*get the cursor's x and y positions:*/
       pos = getCursorPos(e);
       /*calculate the position of the lens:*/
-      x = pos.x - lens.offsetWidth / 2;
-      y = pos.y - lens.offsetHeight / 2;
+      x = pos.x - lens.offsetWidth / 1;
+      y = pos.y - lens.offsetHeight / 1;
       /*prevent the lens from being positioned outside the image:*/
       if (x > img.width - lens.offsetWidth) {
-        x = img.width - lens.offsetWidth - 1;
+        x = img.width - lens.offsetWidth - 10;
       }
       if (x < 0) {
         x = 0;
       }
       if (y > img.height - lens.offsetHeight) {
-        y = img.height - lens.offsetHeight - 1;
+        y = img.height - lens.offsetHeight - 10;
       }
       if (y < 0) {
         y = 0;
@@ -580,13 +587,16 @@
         <div class="flex flex-wrap mb-24 -mx-4">
           <div class="w-full px-4 mb-8 md:w-1/2 md:mb-0">
             <div class="sticky top-0 z-50 overflow-hidden">
-              <div class="img-zoom-container">
+              <div class="img-zoom-container relative">
                 <!-- class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md" -->
-                <div class="img-zoom-lens" id="lensId"></div>
+                <div
+                  class="img-zoom-lens absolute w-10 h-10 opacity-50 border-white bg-white rounded-full"
+                  id="lensId"
+                ></div>
                 <img id="myimage" src={source} alt="" />
                 <div
                   id="myresult"
-                  class="img-zoom-result bg-no-repeat absolute"
+                  class="img-zoom-result bg-no-repeat fixed top-24 right-40 w-96 h-96 pointer-events-none"
                 ></div>
               </div>
 
@@ -1213,26 +1223,8 @@
 </main>
 
 <style>
-  * {
-    box-sizing: border-box;
-  }
-
-  .img-zoom-container {
-    position: relative;
-  }
-
-  .img-zoom-lens {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    /*set the size of the lens:*/
-    width: 40px;
-    height: 40px;
-  }
-
-  .img-zoom-result {
-    border: 1px solid #d4d4d4;
-    /*set the size of the result div:*/
-    width: 300px;
-    height: 300px;
-  }
+  /* .img-zoom-result {
+    width: 400px;
+    height: 400px;
+  } */
 </style>
