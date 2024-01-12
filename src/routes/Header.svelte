@@ -99,11 +99,11 @@
             />
           </a>
         </div>
-        <div class="hidden sm:ml-6 sm:block">
+        <div class="hidden sm:ml-36 sm:block">
           <div class="flex justify-center space-x-3">
             <a
               href="/"
-              class=" rounded-md px-3 py-2 text-sm font-medium"
+              class="sm:hidden rounded-md px-3 py-2 text-sm font-medium"
               aria-current="page">Home</a
             >
             {#if userType == undefined}
