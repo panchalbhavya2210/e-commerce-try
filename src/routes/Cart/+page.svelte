@@ -70,10 +70,19 @@
     } else {
       removerState = false;
     }
-    // const { error } = await supabase
-    //   .from("CartData")
-    //   .delete()
-    //   .eq("product_id", con.id);
+    const { error } = await supabase
+      .from("CartData")
+      .delete()
+      .eq("product_id", con.id);
+
+    if (error == null) {
+      const { data, error } = await supabase
+        .from("ProductData")
+        .update({
+          product_qty: con.product_qty + arrCount[con.id],
+        })
+        .eq("id", con.id);
+    }
 
     getCartData();
   }

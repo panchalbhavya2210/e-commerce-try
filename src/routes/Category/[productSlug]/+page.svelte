@@ -137,6 +137,7 @@
           ratData = ratData;
           ratData.push(payload.new);
           ratings.push(payload.new.review_stars);
+          console.log(payload);
           // console.log(ratings);
         }
       )
@@ -266,11 +267,11 @@
         userRating = 0;
         reviewSummary = "";
 
-        channelSet();
         btnDecision = true;
+        await channelSet();
         setTimeout(() => {
           CalculateRating();
-        }, 500);
+        }, 800);
         reviewState = !reviewState;
       }
     }
@@ -321,10 +322,10 @@
     });
   }
 
-  let viewLength = ratData.length,
+  let viewLength = 5,
     source;
   function loadMoreReview() {
-    viewLength = ratData.length;
+    viewLength = 5;
   }
   function dynamicImgUrl(url) {
     source = url;
@@ -522,7 +523,7 @@
             <div class="lg:pl-20">
               <div class="mb-6">
                 <h2
-                  class="max-w-xl mt-4 mb-4 text-5xl font-bold md:text-6xl font-heading"
+                  class="max-w-xl mt-4 mb-4 text-5xl font-bold md:text-6xl font-heading break-words"
                 >
                   {prName}
                 </h2>
