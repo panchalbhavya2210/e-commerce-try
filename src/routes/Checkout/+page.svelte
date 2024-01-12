@@ -90,6 +90,8 @@
   });
 
   async function deleteItem(con) {
+    console.log(con.product_qty);
+    console.log(arrCount[con.id]);
     if (removerState == true) {
       removerState = false;
     } else {
@@ -99,6 +101,15 @@
       .from("CartData")
       .delete()
       .eq("product_id", con.id);
+
+    if (error == null) {
+      const { data, error } = await supabase
+        .from("ProductData")
+        .update({
+          product_qty: con.product_qty + arrCount[con.id],
+        })
+        .eq("id", prdId);
+    }
 
     getCartData();
   }
@@ -136,33 +147,6 @@
       console.error("Error during checkout:", response.statusText);
     }
   }
-
-  // const data = null;
-
-  // fetch(
-  //   `https://anyapi.io/${apiKey}/v1/invoice/generate?date=22/10/2001&number=1&from=AnyAPI&from_address=1&to=Acme%2C%20Corp&ship_to=1&name=USB&unit_cost=50&quantity=2&logo=https%3A%2F%2Fanyapi.io%2Fassets%2Flogo.png&currency=inr&due_date=22/10/2001&tax=8&amount_paid=10&notes=Bhavyakey`,
-  //   {
-  //     method: "GET",
-  //     credentials: "include",
-  //     headers: {
-  //       Authorization: `Bearer ${apiKey}`,
-  //       // Add any other headers if required
-  //     },
-  //   }
-  // )
-  //   .then((response) => {
-  //     console.log(response);
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-  //     return response.text();
-  //   })
-  //   .then((data) => {
-  //     console.log(data);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Fetch error:", error);
-  //   });
 </script>
 
 <div class="checkout">
