@@ -2,10 +2,11 @@
   import { page } from "$app/stores";
   import { onMount } from "svelte";
   import supabase from "../lib/index";
+  import person from "../lib/assets/person-svgrepo-com.svg";
 
-  let navMobileState, profileView, dropdown;
+  let navMobileState, profileView, dropdown, loginState;
 
-  let img;
+  let img = person;
   let accordionMenu, navShow;
   let userType, rowDataif;
   async function getUidData() {
@@ -23,6 +24,10 @@
             .select("*")
             .eq("auth_uid", authId);
           console.log(seller);
+
+          if (error == null || serror == null) {
+            loginState = !loginState;
+          }
 
           if (data && data.length > 0) {
             const rowData = data[0];
@@ -55,6 +60,8 @@
     userType = undefined;
     const { error } = await supabase.auth.signOut();
     console.log(error);
+    img = person;
+    loginState = false;
   }
 </script>
 
@@ -99,7 +106,7 @@
             />
           </a>
         </div>
-        <div class="hidden sm:ml-36 sm:block">
+        <div class="hidden sm:ml-24 sm:block">
           <div class="flex justify-center space-x-3">
             <a
               href="/"
@@ -221,25 +228,19 @@
           >
             <!-- Active: "bg-gray-100", Not Active: "" -->
             <a
-              href="#"
+              href="ProfilePage"
               class="block px-4 py-2 text-sm text-black"
               role="menuitem"
               tabindex="-1"
               id="user-menu-item-0">Your Profile</a
             >
-            <a
-              href="#"
+
+            <button
+              on:click={signOut}
               class="block px-4 py-2 text-sm text-black"
               role="menuitem"
               tabindex="-1"
-              id="user-menu-item-1">Settings</a
-            >
-            <a
-              href="#"
-              class="block px-4 py-2 text-sm text-black"
-              role="menuitem"
-              tabindex="-1"
-              id="user-menu-item-2">Sign out</a
+              id="user-menu-item-2">Sign out</button
             >
           </div>
         </div>
@@ -460,6 +461,28 @@
     </div>
   </div>
 </nav>
+
+<div
+  class="fixed {loginState
+    ? '-bottom-40'
+    : 'bottom-0'}  transition-all left-0 w-full flex justify-center z-50"
+>
+  <div
+    class="beta bg-gray-200 rounded-t-md rounded-tr-md p-3 flex items-center"
+  >
+    <p class="font-semibold">Not Logged In Yet!</p>
+    <a href="/Login">
+      <button class="bg-gray-700 text-white p-1 px-2 rounded-md ml-2"
+        >Log In</button
+      ></a
+    >
+    <a href="/Auth">
+      <button class="bg-gray-700 text-white p-1 px-2 rounded-md ml-2"
+        >Sign Up</button
+      >
+    </a>
+  </div>
+</div>
 
 <style>
   .mobileMenu::-webkit-scrollbar {
