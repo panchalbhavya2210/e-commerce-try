@@ -427,7 +427,7 @@
               <p class="font-medium text-lg break-words mt-2 m-1">
                 {product.product_name}
               </p>
-              <p class="break-words m-1">
+              <p class="break-words m-1 truncate">
                 {product.product_description}
               </p>
               <p class="break-words m-1">
