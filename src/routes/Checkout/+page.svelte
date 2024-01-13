@@ -6,7 +6,6 @@
   import "../../lib/global.css";
   import done from "../../lib/assets/done-round-svgrepo-com.svg";
   import error from "../../lib/assets/error.svg";
-  import { loadStripe } from "@stripe/stripe-js";
 
   // src/routes/api/sendEmail.js
   // Your client-side code (e.g., in a Svelte component)
@@ -141,8 +140,7 @@
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      // order();
-      window.location.replace(data.url);
+      window.location.replace(data.sessionData.url);
     } else {
       console.error("Error during checkout:", response.statusText);
     }

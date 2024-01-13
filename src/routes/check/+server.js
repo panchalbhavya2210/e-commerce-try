@@ -34,21 +34,6 @@ export const POST = async ({ request }) => {
       quantity: item.quantity,
     }));
 
-    // Create session for redirecting users
-    // const lineItems = cartItems.map((item) => {
-    //   return {
-    //     price_data: {
-    //       currency: "INR",
-    //       product_data: {
-    //         name: item.product_name,
-    //         images: [item.product_image_d],
-    //       },
-    //       unit_amount: item.product_price * 100,
-    //     },
-    //     quantity: 3,
-    //   };
-    // });
-
     // Create session
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
@@ -56,13 +41,16 @@ export const POST = async ({ request }) => {
         allowed_countries: ["IN"],
       },
       mode: "payment",
-      success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `http://localhost:5173/success`,
       cancel_url: `http://localhost:5173/cancel`,
     });
+    console.log(session);
 
     return new Response(
       JSON.stringify({
-        url: session.url,
+        // url: session.url,
+        // paymentId: session.payment_intent,
+        sessionData: session,
       }),
       {
         status: 200,
