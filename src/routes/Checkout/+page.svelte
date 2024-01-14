@@ -7,9 +7,6 @@
   import done from "../../lib/assets/done-round-svgrepo-com.svg";
   import error from "../../lib/assets/error.svg";
 
-  // src/routes/api/sendEmail.js
-  // Your client-side code (e.g., in a Svelte component)
-
   let addArr = [];
   let arrCount = [];
   let totalAmount;
@@ -19,7 +16,8 @@
     product_desc = [],
     product_price = [],
     product_img = [],
-    prdQty = [];
+    prdQty = [],
+    addressData = [];
   let user_email;
   let user_id, orderConfirmation, ocTemp, orderError;
 
@@ -76,7 +74,7 @@
           totalAmount += product.product_price * countMap[product.id];
         }
       }
-      if (totalAmount < 500 && addArr.length != 0) {
+      if (totalAmount < 100 && addArr.length != 0) {
         totalAmount = totalAmount + 50;
       } else {
         totalAmount = totalAmount;
@@ -109,7 +107,6 @@
         })
         .eq("id", prdId);
     }
-
     getCartData();
   }
 
@@ -121,6 +118,40 @@
     recPin = 6,
     recPhone = 7;
 
+  async function addAddressData() {
+    const addressDataCont = {
+      user_id: user_id,
+      reciever_name: recFName + " " + recLName,
+      rec_city: recCity,
+      address_title: "Shop",
+      address_details: recAddres,
+      pin_code: recPin,
+      user_phone: recPhone,
+    };
+    const { data, error } = await supabase
+      .from("address_data")
+      .insert(addressDataCont);
+    console.log(data, error);
+
+    fetchAddress();
+  }
+
+  async function fetchAddress() {
+    console.log(user_id);
+    const { data, error } = await supabase
+      .from("address_data")
+      .select("*")
+      .eq("user_id", user_id);
+
+    console.log(data, error);
+    addressData = data;
+  }
+
+  onMount(() => {
+    setTimeout(() => {
+      fetchAddress();
+    }, 1500);
+  });
   async function checkout() {
     const response = await fetch("/check", {
       method: "POST",
@@ -130,10 +161,7 @@
       body: JSON.stringify({
         items: addArr,
         countMap: arrCount,
-        address: "1",
-        city: "1",
-        state: "1",
-        postalCode: "1",
+        totalAmt: totalAmount,
       }),
     });
 
@@ -192,7 +220,7 @@
               </div>
             </li>
           {/each}
-          {#if totalAmount < 500 && totalAmount > 0}
+          {#if totalAmount < 100 && totalAmount > 0}
             <li class="flex py-6">
               <div
                 class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
@@ -216,6 +244,9 @@
                 </div>
                 <div class="flex flex-1 items-end justify-between text-sm">
                   <p class="text-gray-500">Quantity 1</p>
+                  <p class="text-red-500">
+                    Note: Pay delivery charge when parcel arrives.
+                  </p>
                 </div>
               </div>
             </li>
@@ -250,122 +281,155 @@
         </div>
       </div>
     </div>
-    <h2 class="mb-5">Fill Out Your Details.</h2>
-    <div class="formContainer">
-      <div class="form">
-        <div class="inp mb-5">
-          <label for="reciever-email">Email</label>
-          <br />
-          <input
-            bind:value={recEmail}
-            name="reciever-email"
-            id="reciever-email"
-            class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-            type="text"
-            required
-          />
-        </div>
-        <div class="formFlex flex justify-between">
-          <div class="inp flex-1">
-            <label for="reciever-first">Recipient's First Name</label>
-            <br />
-            <input
-              bind:value={recFName}
-              name="reciever-first"
-              id="reciever-first"
-              class="w-11/12 mr-5 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
-              minlength="3"
-              required
-            />
-          </div>
-          <div class="inp flex-1">
-            <label class="ml-2 sm:ml-12 md:ml-12 lg:ml-12" for="reciever-last"
-              >Recipient's Last Name</label
-            >
-            <br />
-            <input
-              bind:value={recLName}
-              name="reciever-last"
-              id="reciever-last"
-              class="w-11/12 ml-2 sm:ml-12 md:ml-12 lg:ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
-              required
-              minlength="3"
-            />
-          </div>
-        </div>
-        <div class="formFlex flex justify-between mt-4">
-          <div class="inp flex-1">
-            <label for="address">Address</label>
-            <br />
-            <input
-              bind:value={recAddres}
-              name="address"
-              id="address"
-              class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
-              minlength="10"
-              required
-            />
-          </div>
-          <div class="inp flex-1">
-            <label class="ml-2 sm:ml-12 md:ml-12 lg:ml-12" for="city"
-              >City</label
-            >
-            <br />
-            <input
-              bind:value={recCity}
-              name="city"
-              id="city"
-              class="w-11/12 ml-2 sm:ml-12 md:ml-12 lg:ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="text"
-              required
-              minlength="2"
-            />
-          </div>
-        </div>
-        <div class="formFlex flex justify-between mt-4">
-          <div class="inp flex-1">
-            <label for="zip">ZIP Code</label>
-            <br />
-            <input
-              bind:value={recPin}
-              name="zip"
-              id="zip"
-              class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="number"
-              minlength="3"
-              required
-            />
-          </div>
-          <div class="inp flex-1">
-            <label class="ml-2 sm:ml-12 md:ml-12 lg:ml-12" for="phone"
-              >Phone Number</label
-            >
-            <br />
-            <input
-              bind:value={recPhone}
-              name="phone"
-              id="phone"
-              class="w-11/12 ml-2 sm:ml-12 md:ml-12 lg:ml-12 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-              type="tel"
-              minlength="6"
-              required
-            />
+    <h2 class="mb-5">Choose Your Address.</h2>
+    <div class="noAddress">
+      No Addresses Available, <button>Add Address</button>
+    </div>
+
+    {#each addressData as data}
+      <div>
+        <div class="radioData">
+          <div
+            class="full w-full my-4 border-black border rounded-md flex justify-start"
+          >
+            <div class="radioItself ml-3 w-10 flex items-start">
+              <input type="radio" name="address_radio" class="mt-3 w-5 h-5" />
+            </div>
+            <div class="data mt-2 mb-2">
+              <p class="font-semibold">{data.address_title}</p>
+              <p>{data.reciever_name}</p>
+              <p>{data.address_details}</p>
+              <p>{data.rec_city}</p>
+              <p>{data.user_phone}</p>
+              <p>{data.pin_code}</p>
+            </div>
           </div>
         </div>
       </div>
-      <p class="text-red-400 mt-3">Only COD(cash on delivery) Available.</p>
-      <div class="button">
-        <div class="mt-6">
-          <a
-            on:click={checkout}
-            href=""
-            class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
-            >Checkout {totalAmount}₹</a
-          >
+    {/each}
+
+    <div class="addModal bg-red-400 p-4 absolute top-24 z-50 w-11/12">
+      <div class="formContainer">
+        <div class="form">
+          <div class="inp mb-5">
+            <label for="reciever-email">Email</label>
+            <br />
+            <input
+              bind:value={recEmail}
+              name="reciever-email"
+              id="reciever-email"
+              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="text"
+              required
+            />
+          </div>
+          <div class="formFlex flex justify-between">
+            <div class="inp flex-1">
+              <label for="reciever-first">Recipient's First Name</label>
+              <br />
+              <input
+                bind:value={recFName}
+                name="reciever-first"
+                id="reciever-first"
+                class="w-11/12 mr-5 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                type="text"
+                minlength="3"
+                required
+              />
+            </div>
+            <div class="inp flex-1">
+              <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="reciever-last"
+                >Recipient's Last Name</label
+              >
+              <br />
+              <input
+                bind:value={recLName}
+                name="reciever-last"
+                id="reciever-last"
+                class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                type="text"
+                required
+                minlength="3"
+              />
+            </div>
+          </div>
+          <div class="formFlex flex justify-between mt-4">
+            <div class="inp flex-1">
+              <label for="address">Address</label>
+              <br />
+              <input
+                bind:value={recAddres}
+                name="address"
+                id="address"
+                class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                type="text"
+                minlength="10"
+                required
+              />
+            </div>
+            <div class="inp flex-1">
+              <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="city">City</label
+              >
+              <br />
+              <input
+                bind:value={recCity}
+                name="city"
+                id="city"
+                class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                type="text"
+                required
+                minlength="2"
+              />
+            </div>
+          </div>
+          <div class="formFlex flex justify-between mt-4">
+            <div class="inp flex-1">
+              <label for="zip">ZIP Code</label>
+              <br />
+              <input
+                bind:value={recPin}
+                name="zip"
+                id="zip"
+                class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                type="number"
+                minlength="3"
+                required
+              />
+            </div>
+            <div class="inp flex-1">
+              <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="phone"
+                >Phone Number</label
+              >
+              <br />
+              <input
+                bind:value={recPhone}
+                name="phone"
+                id="phone"
+                class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                type="tel"
+                minlength="6"
+                required
+              />
+            </div>
+          </div>
         </div>
+
+        <button
+          on:click={addAddressData}
+          class="w-full button flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-3 py-2 mt-3 cursor-pointer text-base font-medium text-white shadow-sm hover:bg-gray-700"
+        >
+          Add Address
+        </button>
+      </div>
+    </div>
+    <div class="button">
+      <div class="mt-6">
+        <a
+          on:click={checkout}
+          href=""
+          class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+          >Checkout {totalAmount}₹</a
+        >
       </div>
     </div>
   </div>

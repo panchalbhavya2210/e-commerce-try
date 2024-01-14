@@ -3,14 +3,10 @@ import { stripe } from "../stripe";
 export const POST = async ({ request }) => {
   try {
     const data = await request.json();
-    const {
-      address,
-      city,
-      state,
-      postalCode /* add other fields as needed */,
-    } = request;
+
     const cartItems = data.items;
     const countMap = data.countMap;
+    const totalAmount = data.totalAmt;
     const countMapInt = {};
     for (const key in countMap) {
       countMapInt[parseInt(key)] = countMap[key];
@@ -21,7 +17,7 @@ export const POST = async ({ request }) => {
       ...item,
       quantity: countMapInt[item.id] || 1,
     }));
-
+    console.log(mergedArray);
     const lineItems = mergedArray.map((item) => ({
       price_data: {
         currency: "INR",
@@ -31,6 +27,7 @@ export const POST = async ({ request }) => {
         },
         unit_amount: item.product_price * 100,
       },
+
       quantity: item.quantity,
     }));
 
