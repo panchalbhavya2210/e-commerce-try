@@ -15,7 +15,7 @@
     product_img = [],
     prdQty = [],
     user_email;
-  let userName = "Bhavya Panchal";
+  let userName;
   let user_id, orderConfirmation, ocTemp, orderError;
 
   let removerState = false;
@@ -27,6 +27,12 @@
 
       const response = await supabase.auth.getUser();
       const authId = response.data.user.id;
+      const { data: udata, error: uerror } = await supabase
+        .from("user_auth_data")
+        .select("*")
+        .eq("auth_uid", authId);
+      userName = udata[0].user_name;
+
       user_id = response.data.user.id;
       const { data: cartData, error } = await supabase
         .from("CartData")
@@ -81,12 +87,10 @@
   }
 
   async function fetchAddress() {
-    const res = await supabase.auth.getUser();
-    const uid = res.data.user.id;
     const { data, error } = await supabase
       .from("address_data")
       .select("*")
-      .eq("user_id", uid);
+      .eq("user_id", user_id);
 
     console.log(data, error);
     addressData = data;
@@ -145,8 +149,8 @@
     sendMail();
   }
   onMount(() => {
+    getCartData();
     setTimeout(() => {
-      getCartData();
       fetchAddress();
     }, 1500);
   });
@@ -192,7 +196,6 @@
   }
 </script>
 
-<!-- Display the retrieved data in the component -->
 <main>
   <div class="p-5">
     <div>
