@@ -85,56 +85,7 @@
   onMount(() => {
     getCartData();
   });
-  let bindRadio;
-  function changeValue(data) {
-    bindRadio = data.id;
-  }
-  async function order() {
-    const randomDecimal = Math.random();
-    const otp = Math.floor(randomDecimal * 1000000);
-    for (let i = 0; i < seller_id.length; i++) {
-      const orderDataToInsert = {
-        seller_id: seller_id[i],
-        address_id: bindRadio,
-        product_ids: prdId[i],
-        user_id: user_id,
-        product_name: product_name[i],
-        product_desc: product_desc[i],
-        product_image: product_img[i],
-        product_price: product_price[i],
-        order_status: "Pending",
-        customer_otp: otp,
-        ordered_qty: arrCount[prdId[i]],
-        invoice_amt: totalAmount,
-        payment_status: "unpaid",
-      };
-      console.log(orderDataToInsert);
-      const { data, error } = await supabase
-        .from("order_table")
-        .insert(orderDataToInsert);
-      for (let i = 0; i < prdId.length; i++) {
-        // const { data: deleted } = await supabase
-        //   .from("CartData")
-        //   .delete()
-        //   .eq("product_id", prdId[i]);
-      }
-      ocTemp = error;
-      console.log(data, error);
-    }
-    if (ocTemp == null && addArr.length != 0) {
-      orderConfirmation = !orderConfirmation;
-      setTimeout(() => {
-        orderConfirmation = !orderConfirmation;
-      }, 5000);
-    } else if (addArr.length == 0) {
-      orderError = !orderError;
-      setTimeout(() => {
-        orderError = !orderError;
-      }, 5000);
-    } else {
-      alert("Something Went Wrong");
-    }
-  }
+
   async function deleteItem(con) {
     console.log(con.product_qty);
     console.log(arrCount[con.id]);
@@ -174,26 +125,8 @@
       .from("address_data")
       .insert(addressDataCont);
     console.log(data, error);
-
-    fetchAddress();
   }
 
-  async function fetchAddress() {
-    console.log(user_id);
-    const { data, error } = await supabase
-      .from("address_data")
-      .select("*")
-      .eq("user_id", user_id);
-
-    console.log(data, error);
-    addressData = data;
-  }
-
-  onMount(() => {
-    setTimeout(() => {
-      fetchAddress();
-    }, 1500);
-  });
   async function checkout() {
     const response = await fetch("/check", {
       method: "POST",
@@ -209,7 +142,6 @@
 
     if (response.ok) {
       const data = await response.json();
-      order();
       window.location.replace(data.sessionData.url);
     } else {
       console.error("Error during checkout:", response.statusText);
@@ -323,38 +255,6 @@
         </div>
       </div>
     </div>
-    <h2 class="mb-5">Choose Your Address.</h2>
-    <div class="noAddress">
-      No Addresses Available, <button>Add Address</button>
-    </div>
-
-    {#each addressData as data}
-      <div>
-        <div class="radioData">
-          <div
-            class="full w-full my-4 border-black border rounded-md flex justify-start"
-          >
-            <div class="radioItself ml-3 w-10 flex items-start">
-              <input
-                type="radio"
-                name="address_radio"
-                class="mt-3 w-5 h-5"
-                on:change={changeValue(data)}
-                selected={bindRadio}
-              />
-            </div>
-            <div class="data mt-2 mb-2">
-              <p class="font-semibold">{data.address_title}</p>
-              <p>{data.reciever_name}</p>
-              <p>{data.address_details}</p>
-              <p>{data.rec_city}</p>
-              <p>{data.user_phone}</p>
-              <p>{data.pin_code}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    {/each}
 
     <div class="addModal bg-red-400 p-4 absolute top-24 z-50 w-11/12">
       <div class="formContainer">
