@@ -4,6 +4,9 @@
   import supabase from "../lib/index";
   import person from "../lib/assets/person-svgrepo-com.svg";
 
+  // const SibApiV3Sdk = require("@getbrevo/brevo");
+  // import "./brevo";
+
   let navMobileState, profileView, dropdown, loginState;
 
   let img = person;

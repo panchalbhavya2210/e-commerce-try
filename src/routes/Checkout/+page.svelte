@@ -85,7 +85,56 @@
   onMount(() => {
     getCartData();
   });
-
+  let bindRadio;
+  function changeValue(data) {
+    bindRadio = data.id;
+  }
+  async function order() {
+    const randomDecimal = Math.random();
+    const otp = Math.floor(randomDecimal * 1000000);
+    for (let i = 0; i < seller_id.length; i++) {
+      const orderDataToInsert = {
+        seller_id: seller_id[i],
+        address_id: bindRadio,
+        product_ids: prdId[i],
+        user_id: user_id,
+        product_name: product_name[i],
+        product_desc: product_desc[i],
+        product_image: product_img[i],
+        product_price: product_price[i],
+        order_status: "Pending",
+        customer_otp: otp,
+        ordered_qty: arrCount[prdId[i]],
+        invoice_amt: totalAmount,
+        payment_status: "unpaid",
+      };
+      console.log(orderDataToInsert);
+      const { data, error } = await supabase
+        .from("order_table")
+        .insert(orderDataToInsert);
+      for (let i = 0; i < prdId.length; i++) {
+        // const { data: deleted } = await supabase
+        //   .from("CartData")
+        //   .delete()
+        //   .eq("product_id", prdId[i]);
+      }
+      ocTemp = error;
+      console.log(data, error);
+    }
+    if (ocTemp == null && addArr.length != 0) {
+      orderConfirmation = !orderConfirmation;
+      setTimeout(() => {
+        orderConfirmation = !orderConfirmation;
+      }, 5000);
+    } else if (addArr.length == 0) {
+      orderError = !orderError;
+      setTimeout(() => {
+        orderError = !orderError;
+      }, 5000);
+    } else {
+      alert("Something Went Wrong");
+    }
+  }
   async function deleteItem(con) {
     console.log(con.product_qty);
     console.log(arrCount[con.id]);
@@ -98,7 +147,6 @@
       .from("CartData")
       .delete()
       .eq("product_id", con.id);
-
     if (error == null) {
       const { data, error } = await supabase
         .from("ProductData")
@@ -110,13 +158,7 @@
     getCartData();
   }
 
-  let recFName = 1,
-    recLName = 2,
-    recEmail = 3,
-    recCity = 4,
-    recAddres = 5,
-    recPin = 6,
-    recPhone = 7;
+  let recFName, recLName, recEmail, recCity, recAddres, recPin, recPhone;
 
   async function addAddressData() {
     const addressDataCont = {
@@ -167,7 +209,7 @@
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
+      order();
       window.location.replace(data.sessionData.url);
     } else {
       console.error("Error during checkout:", response.statusText);
@@ -293,7 +335,13 @@
             class="full w-full my-4 border-black border rounded-md flex justify-start"
           >
             <div class="radioItself ml-3 w-10 flex items-start">
-              <input type="radio" name="address_radio" class="mt-3 w-5 h-5" />
+              <input
+                type="radio"
+                name="address_radio"
+                class="mt-3 w-5 h-5"
+                on:change={changeValue(data)}
+                selected={bindRadio}
+              />
             </div>
             <div class="data mt-2 mb-2">
               <p class="font-semibold">{data.address_title}</p>
