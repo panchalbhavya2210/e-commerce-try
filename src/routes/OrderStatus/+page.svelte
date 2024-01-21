@@ -35,16 +35,18 @@
       type = null;
     }
   }
+  let address_id,
+    data_of_addr = [],
+    mappedData = [];
 
   // Asynchronous function to load user orders.
   async function LoadUserOrder() {
     // A map to store the count of each product ID.
-    const countMap = {};
+    data_of_addr;
 
     // Fetching user information using Supabase authentication.
     const response = await supabase.auth.getUser();
     user_id = response.data.user.id;
-    console.log(response);
 
     const { data: sellerData, error: SellerErit } = await supabase
       .from("seller_auth_data")
@@ -72,12 +74,33 @@
 
     // Storing order data in the render array and logging it.
     renderUserArr = data;
-    console.log(renderUserArr);
+
+    const fetchAdd = data.map((item) => item.address_id);
+
+    const { data: address, error: addrError } = await supabase
+      .from("address_data")
+      .select("*")
+      .in("id", fetchAdd);
+
+    data_of_addr = address;
+    console.log(data_of_addr);
+
+    data_of_addr.forEach((item) => {
+      mappedData[item.id] = item;
+    });
+    data_of_addr = mappedData;
+    console.log(mappedData);
+    // Now, mappedData will have elements at the specified address_id
+
+    // Example usage:
+    // const addressIdToAccess = 2;
+    // if (mappedData[addressIdToAccess]) {
+    //   console.log(mappedData[addressIdToAccess].reciever_name);
+    // } else {
+    //   console.log("Data not found for the given address_id");
+    // }
   }
-
   async function LoadSellerOrder() {
-    const countMap = {};
-
     // Fetching user information using Supabase authentication.
     const response = await supabase.auth.getUser();
     user_id = response.data.user.id;
@@ -89,9 +112,6 @@
       .eq("seller_id", user_id);
 
     renderSellerArr = data;
-    console.log(renderSellerArr);
-
-    // Storing order data in the render array and logging it.
   }
 
   async function markProc(sellerRender) {
@@ -165,11 +185,10 @@
   });
 </script>
 
-<!--  -->
 <main>
   {#if type == "User"}
     <div class="itemOne">
-      {#each renderUserArr as userRender}
+      {#each renderUserArr as userRender (userRender.address_id)}
         <div class="orderDetailss mt-10">
           <div class="orderDetails ml-10">
             <div>
@@ -214,17 +233,26 @@
                     <div class="sm:mx-5 my-2">
                       <p class="font-medium">Delivery Address</p>
                       <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {userRender.customer_name}
+                        {data_of_addr[userRender.address_id]?.address_title}
                       </p>
                       <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {userRender.customer_address}
+                        {data_of_addr[userRender.address_id]?.reciever_name}
                       </p>
                       <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {userRender.customer_city}
+                        {data_of_addr[userRender.address_id]?.user_phone}
                       </p>
                       <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {userRender.customer_pin}
+                        {data_of_addr[userRender.address_id]?.address_details}
                       </p>
+                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                        {data_of_addr[userRender.address_id]?.rec_city}
+                      </p>
+                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                        {data_of_addr[userRender.address_id]?.pin_code}
+                      </p>
+                      <!-- {userRender.address_id}
+
+                      <p>{data_of_addr[userRender.address_id]?.pin_code}</p> -->
                     </div>
                     <!-- <div class="sm:mx-5 my-2">
                       <p class="font-medium">Seller Info</p>
@@ -456,12 +484,6 @@
               </div>
 
               <div class="progress mt-10">
-                <!-- <div
-                  class="progressbar hidden sm:block lg:block lg:w-full bg-blue-600 rounded-full h-2"
-                />
-                <div
-                  class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
-                /> -->
                 <div
                   class="xname lg:flex lg:justify-between lg:items-center sm:flex sm:justify-between md:flex md:justify-between font-medium"
                 >

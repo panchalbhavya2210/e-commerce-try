@@ -17,7 +17,8 @@
     product_price = [],
     product_img = [],
     prdQty = [],
-    addressData = [];
+    addressData = [],
+    addressForm;
   let user_email;
   let user_id, orderConfirmation, ocTemp, orderError;
 
@@ -35,6 +36,23 @@
         .from("CartData")
         .select("*")
         .eq("auth_id", authId);
+
+      const { data: addressDataBeta, error: addressError } = await supabase
+        .from("address_data")
+        .select("*")
+        .eq("user_id", authId);
+      console.log(addressData, addressError);
+      addressData = addressDataBeta;
+
+      if (
+        addressData == null ||
+        addressData == undefined ||
+        addressData.length == 0
+      ) {
+        console.log("no address exists");
+      } else {
+        //do none
+      }
 
       const fetchArr = cartData.map((item) => item.product_id);
 
@@ -147,11 +165,19 @@
       console.error("Error during checkout:", response.statusText);
     }
   }
+
+  function thisFunc() {
+    addressForm = !addressForm;
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
 </script>
 
 <div class="checkout">
   <h1 class="font-medium absolute left-10 mb-4">Products In Cart</h1>
-  <div class="mt-8 p-10">
+  <div class="mt-8 p-6">
     <div class="productDetails">
       <div class="flow-root">
         <ul role="list" class="-my-6 divide-y divide-gray-200 mt-2">
@@ -256,9 +282,116 @@
       </div>
     </div>
 
-    <div class="addModal bg-red-400 p-4 absolute top-24 z-50 w-11/12">
+    <h1 class="mt-2">Availabe Addresses</h1>
+    {#if addressData == null || addressData.length == 0 || addressData == undefined}
+      <h1>None</h1>
+    {:else}
+      {#each addressData as data}
+        <div class="">
+          <div class="radioData">
+            <div
+              class="full w-full my-2 border-black border rounded-md flex justify-start"
+            >
+              <div class="data mt-2 ml-5 mb-2">
+                <p class="font-semibold">{data.address_title}</p>
+                <p>{data.reciever_name}</p>
+                <p>{data.address_details}</p>
+                <p>{data.rec_city}</p>
+                <p>{data.user_phone}</p>
+                <p>{data.pin_code}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {/each}
+    {/if}
+
+    <div class="">
+      <div class="radioData">
+        <button
+          on:click={thisFunc}
+          class="full w-full my-2 border-black border bg-gray-300 rounded-md flex items-center justify-start py-2"
+        >
+          <svg
+            class="w-5 h-5 mx-5"
+            viewBox="0 -0.5 21 21"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            fill="#000000"
+            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g><g id="SVGRepo_iconCarrier">
+              <title>plus_circle [#1427]</title>
+              <desc>Created with Sketch.</desc> <defs> </defs>
+              <g
+                id="Page-1"
+                stroke="none"
+                stroke-width="1"
+                fill="none"
+                fill-rule="evenodd"
+              >
+                <g
+                  id="Dribbble-Light-Preview"
+                  transform="translate(-179.000000, -600.000000)"
+                  fill="#000000"
+                >
+                  <g id="icons" transform="translate(56.000000, 160.000000)">
+                    <path
+                      d="M137.7,450 C137.7,450.552 137.2296,451 136.65,451 L134.55,451 L134.55,453 C134.55,453.552 134.0796,454 133.5,454 C132.9204,454 132.45,453.552 132.45,453 L132.45,451 L130.35,451 C129.7704,451 129.3,450.552 129.3,450 C129.3,449.448 129.7704,449 130.35,449 L132.45,449 L132.45,447 C132.45,446.448 132.9204,446 133.5,446 C134.0796,446 134.55,446.448 134.55,447 L134.55,449 L136.65,449 C137.2296,449 137.7,449.448 137.7,450 M133.5,458 C128.86845,458 125.1,454.411 125.1,450 C125.1,445.589 128.86845,442 133.5,442 C138.13155,442 141.9,445.589 141.9,450 C141.9,454.411 138.13155,458 133.5,458 M133.5,440 C127.70085,440 123,444.477 123,450 C123,455.523 127.70085,460 133.5,460 C139.29915,460 144,455.523 144,450 C144,444.477 139.29915,440 133.5,440"
+                      id="plus_circle-[#1427]"
+                    >
+                    </path>
+                  </g>
+                </g>
+              </g>
+            </g></svg
+          >
+          Add New Address
+        </button>
+      </div>
+    </div>
+    <div
+      class="{addressForm
+        ? 'block'
+        : 'hidden'} mx-auto bg-gray-200 rounded-md p-4 absolute top-24 z-50 w-11/12"
+    >
       <div class="formContainer">
         <div class="form">
+          <div
+            class="head flex items-center justify-between border-b mb-2 border-black"
+          >
+            <h1>Add Your Address</h1>
+            <svg
+              on:click={() => (addressForm = !addressForm)}
+              class="w-6 h-6 cursor-pointer"
+              viewBox="-0.5 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g><g id="SVGRepo_iconCarrier">
+                <path
+                  d="M3 21.32L21 3.32001"
+                  stroke="#000000"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+                <path
+                  d="M3 3.32001L21 21.32"
+                  stroke="#000000"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </g></svg
+            >
+          </div>
           <div class="inp mb-5">
             <label for="reciever-email">Email</label>
             <br />
