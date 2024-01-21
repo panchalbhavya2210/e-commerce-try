@@ -43,6 +43,7 @@
         .eq("user_id", authId);
       console.log(addressData, addressError);
       addressData = addressDataBeta;
+      console.log(addressData);
 
       if (
         addressData == null ||
@@ -127,14 +128,21 @@
     getCartData();
   }
 
-  let recFName, recLName, recEmail, recCity, recAddres, recPin, recPhone;
+  let recFName,
+    recLName,
+    recEmail,
+    recCity,
+    recAddres,
+    recPin,
+    recPhone,
+    recType;
 
   async function addAddressData() {
     const addressDataCont = {
       user_id: user_id,
       reciever_name: recFName + " " + recLName,
       rec_city: recCity,
-      address_title: "Shop",
+      address_title: recType,
       address_details: recAddres,
       pin_code: recPin,
       user_phone: recPhone,
@@ -143,6 +151,8 @@
       .from("address_data")
       .insert(addressDataCont);
     console.log(data, error);
+
+    getCartData();
   }
 
   async function checkout() {
@@ -282,10 +292,10 @@
       </div>
     </div>
 
-    <h1 class="mt-2">Availabe Addresses</h1>
     {#if addressData == null || addressData.length == 0 || addressData == undefined}
-      <h1>None</h1>
+      <h1>No Addresses Available</h1>
     {:else}
+      <h1 class="mt-2">Availabe Addresses</h1>
       {#each addressData as data}
         <div class="">
           <div class="radioData">
@@ -353,165 +363,186 @@
         </button>
       </div>
     </div>
-    <div
-      class="{addressForm
-        ? 'block'
-        : 'hidden'} mx-auto bg-gray-200 rounded-md p-4 absolute top-24 z-50 w-11/12"
-    >
-      <div class="formContainer">
-        <div class="form">
-          <div
-            class="head flex items-center justify-between border-b mb-2 border-black"
-          >
-            <h1>Add Your Address</h1>
-            <svg
-              on:click={() => (addressForm = !addressForm)}
-              class="w-6 h-6 cursor-pointer"
-              viewBox="-0.5 0 25 25"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                id="SVGRepo_tracerCarrier"
+
+    <div class="button">
+      <div class="mt-6">
+        <button
+          on:click={checkout}
+          disabled={addressData == undefined ||
+            addressData.length == 0 ||
+            addressData == null}
+          class="flex {addressData == undefined ||
+          addressData.length == 0 ||
+          addressData == null
+            ? 'cursor-not-allowed'
+            : 'cursor-pointer'} items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+          >Checkout {totalAmount}₹</button
+        >
+      </div>
+    </div>
+  </div>
+  <div
+    class="{addressForm
+      ? 'block'
+      : 'hidden'} mx-auto bg-gray-200 rounded-md p-10 absolute top-16 z-50 w-full"
+  >
+    <div class="formContainer">
+      <div class="form">
+        <div
+          class="head flex items-center justify-between border-b mb-2 border-black"
+        >
+          <h1>Add Your Address</h1>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <svg
+            on:click={() => (addressForm = !addressForm)}
+            class="w-6 h-6 cursor-pointer"
+            viewBox="-0.5 0 25 25"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g><g id="SVGRepo_iconCarrier">
+              <path
+                d="M3 21.32L21 3.32001"
+                stroke="#000000"
+                stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-              ></g><g id="SVGRepo_iconCarrier">
-                <path
-                  d="M3 21.32L21 3.32001"
-                  stroke="#000000"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-                <path
-                  d="M3 3.32001L21 21.32"
-                  stroke="#000000"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </g></svg
-            >
-          </div>
-          <div class="inp mb-5">
-            <label for="reciever-email">Email</label>
+              ></path>
+              <path
+                d="M3 3.32001L21 21.32"
+                stroke="#000000"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </g></svg
+          >
+        </div>
+        <div class="inp mb-5">
+          <label for="reciever-email">Email</label>
+          <br />
+          <input
+            bind:value={recEmail}
+            name="reciever-email"
+            id="reciever-email"
+            class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+            type="text"
+            required
+          />
+        </div>
+        <div class="inp mb-5">
+          <label for="reciever-type">Address Type</label>
+          <br />
+          <input
+            bind:value={recType}
+            name="reciever-type"
+            id="reciever-type"
+            class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+            type="text"
+            required
+            placeholder="Home, Office, etc."
+          />
+        </div>
+        <div class="formFlex flex justify-between">
+          <div class="inp flex-1">
+            <label for="reciever-first">Recipient's First Name</label>
             <br />
             <input
-              bind:value={recEmail}
-              name="reciever-email"
-              id="reciever-email"
-              class="w-full p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              bind:value={recFName}
+              name="reciever-first"
+              id="reciever-first"
+              class="w-11/12 mr-5 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
               type="text"
+              minlength="3"
               required
             />
           </div>
-          <div class="formFlex flex justify-between">
-            <div class="inp flex-1">
-              <label for="reciever-first">Recipient's First Name</label>
-              <br />
-              <input
-                bind:value={recFName}
-                name="reciever-first"
-                id="reciever-first"
-                class="w-11/12 mr-5 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-                type="text"
-                minlength="3"
-                required
-              />
-            </div>
-            <div class="inp flex-1">
-              <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="reciever-last"
-                >Recipient's Last Name</label
-              >
-              <br />
-              <input
-                bind:value={recLName}
-                name="reciever-last"
-                id="reciever-last"
-                class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-                type="text"
-                required
-                minlength="3"
-              />
-            </div>
-          </div>
-          <div class="formFlex flex justify-between mt-4">
-            <div class="inp flex-1">
-              <label for="address">Address</label>
-              <br />
-              <input
-                bind:value={recAddres}
-                name="address"
-                id="address"
-                class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-                type="text"
-                minlength="10"
-                required
-              />
-            </div>
-            <div class="inp flex-1">
-              <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="city">City</label
-              >
-              <br />
-              <input
-                bind:value={recCity}
-                name="city"
-                id="city"
-                class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-                type="text"
-                required
-                minlength="2"
-              />
-            </div>
-          </div>
-          <div class="formFlex flex justify-between mt-4">
-            <div class="inp flex-1">
-              <label for="zip">ZIP Code</label>
-              <br />
-              <input
-                bind:value={recPin}
-                name="zip"
-                id="zip"
-                class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-                type="number"
-                minlength="3"
-                required
-              />
-            </div>
-            <div class="inp flex-1">
-              <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="phone"
-                >Phone Number</label
-              >
-              <br />
-              <input
-                bind:value={recPhone}
-                name="phone"
-                id="phone"
-                class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
-                type="tel"
-                minlength="6"
-                required
-              />
-            </div>
+          <div class="inp flex-1">
+            <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="reciever-last"
+              >Recipient's Last Name</label
+            >
+            <br />
+            <input
+              bind:value={recLName}
+              name="reciever-last"
+              id="reciever-last"
+              class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="text"
+              required
+              minlength="3"
+            />
           </div>
         </div>
+        <div class="formFlex flex justify-between mt-4">
+          <div class="inp flex-1">
+            <label for="address">Address</label>
+            <br />
+            <input
+              bind:value={recAddres}
+              name="address"
+              id="address"
+              class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="text"
+              minlength="10"
+              required
+            />
+          </div>
+          <div class="inp flex-1">
+            <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="city">City</label>
+            <br />
+            <input
+              bind:value={recCity}
+              name="city"
+              id="city"
+              class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="text"
+              required
+              minlength="2"
+            />
+          </div>
+        </div>
+        <div class="formFlex flex justify-between mt-4">
+          <div class="inp flex-1">
+            <label for="zip">ZIP Code</label>
+            <br />
+            <input
+              bind:value={recPin}
+              name="zip"
+              id="zip"
+              class="w-11/12 mr-3 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="number"
+              minlength="3"
+              required
+            />
+          </div>
+          <div class="inp flex-1">
+            <label class="ml-2 sm:ml-8 md:ml-8 lg:ml-8" for="phone"
+              >Phone Number</label
+            >
+            <br />
+            <input
+              bind:value={recPhone}
+              name="phone"
+              id="phone"
+              class="w-11/12 ml-2 sm:ml-8 md:ml-8 lg:ml-8 p-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+              type="tel"
+              minlength="6"
+              required
+            />
+          </div>
+        </div>
+      </div>
 
-        <button
-          on:click={addAddressData}
-          class="w-full button flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-3 py-2 mt-3 cursor-pointer text-base font-medium text-white shadow-sm hover:bg-gray-700"
-        >
-          Add Address
-        </button>
-      </div>
-    </div>
-    <div class="button">
-      <div class="mt-6">
-        <a
-          on:click={checkout}
-          href=""
-          class="flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
-          >Checkout {totalAmount}₹</a
-        >
-      </div>
+      <button
+        on:click={addAddressData}
+        class="w-full button flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-3 py-2 mt-3 cursor-pointer text-base font-medium text-white shadow-sm hover:bg-gray-700"
+      >
+        Add Address
+      </button>
     </div>
   </div>
 

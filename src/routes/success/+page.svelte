@@ -3,6 +3,8 @@
   import "../../lib/global.css";
   import brevo from "@getbrevo/brevo";
   import supabase from "../../lib";
+  import done from "../../lib/assets/done-round-svgrepo-com.svg";
+
   let addressData = [];
   let addArr = [];
   let arrCount = [];
@@ -132,21 +134,19 @@
       }
       ocTemp = error;
       console.log(data, error);
+      console.log(ocTemp);
     }
     if (ocTemp == null && addArr.length != 0) {
       orderConfirmation = !orderConfirmation;
+      console.log(orderConfirmation);
       setTimeout(() => {
         orderConfirmation = !orderConfirmation;
       }, 5000);
     } else if (addArr.length == 0) {
-      orderError = !orderError;
-      setTimeout(() => {
-        orderError = !orderError;
-      }, 5000);
     } else {
       alert("Something Went Wrong");
     }
-    sendMail();
+    // sendMail();
   }
   onMount(() => {
     getCartData();
@@ -199,7 +199,7 @@
 <main>
   <div class="p-5">
     <div>
-      <h1 class="font-semibold">All Done</h1>
+      <h1 class="font-semibold">All Done.</h1>
       <h2>Just Select Your Address.</h2>
     </div>
   </div>
@@ -236,6 +236,21 @@
       class="w-full flex items-center justify-center rounded-md border border-transparent bg-gray-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-gray-700"
       >Confirm Your Order</button
     >
+  </div>
+  <div
+    class="checkMarkAnimation w-96 h-16 bg-green-200 fixed bottom-0 ml-2 sm:m-10 md:m-10 lg:m-10 rounded-md transition-all duration-300 shadow-md flex items-center justify-start {orderConfirmation
+      ? 'opacity-100 translate-y-0'
+      : 'opacity-0 translate-y-20'}"
+  >
+    <img src={done} class="w-auto h-8 mx-5" alt="" />
+    <div>
+      <p class="font-semibold text-green-700">Thanks! Order Placed.</p>
+      <p class="font-medium text-green-700">
+        View
+        <a href="/OrderStatus" class="underline">Order Status</a>
+        .
+      </p>
+    </div>
   </div>
 </main>
 <!-- Add other components or elements to display additional data -->

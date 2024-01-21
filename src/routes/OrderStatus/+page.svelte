@@ -188,7 +188,7 @@
 <main>
   {#if type == "User"}
     <div class="itemOne">
-      {#each renderUserArr as userRender (userRender.address_id)}
+      {#each renderUserArr as userRender}
         <div class="orderDetailss mt-10">
           <div class="orderDetails ml-10">
             <div>
