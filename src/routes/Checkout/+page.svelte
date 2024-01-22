@@ -170,7 +170,9 @@
 
     if (response.ok) {
       const data = await response.json();
-      window.location.replace(data.sessionData.url);
+      // window.location.replace(data.sessionData.url);
+      payment_id = data.sessionData.id;
+      console.log(data.sessionData.id);
     } else {
       console.error("Error during checkout:", response.statusText);
     }

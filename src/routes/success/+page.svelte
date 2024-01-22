@@ -5,6 +5,14 @@
   import supabase from "../../lib";
   import done from "../../lib/assets/done-round-svgrepo-com.svg";
 
+  onMount(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isBeta = urlParams.has("session_id");
+    console.log(isBeta);
+  });
+
+  let isVerified = false;
+
   let addressData = [];
   let addArr = [];
   let arrCount = [];

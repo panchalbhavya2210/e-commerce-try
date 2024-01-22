@@ -1,5 +1,4 @@
 import { stripe } from "../stripe";
-
 export const POST = async ({ request }) => {
   try {
     const data = await request.json();
@@ -38,10 +37,10 @@ export const POST = async ({ request }) => {
         allowed_countries: ["IN"],
       },
       mode: "payment",
-      success_url: `http://localhost:5173/success`,
+      success_url:
+        "http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: `http://localhost:5173/cancel`,
     });
-    console.log(session);
 
     return new Response(
       JSON.stringify({
