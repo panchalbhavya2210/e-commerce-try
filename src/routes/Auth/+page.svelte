@@ -115,7 +115,7 @@
             if (error == null) {
               setTimeout(() => {
                 window.location.href = "/Verify";
-              }, 1000);
+              }, 3000);
             }
           }
 
