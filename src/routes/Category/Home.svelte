@@ -60,7 +60,7 @@
       });
   }
   onMount(() => {
-    inject();
+    inject({ mode: dev ? "development" : "production" });
     getUidData();
     injectSpeedInsights();
   });
