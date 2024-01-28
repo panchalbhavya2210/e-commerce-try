@@ -154,7 +154,7 @@
     } else {
       alert("Something Went Wrong");
     }
-    // sendMail();
+    sendMail();
   }
   onMount(() => {
     getCartData();
