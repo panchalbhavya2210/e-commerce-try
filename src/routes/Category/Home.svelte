@@ -18,6 +18,7 @@
   import gift from "../../lib/category-icons/gift.png";
   import misc from "../../lib/category-icons/hsh.png";
   import { fade, fly } from "svelte/transition";
+  import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
 
   import "../../lib/global.css";
   import supabase from "../../lib";
@@ -58,6 +59,7 @@
   }
   onMount(() => {
     getUidData();
+    injectSpeedInsights();
   });
 
   let currentIndex = 0;

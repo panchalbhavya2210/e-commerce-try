@@ -21,6 +21,7 @@
 	"dependencies": {
 		"@getbrevo/brevo": "^1.0.1",
 		"@stripe/stripe-js": "^2.2.2",
-		"@supabase/supabase-js": "^2.38.0"
+		"@supabase/supabase-js": "^2.38.0",
+		"@vercel/speed-insights": "^1.0.8"
 	}
 }
