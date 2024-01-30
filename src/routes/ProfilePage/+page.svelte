@@ -19,6 +19,7 @@
     productQty,
     hiddenState,
     revData,
+    ordData,
     prdData,
     successText;
   let userType,
@@ -45,6 +46,12 @@
 
         revData = rev;
         console.log(revData);
+        const { data: orderData, error: oerror } = await supabase
+          .from("order_table")
+          .select("*")
+          .eq("user_id", userid);
+        ordData = orderData;
+        console.log(ordData, oerror);
         const fetchArr = revData.map((item) => item.prd_id);
         console.log(fetchArr);
         const { data: prdD, error: an } = await supabase
@@ -131,7 +138,6 @@
         errorState = !errorState;
       }, 5000);
     }
-
     console.log(data);
   }
 
@@ -174,6 +180,8 @@
 </script>
 
 <main>
+  <!-- component -->
+
   {#if loadData == true}
     <div
       role="status"
@@ -215,198 +223,505 @@
       <span class="sr-only">Loading...</span>
     </div>
   {:else}
-    <div class="profileCard">
+    <div
+      class="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-16 bg-white shadow-xl rounded-lg text-gray-900"
+    >
+      <div class="rounded-t-lg h-32 overflow-hidden">
+        <img
+          class="object-cover object-top w-full blur-md"
+          src={img}
+          alt="Mountain"
+        />
+      </div>
       <div
-        class="profileImg sm:flex sm:items-center sm:justify-start md:flex md:items-center md:justify-start lg:flex lg:items-center lg:justify-start w-full"
+        class="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden"
       >
-        <img src={img} alt="" class="mt-5 mx-10 w-auto h-44 rounded-full p-2" />
-        <div class="detailGiver">
-          <p class="ml-10 font-semibold">{username}</p>
-          <p class="ml-10 font-medium">{email}</p>
-          <p class="ml-10 font-normal">{userid}</p>
+        <img
+          class="object-cover object-center h-32"
+          src={img}
+          alt="Woman looking front"
+        />
+      </div>
+      <div class="text-center mt-2">
+        <h2 class="font-semibold">{username}</h2>
+        <p class="">{email}</p>
+        <div class="has-tooltip">
+          <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
+            >Your User Id</span
+          >
+          <p>{userid}</p>
         </div>
       </div>
-    </div>
-    <div class="ml-10 md:ml-5 lg:ml-5 mt-3">
-      <h1 class="text-2xl font-bold">Your Reviews</h1>
-    </div>
-
-    {#if prdData.length != 0}
-      <div
-        class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
-      >
-        {#each prdData as product (product.id)}
-          <!-- svelte-ignore a11y-no-static-element-interactions -->
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div class="rowOne cursor-pointer group transition-all">
-            <div class="heightOne h-11/12 shadow-lg p-3">
-              <img
-                src={product.product_image_d}
-                alt=""
-                srcset=""
-                class="rounded-md transition-all h-full w-full"
+      <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
+        <li class="flex flex-col items-center justify-around cursor-pointer">
+          <div class="has-tooltip">
+            <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
+              >Your Reviews</span
+            >
+            <svg
+              class="w-4 fill-current text-blue-900"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
               />
-              <p class="font-medium text-lg break-words mt-2 m-1">
-                {product.product_name}
-              </p>
-              <p class="break-words m-1">
-                {product.product_description}
-              </p>
-
-              {#if revData.filter((review) => review.prd_id === product.id).length > 0}
-                <!-- Render review data -->
-                {#each revData.filter((review) => review.prd_id === product.id) as rating (rating.id)}
-                  <article>
-                    <div class="flex items-center mb-4">
-                      <img
-                        class="w-10 h-10 me-4 rounded-full"
-                        src={rating.user_image}
-                        alt=""
-                      />
-                      <div class="font-medium dark:text-white">
-                        <p>
-                          {rating.user_name}
-                          <time
-                            datetime="2014-08-16 19:00"
-                            class="block text-sm text-gray-500 dark:text-gray-400"
-                            >Joined on {rating.user_joined}</time
-                          >
-                        </p>
-                      </div>
-                    </div>
-                    <footer class="mb-5 text-sm text-gray-900">
-                      <p>
-                        Reviewed at <time datetime="2017-03-03 19:00"
-                          >{rating.review_date_time}</time
-                        >
-                      </p>
-                    </footer>
-                    <div
-                      class="flex items-center mb-1 space-x-1 rtl:space-x-reverse"
-                    >
-                      <svg
-                        class="w-4 h-4 {rating.review_stars >= 1
-                          ? 'text-yellow-400'
-                          : 'text-gray-500'}"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                      <svg
-                        class="w-4 h-4 {rating.review_stars >= 2
-                          ? 'text-yellow-400'
-                          : 'text-gray-500'}"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                      <svg
-                        class="w-4 h-4 {rating.review_stars >= 3
-                          ? 'text-yellow-400'
-                          : 'text-gray-500'}"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                      <svg
-                        class="w-4 h-4 {rating.review_stars >= 4
-                          ? 'text-yellow-400'
-                          : 'text-gray-500'}"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                      <svg
-                        class="w-4 h-4 {rating.review_stars == 5
-                          ? 'text-yellow-400'
-                          : 'text-gray-500'}"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 22 20"
-                      >
-                        <path
-                          d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                        />
-                      </svg>
-                      <h3 class="ms-2 text-sm font-semibold text-gray-900">
-                        {rating.review_title}
-                      </h3>
-                    </div>
-                    <div class="img flex overflow-x-auto">
-                      {#each rating.review_image as i}
-                        <img
-                          src={i.publicUrl}
-                          alt=""
-                          class="w-auto h-24 mx-2 rounded-md shadow-md my-2"
-                        />
-                      {/each}
-                      <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
-                    </div>
-
-                    <p class="mb-2 text-gray-500 dark:text-gray-400">
-                      {rating.review_desc}
-                    </p>
-                    <div class="flex">
-                      <button
-                        on:click={deleteReview(rating.id)}
-                        class="bg-red-300 w-full p-1 flex justify-center items-center hover:bg-red-400 transition-all m-2 rounded-md"
-                      >
-                        <svg
-                          class="w-auto h-7"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
-                            id="SVGRepo_tracerCarrier"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></g><g id="SVGRepo_iconCarrier">
-                            <path
-                              d="M10 12L14 16M14 12L10 16M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6"
-                              stroke="#242424"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                          </g></svg
-                        >
-                      </button>
-                    </div>
-                  </article>
-                  <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
-                {/each}
-              {:else}
-                <!-- Handle case where there is no review data for the product -->
-                <p>No reviews available</p>
-              {/if}
-            </div>
+            </svg>
+            <div>{revData.length || 0}</div>
           </div>
-        {/each}
+        </li>
+        <li class="flex flex-col items-center justify-between cursor-pointer">
+          <div class="has-tooltip">
+            <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
+              >Your Orders</span
+            >
+            <svg
+              class="w-4 fill-current text-blue-900"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M7 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0 1c2.15 0 4.2.4 6.1 1.09L12 16h-1.25L10 20H4l-.75-4H2L.9 10.09A17.93 17.93 0 0 1 7 9zm8.31.17c1.32.18 2.59.48 3.8.92L18 16h-1.25L16 20h-3.96l.37-2h1.25l1.65-8.83zM13 0a4 4 0 1 1-1.33 7.76 5.96 5.96 0 0 0 0-7.52C12.1.1 12.53 0 13 0z"
+              />
+            </svg>
+            <div>{ordData.length || 0}</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="m-2 mt-5 space-y-2">
+      <!-- svelte-ignore a11y-positive-tabindex -->
+      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+      <div
+        class="group flex flex-col gap-2 rounded-lg bg-gray-200 p-5"
+        tabindex="1"
+      >
+        <div class="flex cursor-pointer items-center justify-between">
+          <span> Your reviews </span>
+          <!-- svelte-ignore a11y-missing-attribute -->
+          <svg
+            class="h-10 w-10 transition-all duration-500 group-focus:-rotate-180"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g><g id="SVGRepo_iconCarrier">
+              <path
+                d="M6 9L12 15L18 9"
+                stroke="#000000"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </g></svg
+          >
+        </div>
+        <div
+          class="invisible h-auto max-h-0 items-center opacity-0 transition-all group-focus:visible group-focus:max-h-screen group-focus:opacity-100 group-focus:duration-1000"
+        >
+          {#if prdData.length != 0}
+            <div
+              class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
+            >
+              {#each prdData as product (product.id)}
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div class="rowOne cursor-pointer group transition-all">
+                  <div class="heightOne h-11/12 shadow-lg p-3">
+                    <img
+                      src={product.product_image_d}
+                      alt=""
+                      srcset=""
+                      class="rounded-md transition-all h-full w-full"
+                    />
+                    <p class="font-medium text-lg break-words mt-2 m-1">
+                      {product.product_name}
+                    </p>
+                    <p class="break-words m-1">
+                      {product.product_description}
+                    </p>
+
+                    {#if revData.filter((review) => review.prd_id === product.id).length > 0}
+                      <!-- Render review data -->
+                      {#each revData.filter((review) => review.prd_id === product.id) as rating (rating.id)}
+                        <article>
+                          <div class="flex items-center mb-4">
+                            <img
+                              class="w-10 h-10 me-4 rounded-full"
+                              src={rating.user_image}
+                              alt=""
+                            />
+                            <div class="font-medium">
+                              <p>
+                                {rating.user_name}
+                                <time
+                                  datetime="2014-08-16 19:00"
+                                  class="block text-sm text-gray-500 dark:text-gray-400"
+                                  >Joined on {rating.user_joined}</time
+                                >
+                              </p>
+                            </div>
+                          </div>
+                          <footer class="mb-5 text-sm text-gray-900">
+                            <p>
+                              Reviewed at <time datetime="2017-03-03 19:00"
+                                >{rating.review_date_time}</time
+                              >
+                            </p>
+                          </footer>
+                          <div
+                            class="flex items-center mb-1 space-x-1 rtl:space-x-reverse"
+                          >
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 1
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 2
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 3
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 4
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars == 5
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <h3
+                              class="ms-2 text-sm font-semibold text-gray-900"
+                            >
+                              {rating.review_title}
+                            </h3>
+                          </div>
+                          <div class="img flex overflow-x-auto">
+                            {#each rating.review_image as i}
+                              <img
+                                src={i.publicUrl}
+                                alt=""
+                                class="w-auto h-24 mx-2 rounded-md shadow-md my-2"
+                              />
+                            {/each}
+                            <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
+                          </div>
+
+                          <p class="mb-2 text-gray-500 dark:text-gray-400">
+                            {rating.review_desc}
+                          </p>
+                          <div class="flex">
+                            <button
+                              on:click={deleteReview(rating.id)}
+                              class="bg-red-300 w-full p-1 flex justify-center items-center hover:bg-red-400 transition-all m-2 rounded-md"
+                            >
+                              <svg
+                                class="w-auto h-7"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                ><g id="SVGRepo_bgCarrier" stroke-width="0"
+                                ></g><g
+                                  id="SVGRepo_tracerCarrier"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></g><g id="SVGRepo_iconCarrier">
+                                  <path
+                                    d="M10 12L14 16M14 12L10 16M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6"
+                                    stroke="#242424"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                </g></svg
+                              >
+                            </button>
+                          </div>
+                        </article>
+                        <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
+                      {/each}
+                    {:else}
+                      <!-- Handle case where there is no review data for the product -->
+                      <p>No reviews available</p>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
+          {:else}
+            <p class="ml-10 md:ml-5 lg:ml-5 mt-3">No Reviewed Product</p>
+          {/if}
+        </div>
       </div>
-    {:else}
-      <p class="ml-10 md:ml-5 lg:ml-5 mt-3">No Reviewed Product</p>
-    {/if}
+
+      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+      <!-- svelte-ignore a11y-positive-tabindex -->
+      <div
+        class="group flex flex-col mt-10 gap-2 rounded-lg bg-gray-200 p-5"
+        tabindex="1"
+      >
+        <div class="flex cursor-pointer items-center justify-between">
+          <span> Your addresses </span>
+          <!-- svelte-ignore a11y-missing-attribute -->
+          <svg
+            class="h-10 w-10 transition-all duration-500 group-focus:-rotate-180"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g><g id="SVGRepo_iconCarrier">
+              <path
+                d="M6 9L12 15L18 9"
+                stroke="#000000"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </g></svg
+          >
+        </div>
+        <div
+          class="invisible h-auto max-h-0 items-center opacity-0 transition-all group-focus:visible group-focus:max-h-screen group-focus:opacity-100 group-focus:duration-1000"
+        >
+          {#if prdData.length != 0}
+            <div
+              class="grid grid-cols-1 gap-5 m-auto sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3"
+            >
+              {#each prdData as product (product.id)}
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div class="rowOne cursor-pointer group transition-all">
+                  <div class="heightOne h-11/12 shadow-lg p-3">
+                    <img
+                      src={product.product_image_d}
+                      alt=""
+                      srcset=""
+                      class="rounded-md transition-all h-full w-full"
+                    />
+                    <p class="font-medium text-lg break-words mt-2 m-1">
+                      {product.product_name}
+                    </p>
+                    <p class="break-words m-1">
+                      {product.product_description}
+                    </p>
+
+                    {#if revData.filter((review) => review.prd_id === product.id).length > 0}
+                      <!-- Render review data -->
+                      {#each revData.filter((review) => review.prd_id === product.id) as rating (rating.id)}
+                        <article>
+                          <div class="flex items-center mb-4">
+                            <img
+                              class="w-10 h-10 me-4 rounded-full"
+                              src={rating.user_image}
+                              alt=""
+                            />
+                            <div class="font-medium">
+                              <p>
+                                {rating.user_name}
+                                <time
+                                  datetime="2014-08-16 19:00"
+                                  class="block text-sm text-gray-500 dark:text-gray-400"
+                                  >Joined on {rating.user_joined}</time
+                                >
+                              </p>
+                            </div>
+                          </div>
+                          <footer class="mb-5 text-sm text-gray-900">
+                            <p>
+                              Reviewed at <time datetime="2017-03-03 19:00"
+                                >{rating.review_date_time}</time
+                              >
+                            </p>
+                          </footer>
+                          <div
+                            class="flex items-center mb-1 space-x-1 rtl:space-x-reverse"
+                          >
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 1
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 2
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 3
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars >= 4
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <svg
+                              class="w-4 h-4 {rating.review_stars == 5
+                                ? 'text-yellow-400'
+                                : 'text-gray-500'}"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 22 20"
+                            >
+                              <path
+                                d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
+                              />
+                            </svg>
+                            <h3
+                              class="ms-2 text-sm font-semibold text-gray-900"
+                            >
+                              {rating.review_title}
+                            </h3>
+                          </div>
+                          <div class="img flex overflow-x-auto">
+                            {#each rating.review_image as i}
+                              <img
+                                src={i.publicUrl}
+                                alt=""
+                                class="w-auto h-24 mx-2 rounded-md shadow-md my-2"
+                              />
+                            {/each}
+                            <!-- <img src={rating.review_image.publicUrl} alt="" srcset="" /> -->
+                          </div>
+
+                          <p class="mb-2 text-gray-500 dark:text-gray-400">
+                            {rating.review_desc}
+                          </p>
+                          <div class="flex">
+                            <button
+                              on:click={deleteReview(rating.id)}
+                              class="bg-red-300 w-full p-1 flex justify-center items-center hover:bg-red-400 transition-all m-2 rounded-md"
+                            >
+                              <svg
+                                class="w-auto h-7"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                ><g id="SVGRepo_bgCarrier" stroke-width="0"
+                                ></g><g
+                                  id="SVGRepo_tracerCarrier"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></g><g id="SVGRepo_iconCarrier">
+                                  <path
+                                    d="M10 12L14 16M14 12L10 16M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6"
+                                    stroke="#242424"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                </g></svg
+                              >
+                            </button>
+                          </div>
+                        </article>
+                        <div class="line w-full h-0.5 bg-gray-300 my-2"></div>
+                      {/each}
+                    {:else}
+                      <!-- Handle case where there is no review data for the product -->
+                      <p>No reviews available</p>
+                    {/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
+          {:else}
+            <p class="ml-10 md:ml-5 lg:ml-5 mt-3">No Reviewed Product</p>
+          {/if}
+        </div>
+      </div>
+
+      <!-- svelte-ignore a11y-positive-tabindex -->
+      <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+    </div>
   {/if}
 
   {#if productArr.length == 0}

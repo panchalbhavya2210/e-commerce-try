@@ -5,6 +5,7 @@
   import truck from "../../lib/category-icons/truck.png";
   import empty from "../../lib/category-icons/cart-mt.png";
   import "../../lib/global.css";
+  let hiddenState = true;
 
   let addArr = [];
   let arrCount = [];
@@ -45,6 +46,10 @@
         .in("id", fetchArr);
 
       addArr = productData;
+      console.log(addArr);
+      if (addArr == null || addArr.length == 0) {
+        hiddenState = false;
+      }
       totalAmount = 0;
 
       for (const product of addArr) {
@@ -92,47 +97,90 @@
   <div class="mt-8 p-10">
     <div class="flow-root">
       <ul role="list" class="-my-6 divide-y divide-gray-200">
-        {#each addArr as con (con.id)}
-          <li class="flex py-6">
+        {#if hiddenState == true}
+          <div
+            role="status"
+            class="space-y-8 p-10 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
+          >
             <div
-              class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+              class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700"
             >
-              <img
-                src={con.product_image_d}
-                alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-                class="h-full w-full object-cover object-center"
+              <svg
+                class="w-10 h-10 text-gray-200 dark:text-gray-600"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 18"
+              >
+                <path
+                  d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"
+                />
+              </svg>
+            </div>
+            <div class="w-full">
+              <div
+                class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-400 w-48 mb-4"
+              />
+              <div
+                class="h-2 bg-gray-200 rounded-full dark:bg-gray-400 max-w-[480px] mb-2.5"
+              />
+              <div
+                class="h-2 bg-gray-200 rounded-full dark:bg-gray-400 mb-2.5"
+              />
+              <div
+                class="h-2 bg-gray-200 rounded-full dark:bg-gray-400 max-w-[440px] mb-2.5"
+              />
+              <div
+                class="h-2 bg-gray-200 rounded-full dark:bg-gray-400 max-w-[460px] mb-2.5"
+              />
+              <div
+                class="h-2 bg-gray-200 rounded-full dark:bg-gray-400 max-w-[360px]"
               />
             </div>
-            <div class="ml-4 flex flex-1 flex-col">
-              <div>
-                <div
-                  class="flex justify-between text-base font-medium text-gray-900"
-                >
-                  <h3>
-                    <a href="#">{con.product_name}</a>
-                  </h3>
-                  <p class="ml-4">{con.product_price}₹</p>
-                </div>
+            <span class="sr-only">Loading...</span>
+          </div>
+        {:else}
+          {#each addArr as con (con.id)}
+            <li class="flex py-6">
+              <div
+                class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+              >
+                <img
+                  src={con.product_image_d}
+                  alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
+                  class="h-full w-full object-cover object-center"
+                />
               </div>
-              <div class="flex flex-1 items-end justify-between text-sm">
-                <p class="text-gray-500">
-                  Quantity {arrCount[con.id] || 0}
-                </p>
-
-                <div class="flex">
-                  <button
-                    on:click={() => deleteItem(con)}
-                    type="button"
-                    class="font-medium text-indigo-600 hover:text-indigo-500"
-                    >Remove</button
+              <div class="ml-4 flex flex-1 flex-col">
+                <div>
+                  <div
+                    class="flex justify-between text-base font-medium text-gray-900"
                   >
+                    <h3>
+                      <a href="#">{con.product_name}</a>
+                    </h3>
+                    <p class="ml-4">{con.product_price}₹</p>
+                  </div>
+                </div>
+                <div class="flex flex-1 items-end justify-between text-sm">
+                  <p class="text-gray-500">
+                    Quantity {arrCount[con.id] || 0}
+                  </p>
+
+                  <div class="flex">
+                    <button
+                      on:click={() => deleteItem(con)}
+                      type="button"
+                      class="font-medium text-indigo-600 hover:text-indigo-500"
+                      >Remove</button
+                    >
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        {/each}
-
-        {#if totalAmount == 0 && addArr.length == 0}
+            </li>
+          {/each}
+        {/if}
+        {#if (totalAmount == 0 && addArr.length == 0) || hiddenState == false}
           <li class="flex py-6 items-center">
             <div class="h-40 w-auto flex-shrink-0 overflow-hidden rounded-md">
               <img
@@ -144,6 +192,7 @@
 
             <h1 class="ml-5 font-semibold">Your Cart Is Empty.</h1>
           </li>
+          <!-- svelte-ignore empty-block -->
         {:else}{/if}
       </ul>
     </div>
