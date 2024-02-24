@@ -76,11 +76,7 @@
               .from("user_auth_data")
               .insert(userDataToInsert);
             console.log(error);
-            if (error == null) {
-              setTimeout(() => {
-                window.location.href = "/Verify";
-              }, 1000);
-            }
+          
           }
           setTimeout(() => {
             pushData();
@@ -112,11 +108,6 @@
               .insert(sellerDataToInsert);
             console.log(error);
 
-            if (error == null) {
-              setTimeout(() => {
-                window.location.href = "/Verify";
-              }, 3000);
-            }
           }
 
           setTimeout(() => {
@@ -150,19 +141,19 @@
   class="flex min-h-full flex-col justify-center px-6 py-6 lg:px-8"
 >
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img
+    <!-- <img
       class="mx-auto h-10 w-auto"
       src="https://raw.githubusercontent.com/panchalbhavya2210/e-commerce-try/main/src/lib/Screenshot_2023-10-15_162702-transformed-removebg-preview.png"
       alt="Your Company"
-    />
+    /> -->
     <h2
-      class="mt-2 text-center text-2xl font-medium leading-9 tracking-tight text-gray-900"
+      class="mt-0 text-center text-2xl font-medium leading-9 tracking-tight text-gray-900"
     >
-      Sign in to your account
+      Create New Account
     </h2>
   </div>
 
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+  <div class="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
     <form class="space-y-6">
       <div class="flexData flex">
         <div>
@@ -274,7 +265,8 @@
         <button
           type="submit"
           on:click={mainFunction}
-          class="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+          disabled={progressSignUp}
+          class="flex w-full {progressSignUp ? 'cursor-pointer' : 'cursor-not-allowed'} justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         >
           <div role="status" class=" {progressSignUp ? 'block' : 'hidden'}">
             <svg

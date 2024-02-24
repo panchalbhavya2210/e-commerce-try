@@ -468,7 +468,7 @@
 <div
   class="fixed {loginState
     ? '-bottom-40'
-    : 'bottom-0'}  transition-all left-0 w-full flex justify-center z-50"
+    : 'bottom-0'}  transition-all left-0 w-full flex justify-center"
 >
   <div
     class="beta bg-gray-200 rounded-t-md rounded-tr-md p-3 flex items-center"
