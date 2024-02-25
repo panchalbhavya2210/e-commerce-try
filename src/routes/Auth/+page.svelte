@@ -4,10 +4,17 @@
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
 
-  let selected, progressSignUp, successState, errorState, errBody, errTitle;
+  let selected = "User",
+    progressSignUp,
+    successState,
+    errorState,
+    errBody,
+    errTitle;
   function onChange(event) {
     selected = event.currentTarget.value;
+    console.log(selected);
   }
+
   let emailVal;
   let us;
   const validateEmail = (email) => {
@@ -24,100 +31,97 @@
     validateEmail(emailVal);
     if (us != null) {
       if (files != undefined) {
-         if(selected == undefined){
+        if (selected == undefined) {
           errorState = !errorState;
-        errTitle = "Role error!";
-        errBody = "Please select a user type";
-
-        setTimeout(() => {
-          errorState = !errorState;
-        }, 3000);
-        }
-        else {
-        let file = files[0].name;
-        let fileIt = files[0];
-        progressSignUp = !progressSignUp;
-        const { data, error } = await supabase.auth.signUp({
-          email: emailVal,
-          password: password,
-        });
-        if (error == null) {
-          progressSignUp = !progressSignUp;
-          successState = !successState;
-          setTimeout(() => {
-            successState = !successState;
-          }, 3000);
-        } else {
-          progressSignUp = !progressSignUp;
-          errorState = !errorState;
-          errTitle = error.name;
-          errBody = error.message;
+          errTitle = "Role error!";
+          errBody = "Please select a user type";
 
           setTimeout(() => {
             errorState = !errorState;
           }, 3000);
-        }
-        const uid = data.user.id;
-       
-          if (selected == "User") {
-          async function pushData() {
-            const { data1, error1 } = supabase.storage
-              .from("profiles")
-              .upload(`${uid}/${file}`, fileIt);
-
-            const { data } = await supabase.storage
-              .from("profiles")
-              .getPublicUrl(`${uid}/${file}`);
-            let imageUrl = data.publicUrl;
-            const userDataToInsert = [
-              {
-                auth_uid: uid,
-                user_name: firstName + " " + lastName,
-                user_email: emailVal,
-                user_profile: imageUrl,
-                user_address: "",
-                user_type: "User",
-              },
-            ];
-            const { error } = await supabase
-              .from("user_auth_data")
-              .insert(userDataToInsert);
-          
-          }
-          setTimeout(() => {
-            pushData();
-          });
         } else {
-          async function pushData() {
-            const { data1, error1 } = supabase.storage
-              .from("profiles")
-              .upload(`${uid}/${file}`, fileIt);
-
-            const { data } = await supabase.storage
-              .from("profiles")
-              .getPublicUrl(`${uid}/${file}`);
-
-            let imageUrl = data.publicUrl;
-            const sellerDataToInsert = [
-              {
-                auth_uid: uid,
-                seller_name: firstName + " " + lastName,
-                seller_email: emailVal,
-                seller_image: imageUrl,
-                seller_address: "",
-                user_type: "Seller",
-              },
-            ];
-            const { error } = await supabase
-              .from("seller_auth_data")
-              .insert(sellerDataToInsert);
-
-          }
-
-          setTimeout(() => {
-            pushData();
+          let file = files[0].name;
+          let fileIt = files[0];
+          progressSignUp = !progressSignUp;
+          const { data, error } = await supabase.auth.signUp({
+            email: emailVal,
+            password: password,
           });
-        }
+          if (error == null) {
+            progressSignUp = !progressSignUp;
+            successState = !successState;
+            setTimeout(() => {
+              successState = !successState;
+            }, 3000);
+          } else {
+            progressSignUp = !progressSignUp;
+            errorState = !errorState;
+            errTitle = error.name;
+            errBody = error.message;
+
+            setTimeout(() => {
+              errorState = !errorState;
+            }, 3000);
+          }
+          const uid = data.user.id;
+
+          if (selected == "User") {
+            async function pushUserData() {
+              const { data1, error1 } = supabase.storage
+                .from("profiles")
+                .upload(`${uid}/${file}`, fileIt);
+
+              const { data } = await supabase.storage
+                .from("profiles")
+                .getPublicUrl(`${uid}/${file}`);
+              let imageUrl = data.publicUrl;
+              const userDataToInsert = [
+                {
+                  auth_uid: uid,
+                  user_name: firstName + " " + lastName,
+                  user_email: emailVal,
+                  user_profile: imageUrl,
+                  user_address: "",
+                  user_type: "User",
+                },
+              ];
+              const { error } = await supabase
+                .from("user_auth_data")
+                .insert(userDataToInsert);
+            }
+            setTimeout(() => {
+              pushUserData();
+            });
+          } else {
+            async function pushSellerData() {
+              const { data1, error1 } = supabase.storage
+                .from("profiles")
+                .upload(`${uid}/${file}`, fileIt);
+
+              const { data } = await supabase.storage
+                .from("profiles")
+                .getPublicUrl(`${uid}/${file}`);
+
+              let imageUrl = data.publicUrl;
+              const sellerDataToInsert = [
+                {
+                  auth_uid: uid,
+                  seller_name: firstName + " " + lastName,
+                  seller_email: emailVal,
+                  seller_image: imageUrl,
+                  seller_address: "",
+                  user_type: "Seller",
+                },
+              ];
+              const { error } = await supabase
+                .from("seller_auth_data")
+                .insert(sellerDataToInsert);
+            }
+
+            setTimeout(() => {
+              pushSellerData();
+            });
+          }
         }
       } else {
         errorState = !errorState;
@@ -247,12 +251,8 @@
       </div>
       <div class="flexRadio flex">
         <label>
-          <input
-            on:change={onChange}
-            type="radio"
-            name="amount"
-            value="User"
-          /> I Am Buyer
+          <input on:change={onChange} type="radio" name="amount" value="User" />
+          I Am Buyer
         </label>
         <label>
           <input
@@ -269,7 +269,9 @@
           type="submit"
           on:click={mainFunction}
           disabled={progressSignUp}
-          class="flex w-full {progressSignUp ? 'cursor-not-allowed' : 'cursor-pointer'} justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+          class="flex w-full {progressSignUp
+            ? 'cursor-not-allowed'
+            : 'cursor-pointer'} justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         >
           <div role="status" class=" {progressSignUp ? 'block' : 'hidden'}">
             <svg

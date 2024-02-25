@@ -44,6 +44,7 @@
         .from("ProductData")
         .select("*")
         .in("id", fetchArr);
+      hiddenState = false;
 
       addArr = productData;
       console.log(addArr);
@@ -97,7 +98,7 @@
   <div class="mt-8 p-10">
     <div class="flow-root">
       <ul role="list" class="-my-6 divide-y divide-gray-200">
-        {#if hiddenState == true}
+        {#if hiddenState}
           <div
             role="status"
             class="space-y-8 p-10 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center"
@@ -180,7 +181,7 @@
             </li>
           {/each}
         {/if}
-        {#if (totalAmount == 0 && addArr.length == 0) || hiddenState == false}
+        {#if totalAmount == 0 && addArr.length == 0}
           <li class="flex py-6 items-center">
             <div class="h-40 w-auto flex-shrink-0 overflow-hidden rounded-md">
               <img
@@ -193,7 +194,9 @@
             <h1 class="ml-5 font-semibold">Your Cart Is Empty.</h1>
           </li>
           <!-- svelte-ignore empty-block -->
-        {:else}{/if}
+        {:else}
+          <!--  -->
+        {/if}
       </ul>
     </div>
     <div

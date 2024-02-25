@@ -330,6 +330,13 @@
   function dynamicImgUrl(url) {
     source = url;
   }
+  let currentIndex = 0; // track the index of the currently displayed image
+
+  // Function to navigate to the next or previous image
+  function navigate(step) {
+    currentIndex = (currentIndex + step + imgData.length) % imgData.length;
+    source = imgData[currentIndex].publicUrl;
+  }
 </script>
 
 <main transition:fly={{ y: 200 }}>
@@ -495,28 +502,75 @@
         <div class="flex flex-wrap mb-24 -mx-4">
           <div class="w-full px-4 mb-8 md:w-1/2 md:mb-0">
             <div class="sticky top-0 z-50 overflow-hidden">
-              <div class="img-zoom-container relative">
+              <div class="img-zoom-container relative flex justify-center">
                 <!-- class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md" -->
 
-                <img class="rounded-md shadow-lg w-96 h-96" src={source} alt="" />
+                <img
+                  class="rounded-md shadow-lg w-96 h-96"
+                  src={source}
+                  alt=""
+                />
               </div>
 
               <div class="mt-2 overflow-scroll flex -mx-2 md:flex -z-0">
                 {#each imgData as img}
-                  <div class="w-full p-2 sm:w-1/4 lg:w-auto md:w-auto bg-red-300">
+                  <div class="w-full p-2 sm:w-1/4 lg:w-auto md:w-auto">
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <img
-                      class="rounded-md object-cover w-96 h-20 lg:h-32 transition-all cursor-pointer bg-red-300"
+                      class="rounded-md object-cover w-96 h-20 lg:h-32 transition-all cursor-pointer"
+                      style="width: 100%; height: auto;"
                       src={img.publicUrl}
                       alt=""
-                      on:click={dynamicImgUrl(img.publicUrl)}
+                      on:click={() => {
+                        source = img.publicUrl;
+                        currentIndex = imgData.indexOf(img);
+                      }}
                     />
                   </div>
                 {/each}
               </div>
 
-              <div class="px-6 pb-6 mt-6 border-t border-gray-300"></div>
+              <div class="px-6 pb-6 mt-6 border-t border-gray-300">
+                <button
+                  on:click={() => navigate(-1)}
+                  class="absolute top-1/2 left-4 transform -translate-y-1/2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  on:click={() => navigate(1)}
+                  class="absolute top-1/2 right-4 transform -translate-y-1/2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           <div class="w-full px-4 md:w-1/2">
