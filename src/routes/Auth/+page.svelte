@@ -7,7 +7,6 @@
   let selected, progressSignUp, successState, errorState, errBody, errTitle;
   function onChange(event) {
     selected = event.currentTarget.value;
-    console.log(selected);
   }
   let emailVal;
   let us;
@@ -25,6 +24,16 @@
     validateEmail(emailVal);
     if (us != null) {
       if (files != undefined) {
+         if(selected == undefined){
+          errorState = !errorState;
+        errTitle = "Role error!";
+        errBody = "Please select a user type";
+
+        setTimeout(() => {
+          errorState = !errorState;
+        }, 3000);
+        }
+        else {
         let file = files[0].name;
         let fileIt = files[0];
         progressSignUp = !progressSignUp;
@@ -47,10 +56,10 @@
           setTimeout(() => {
             errorState = !errorState;
           }, 3000);
-          console.log(error.name, error.message);
         }
         const uid = data.user.id;
-        if (selected == "User") {
+       
+          if (selected == "User") {
           async function pushData() {
             const { data1, error1 } = supabase.storage
               .from("profiles")
@@ -59,7 +68,6 @@
             const { data } = await supabase.storage
               .from("profiles")
               .getPublicUrl(`${uid}/${file}`);
-            console.log(data);
             let imageUrl = data.publicUrl;
             const userDataToInsert = [
               {
@@ -71,11 +79,9 @@
                 user_type: "User",
               },
             ];
-            console.log(userDataToInsert);
             const { error } = await supabase
               .from("user_auth_data")
               .insert(userDataToInsert);
-            console.log(error);
           
           }
           setTimeout(() => {
@@ -102,17 +108,16 @@
                 user_type: "Seller",
               },
             ];
-            console.log(sellerDataToInsert);
             const { error } = await supabase
               .from("seller_auth_data")
               .insert(sellerDataToInsert);
-            console.log(error);
 
           }
 
           setTimeout(() => {
             pushData();
           });
+        }
         }
       } else {
         errorState = !errorState;
@@ -243,7 +248,6 @@
       <div class="flexRadio flex">
         <label>
           <input
-            checked
             on:change={onChange}
             type="radio"
             name="amount"
@@ -253,7 +257,6 @@
         <label>
           <input
             class="ml-3"
-            checked={selected === 20}
             on:change={onChange}
             type="radio"
             name="amount"
@@ -266,7 +269,7 @@
           type="submit"
           on:click={mainFunction}
           disabled={progressSignUp}
-          class="flex w-full {progressSignUp ? 'cursor-pointer' : 'cursor-not-allowed'} justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+          class="flex w-full {progressSignUp ? 'cursor-not-allowed' : 'cursor-pointer'} justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-black hover:transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
         >
           <div role="status" class=" {progressSignUp ? 'block' : 'hidden'}">
             <svg

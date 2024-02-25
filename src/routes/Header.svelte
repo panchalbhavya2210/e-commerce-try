@@ -22,6 +22,7 @@
             .from("user_auth_data")
             .select("*")
             .eq("auth_uid", authId);
+          console.log(data)
           const { data: seller, error: serror } = await supabase
             .from("seller_auth_data")
             .select("*")

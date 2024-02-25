@@ -498,16 +498,16 @@
               <div class="img-zoom-container relative">
                 <!-- class="object-cover w-full lg:h-1/2 -z-10 shadow-xl rounded-md" -->
 
-                <img class="rounded-md shadow-lg" src={source} alt="" />
+                <img class="rounded-md shadow-lg w-96 h-96" src={source} alt="" />
               </div>
 
-              <div class="mt-2 flex-wrap flex -mx-2 md:flex -z-0">
+              <div class="mt-2 overflow-scroll flex -mx-2 md:flex -z-0">
                 {#each imgData as img}
-                  <div class="w-auto p-2 sm:w-1/4 lg:w-auto md:w-auto">
+                  <div class="w-full p-2 sm:w-1/4 lg:w-auto md:w-auto bg-red-300">
                     <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <img
-                      class="rounded-md object-cover w-auto h-20 lg:h-32 transition-all cursor-pointer"
+                      class="rounded-md object-cover w-96 h-20 lg:h-32 transition-all cursor-pointer bg-red-300"
                       src={img.publicUrl}
                       alt=""
                       on:click={dynamicImgUrl(img.publicUrl)}

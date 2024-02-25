@@ -253,6 +253,8 @@
         </div>
       </div>
       <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
+        {#if userType == 'User'}
+
         <li class="flex flex-col items-center justify-around cursor-pointer">
           <div class="has-tooltip">
             <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
@@ -267,9 +269,34 @@
                 d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
               />
             </svg>
-            <div>{revData.length || 0}</div>
+            <div>
+              {revData.length || 0}
+              
+            </div>
           </div>
         </li>
+        {:else}
+        <li class="flex flex-col items-center justify-around cursor-pointer">
+          <div class="has-tooltip">
+            <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
+              >Your Products</span
+            >
+            <svg
+              class="w-4 fill-current text-blue-900"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+              />
+            </svg>
+            <div>
+              {productArr.length || 0}
+              
+            </div>
+          </div>
+        </li>
+              {/if}
         <li class="flex flex-col items-center justify-between cursor-pointer">
           <div class="has-tooltip">
             <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
@@ -290,7 +317,7 @@
       </ul>
     </div>
 
-    <div class="m-2 mt-5 space-y-2">
+    <div class="m-2 space-y-2 {userType == 'User' ? 'block' : 'hidden'}" >
       <!-- svelte-ignore a11y-positive-tabindex -->
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <div
@@ -729,7 +756,7 @@
       role="status"
       class="w-full {userType == 'User'
         ? 'hidden'
-        : 'block'} space-y-4 p-10 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 dark:border-gray-700"
+        : 'block'} space-y-4 mt-5 p-10 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 dark:border-gray-700"
     >
       <div class="flex items-center justify-between">
         <div>
@@ -783,7 +810,7 @@
       <div class="line w-full h-0.5 bg-gray-400 rounded-full" />
 
       {#each productArr as productRender (productRender.id)}
-        <div class="productRender p-5">
+        <div class="productRender mt-5 p-5">
           <div class="w-full p-3 shadow-lg my-2 relative">
             <div
               class="imgHolder w-full sm:w-40 md:w-40 lg:w-40 sm:my-5 md:my-5 lg:my-5 h-full sm:flex sm:items-center sm:justify-start md:flex md:items-center md:justify-start lg:flex lg:items-center lg:justify-start sm:mx-5 md:mx-5 lg:mx-5"
