@@ -27,7 +27,6 @@
 
   function changePaymentFunction(event) {
     changePayment = event.currentTarget.value;
-    console.log(changePayment);
   }
 
   let removerState = false;
@@ -49,16 +48,13 @@
         .from("address_data")
         .select("*")
         .eq("user_id", authId);
-      console.log(addressData, addressError);
       addressData = addressDataBeta;
-      console.log(addressData);
 
       if (
         addressData == null ||
         addressData == undefined ||
         addressData.length == 0
       ) {
-        console.log("no address exists");
       } else {
         //do none
       }
@@ -77,7 +73,6 @@
         if (countMap[key] > 1) {
         }
       }
-      console.log(countMap);
 
       const { data: productData } = await supabase
         .from("ProductData")
@@ -85,7 +80,6 @@
         .in("id", fetchArr);
 
       addArr = productData;
-      console.log(addArr);
       for (let i = 0; i < addArr.length; i++) {
         product_name.push(productData[i].product_name);
         product_desc.push(productData[i].product_description);
@@ -106,7 +100,6 @@
       } else {
         totalAmount = totalAmount;
       }
-      console.log(arrCount);
     } catch (error) {}
   }
   onMount(() => {
@@ -114,8 +107,6 @@
   });
 
   async function deleteItem(con) {
-    console.log(con.product_qty);
-    console.log(arrCount[con.id]);
     if (removerState == true) {
       removerState = false;
     } else {
@@ -146,7 +137,6 @@
     recType;
 
   async function addAddressData() {
-    console.log(recAddres);
     if (
       recFName == undefined &&
       recLName == undefined &&
@@ -172,7 +162,6 @@
       const { data, error } = await supabase
         .from("address_data")
         .insert(addressDataCont);
-      console.log(data, error);
       getCartData();
       if (error == null) {
         addRessLoad = !addRessLoad;

@@ -55,7 +55,6 @@
       })
       .catch((error) => {
         if (error.message == "Cannot read properties of null (reading 'id')") {
-          console.log("User Not Logged In");
         }
       });
   }

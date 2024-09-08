@@ -42,8 +42,6 @@
         imageArray.push(dataOne);
       }
 
-      console.log(imageArray[0]);
-
       const productDataToInsert = {
         product_category: selected,
         product_name: productName,
@@ -66,7 +64,6 @@
         setTimeout(() => {
           successState = !successState;
         }, 3000);
-        console.log(data);
       } else {
         btn.disabled = false;
 
@@ -77,7 +74,6 @@
         setTimeout(() => {
           errorState = !errorState;
         }, 3000);
-        console.log(error.name, error.message);
       }
 
       imageArray = [];

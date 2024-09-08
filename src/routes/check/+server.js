@@ -16,7 +16,6 @@ export const POST = async ({ request }) => {
       ...item,
       quantity: countMapInt[item.id] || 1,
     }));
-    console.log(mergedArray);
     const lineItems = mergedArray.map((item) => ({
       price_data: {
         currency: "INR",
@@ -37,8 +36,7 @@ export const POST = async ({ request }) => {
         allowed_countries: ["IN"],
       },
       mode: "payment",
-      success_url:
-        "http://e-commerce-try.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
+      success_url: "http://e-commerce-try.vercel.app/success",
       cancel_url: `http://e-commerce-try.vercel.app/cancel`,
     });
 

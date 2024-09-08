@@ -33,7 +33,6 @@
 
       userid = authId;
 
-      console.log(authId);
       async function getData() {
         const { data, error } = await supabase
           .from("user_auth_data")
@@ -45,21 +44,17 @@
           .eq("u_id", userid);
 
         revData = rev;
-        console.log(revData);
         const { data: orderData, error: oerror } = await supabase
           .from("order_table")
           .select("*")
           .eq("user_id", userid);
         ordData = orderData;
-        console.log(ordData, oerror);
         const fetchArr = revData.map((item) => item.prd_id);
-        console.log(fetchArr);
         const { data: prdD, error: an } = await supabase
           .from("ProductData")
           .select("*")
           .in("id", fetchArr);
         prdData = prdD;
-        console.log(prdD);
 
         const { data: seller, error: serror } = await supabase
           .from("seller_auth_data")
@@ -85,7 +80,6 @@
             .from("ProductData")
             .select("*")
             .eq("seller_id", authId);
-          console.log(data);
           productArr = data;
         } else {
           rowDataif = 0;
@@ -106,7 +100,6 @@
   function updateProduct(productRender) {
     prdId = productRender.id;
     hiddenState = !hiddenState;
-    console.log(productRender);
 
     productName = productRender.product_name;
     productDesc = productRender.product_description;
@@ -138,7 +131,6 @@
         errorState = !errorState;
       }, 5000);
     }
-    console.log(data);
   }
 
   async function deleteProduct(productRender) {
@@ -166,7 +158,6 @@
       .from("review_table")
       .delete()
       .eq("id", s);
-    console.log(data, error);
 
     if (error === null) {
       successState = !successState;
@@ -253,50 +244,47 @@
         </div>
       </div>
       <ul class="py-4 mt-2 text-gray-700 flex items-center justify-around">
-        {#if userType == 'User'}
-
-        <li class="flex flex-col items-center justify-around cursor-pointer">
-          <div class="has-tooltip">
-            <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
-              >Your Reviews</span
-            >
-            <svg
-              class="w-4 fill-current text-blue-900"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
-              />
-            </svg>
-            <div>
-              {revData.length || 0}
-              
+        {#if userType == "User"}
+          <li class="flex flex-col items-center justify-around cursor-pointer">
+            <div class="has-tooltip">
+              <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
+                >Your Reviews</span
+              >
+              <svg
+                class="w-4 fill-current text-blue-900"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <div>
+                {revData.length || 0}
+              </div>
             </div>
-          </div>
-        </li>
+          </li>
         {:else}
-        <li class="flex flex-col items-center justify-around cursor-pointer">
-          <div class="has-tooltip">
-            <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
-              >Your Products</span
-            >
-            <svg
-              class="w-4 fill-current text-blue-900"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
-              />
-            </svg>
-            <div>
-              {productArr.length || 0}
-              
+          <li class="flex flex-col items-center justify-around cursor-pointer">
+            <div class="has-tooltip">
+              <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
+                >Your Products</span
+              >
+              <svg
+                class="w-4 fill-current text-blue-900"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"
+                />
+              </svg>
+              <div>
+                {productArr.length || 0}
+              </div>
             </div>
-          </div>
-        </li>
-              {/if}
+          </li>
+        {/if}
         <li class="flex flex-col items-center justify-between cursor-pointer">
           <div class="has-tooltip">
             <span class="tooltip rounded shadow-lg p-1 bg-gray-100"
@@ -317,7 +305,7 @@
       </ul>
     </div>
 
-    <div class="m-2 space-y-2 {userType == 'User' ? 'block' : 'hidden'}" >
+    <div class="m-2 space-y-2 {userType == 'User' ? 'block' : 'hidden'}">
       <!-- svelte-ignore a11y-positive-tabindex -->
       <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
       <div

@@ -83,29 +83,16 @@
       .in("id", fetchAdd);
 
     data_of_addr = address;
-    console.log(data_of_addr);
 
     data_of_addr.forEach((item) => {
       mappedData[item.id] = item;
     });
     data_of_addr = mappedData;
-    console.log(mappedData);
-    // Now, mappedData will have elements at the specified address_id
-
-    // Example usage:
-    // const addressIdToAccess = 2;
-    // if (mappedData[addressIdToAccess]) {
-    //   console.log(mappedData[addressIdToAccess].reciever_name);
-    // } else {
-    //   console.log("Data not found for the given address_id");
-    // }
   }
   async function LoadSellerOrder() {
     // Fetching user information using Supabase authentication.
     const response = await supabase.auth.getUser();
     user_id = response.data.user.id;
-    console.log(user_id);
-
     const { data, error } = await supabase
       .from("order_table")
       .select("*")
@@ -141,12 +128,9 @@
   }
 
   async function runCancel(s) {
-    console.log(s.order_status);
     let isDelivered = s.order_status;
-    console.log(s.product_ids);
 
     if (isDelivered == "Delivered") {
-      console.log("Can't Cancel the delivered order");
     } else {
       const { data, error } = await supabase
         .from("order_table")
@@ -160,25 +144,20 @@
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "order_table" },
-      (payload) => {
-        console.log("Change received!", payload);
-      }
+      (payload) => {}
     )
     .subscribe();
 
-  console.log(channels);
   // Using the `onMount` function to call the `LoadUserOrder` function when the component is mounted.
   onMount(() => {
     DataType();
 
     setTimeout(() => {
-      console.log(type);
       if (type == "User") {
         LoadUserOrder();
       } else if (type == "Seller") {
         LoadSellerOrder();
       } else {
-        console.log("notype");
         null;
       }
     }, 1000);
@@ -189,222 +168,224 @@
   {#if type == "User"}
     <div class="itemOne">
       {#each renderUserArr as userRender}
-        <div class="orderDetailss mt-10">
-          <div class="orderDetails ml-10">
-            <div>
-              <h2 class="font-semibold text-gray-700">
-                #Order {userRender.order_id}
-                {#if userRender.order_status == "Shipped"}
-                  | #OTP {userRender.customer_otp}
-                {/if}
-              </h2>
-            </div>
-          </div>
-          <div class="bg w-full flex items-center justify-center">
-            <div class="w-11/12 rounded-md p-5 shadow-md bg-gray-100">
-              <div class="w-full imageDetail sm:flex sm:justify-start block">
-                <div
-                  class="w-full img flex justify-start sm:flex md:w-32 sm:min-w-min"
-                >
-                  <img
-                    src={userRender.product_image}
-                    class="h-11/12 w-auto md:h-32 md:w-auto sm:h-32 sm:w-full rounded-sm"
-                    alt=""
-                  />
-                </div>
-                <div class="block sm:flex sm:mx-5 md:mx-5">
-                  <div class="hello mt-2 mx-1">
-                    <p class="font-medium my-1">{userRender.product_name}</p>
-                    <p class="font-medium my-1 text-gray-700">
-                      {userRender.product_price}₹
-                    </p>
-                    <p
-                      class="truncate sm:whitespace-normal sm:w-56 lg:truncate md:truncate sm:truncate"
-                    >
-                      {userRender.product_desc}
-                    </p>
-                  </div>
-
-                  <div
-                    class="lin w-full h-0.5 my-2 bg-gray-400 sm:hidden md:hidden lg:hidden"
-                  />
-
-                  <div class="sm:flex mt-2 justify-between mx-1">
-                    <div class="sm:mx-5 my-2">
-                      <p class="font-medium">Delivery Address</p>
-                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {data_of_addr[userRender.address_id]?.address_title}
-                      </p>
-                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {data_of_addr[userRender.address_id]?.reciever_name}
-                      </p>
-                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {data_of_addr[userRender.address_id]?.user_phone}
-                      </p>
-                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {data_of_addr[userRender.address_id]?.address_details}
-                      </p>
-                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {data_of_addr[userRender.address_id]?.rec_city}
-                      </p>
-                      <p class="text-gray-800 w-full lg:w-52 sm:w-24">
-                        {data_of_addr[userRender.address_id]?.pin_code}
-                      </p>
-                      <!-- {userRender.address_id}
-
-                      <p>{data_of_addr[userRender.address_id]?.pin_code}</p> -->
-                    </div>
-                    <!-- <div class="sm:mx-5 my-2">
-                      <p class="font-medium">Seller Info</p>
-                      <p class="text-gray-800 truncate w-full lg:w-52 sm:w-24">
-                        seller name
-                      </p>
-                      <p class="text-gray-800 truncate w-full lg:w-52 sm:w-24">
-                        seller details
-                      </p>
-                      <p class="text-gray-800 truncate w-full lg:w-52 sm:w-24">
-                        seller email
-                      </p>
-                    </div> -->
-                  </div>
-                  <div
-                    class="lin w-full h-0.5 my-2 bg-gray-400 sm:hidden md:hidden lg:hidden"
-                  />
-                </div>
+        {#if userRender.order_status == "Delivered"}{:else}
+          <div class="orderDetailss mt-10">
+            <div class="orderDetails ml-10">
+              <div>
+                <h2 class="font-semibold text-gray-700">
+                  #Order {userRender.order_id}
+                  {#if userRender.order_status == "Shipped"}
+                    | #OTP {userRender.customer_otp}
+                  {/if}
+                </h2>
               </div>
+            </div>
+            <div class="bg w-full flex items-center justify-center">
+              <div class="w-11/12 rounded-md p-5 shadow-md bg-gray-100">
+                <div class="w-full imageDetail sm:flex sm:justify-start block">
+                  <div
+                    class="w-full img flex justify-start sm:flex md:w-32 sm:min-w-min"
+                  >
+                    <img
+                      src={userRender.product_image}
+                      class="h-11/12 w-auto md:h-32 md:w-auto sm:h-32 sm:w-full rounded-sm"
+                      alt=""
+                    />
+                  </div>
+                  <div class="block sm:flex sm:mx-5 md:mx-5">
+                    <div class="hello mt-2 mx-1">
+                      <p class="font-medium my-1">{userRender.product_name}</p>
+                      <p class="font-medium my-1 text-gray-700">
+                        {userRender.product_price}₹
+                      </p>
+                      <p
+                        class="truncate sm:whitespace-normal sm:w-56 lg:truncate md:truncate sm:truncate"
+                      >
+                        {userRender.product_desc}
+                      </p>
+                    </div>
 
-              <div class="progress mt-10">
-                {#if userRender.order_status == "Received"}
-                  <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-20 md:w-20 lg:w-20 rounded-full h-2 transition-width duration-1000"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {:else}
-                  <!-- Your content goes here -->
-                {/if}
-                {#if userRender.order_status == "Processed"}
-                  <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-96 md:w-96 lg:w-96 rounded-full h-2 transition-width duration-1000"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {/if}
-                {#if userRender.order_status == "Shipped"}
-                  <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-4/5 md:w-4/5 lg:w-4/5 rounded-full h-2 transition-all duration-1000"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {/if}
-                {#if userRender.order_status == "Delivered"}
-                  <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-full md:w-full lg:w-full rounded-full h-2 transition-width duration-1000"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {/if}
-                {#if userRender.order_status == "Pending"}
-                  <div
-                    class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-5 md:w-5 lg:w-5 rounded-full h-2 transition-width duration-1000"
-                  >
-                    <!-- Your content goes here -->
-                  </div>
-                {:else}
-                  <!--  -->
-                {/if}
+                    <div
+                      class="lin w-full h-0.5 my-2 bg-gray-400 sm:hidden md:hidden lg:hidden"
+                    />
 
-                <!-- 44 full -->
+                    <div class="sm:flex mt-2 justify-between mx-1">
+                      <div class="sm:mx-5 my-2">
+                        <p class="font-medium">Delivery Address</p>
+                        <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                          {data_of_addr[userRender.address_id]?.address_title}
+                        </p>
+                        <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                          {data_of_addr[userRender.address_id]?.reciever_name}
+                        </p>
+                        <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                          {data_of_addr[userRender.address_id]?.user_phone}
+                        </p>
+                        <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                          {data_of_addr[userRender.address_id]?.address_details}
+                        </p>
+                        <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                          {data_of_addr[userRender.address_id]?.rec_city}
+                        </p>
+                        <p class="text-gray-800 w-full lg:w-52 sm:w-24">
+                          {data_of_addr[userRender.address_id]?.pin_code}
+                        </p>
+                        <!-- {userRender.address_id}
 
-                {#if userRender.order_status == "Received"}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-5 absolute bg-blue-600 rounded-full"
-                  />
-                {:else}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
-                  />
-                {/if}
-                {#if userRender.order_status == "Processed"}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-16 absolute bg-blue-600 rounded-full"
-                  />
-                {:else}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
-                  />
-                {/if}
-                {#if userRender.order_status == "Shipped"}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-32 absolute bg-blue-600 rounded-full"
-                  />
-                {:else}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
-                  />
-                {/if}
-                {#if userRender.order_status == "Delivered"}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
-                  />
-                {:else}
-                  <div
-                    class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
-                  />
-                {/if}
-                <!-- <div
-                  class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
-                /> -->
-                <div
-                  class="xname lg:flex lg:justify-between sm:flex sm:justify-between md:flex md:justify-between font-medium"
-                >
+                    <p>{data_of_addr[userRender.address_id]?.pin_code}</p> -->
+                      </div>
+                      <!-- <div class="sm:mx-5 my-2">
+                    <p class="font-medium">Seller Info</p>
+                    <p class="text-gray-800 truncate w-full lg:w-52 sm:w-24">
+                      seller name
+                    </p>
+                    <p class="text-gray-800 truncate w-full lg:w-52 sm:w-24">
+                      seller details
+                    </p>
+                    <p class="text-gray-800 truncate w-full lg:w-52 sm:w-24">
+                      seller email
+                    </p>
+                  </div> -->
+                    </div>
+                    <div
+                      class="lin w-full h-0.5 my-2 bg-gray-400 sm:hidden md:hidden lg:hidden"
+                    />
+                  </div>
+                </div>
+
+                <div class="progress mt-10">
                   {#if userRender.order_status == "Received"}
-                    <p class="mt-7 ml-5">Order Received</p>
-                  {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
-                    <p class="mt-7 ml-5">Order Received</p>
-                  {:else if userRender.order_status == "Pending"}
-                    <p class="mt-7 ml-5">Order Pending</p>
+                    <div
+                      class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-20 md:w-20 lg:w-20 rounded-full h-2 transition-width duration-1000"
+                    >
+                      <!-- Your content goes here -->
+                    </div>
                   {:else}
-                    <p class="mt-7 ml-5">Unconfirmed Order</p>
+                    <!-- Your content goes here -->
                   {/if}
                   {#if userRender.order_status == "Processed"}
-                    <p class="mt-7 ml-5">Order Processed</p>
-                  {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
-                    <p class="mt-7 ml-5">Order Processed</p>
-                  {:else if userRender.order_status == "Received"}
-                    <p class="mt-7 ml-5">Order Processing</p>
-                  {:else}
-                    <p class="mt-7 ml-5">Unprocessed Order</p>
+                    <div
+                      class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-96 md:w-96 lg:w-96 rounded-full h-2 transition-width duration-1000"
+                    >
+                      <!-- Your content goes here -->
+                    </div>
                   {/if}
                   {#if userRender.order_status == "Shipped"}
-                    <p class="mt-7 ml-5">Order Shipped</p>
-                  {:else if userRender.order_status == "Processed"}
-                    <p class="mt-7 ml-5">Shiping Order</p>
-                  {:else if userRender.order_status == "Delivered"}
-                    <p class="mt-7 ml-5">Order Shipped</p>
-                  {:else}
-                    <p class="mt-7 ml-5">Unshipped Order</p>
+                    <div
+                      class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-4/5 md:w-4/5 lg:w-4/5 rounded-full h-2 transition-all duration-1000"
+                    >
+                      <!-- Your content goes here -->
+                    </div>
                   {/if}
                   {#if userRender.order_status == "Delivered"}
-                    <p class="mt-7 ml-5">Order Delivered</p>
-                  {:else if userRender.order_status == "Shipped"}
-                    <p class="mt-7 ml-5">Delivering Order</p>
-                  {:else}
-                    <p class="mt-7 ml-5">Undelivered Order</p>
+                    <div
+                      class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-full md:w-full lg:w-full rounded-full h-2 transition-width duration-1000"
+                    >
+                      <!-- Your content goes here -->
+                    </div>
                   {/if}
-                </div>
-              </div>
+                  {#if userRender.order_status == "Pending"}
+                    <div
+                      class="progressbar hidden sm:block lg:block bg-blue-600 sm:w-5 md:w-5 lg:w-5 rounded-full h-2 transition-width duration-1000"
+                    >
+                      <!-- Your content goes here -->
+                    </div>
+                  {:else}
+                    <!--  -->
+                  {/if}
 
-              <div class="cancelbtn">
-                <button
-                  on:click={runCancel(userRender)}
-                  class="w-full p-2 mt-2 rounded-md border-red-400 border-2"
-                  >CANCEL THIS ORDER</button
-                >
+                  <!-- 44 full -->
+
+                  {#if userRender.order_status == "Received"}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-5 absolute bg-blue-600 rounded-full"
+                    />
+                  {:else}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                    />
+                  {/if}
+                  {#if userRender.order_status == "Processed"}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-16 absolute bg-blue-600 rounded-full"
+                    />
+                  {:else}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                    />
+                  {/if}
+                  {#if userRender.order_status == "Shipped"}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-32 absolute bg-blue-600 rounded-full"
+                    />
+                  {:else}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                    />
+                  {/if}
+                  {#if userRender.order_status == "Delivered"}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
+                    />
+                  {:else}
+                    <div
+                      class="vbar sm:hidden md:hover: lg:hidden block w-2 h-0 absolute bg-blue-600 rounded-full"
+                    />
+                  {/if}
+                  <!-- <div
+                class="vbar sm:hidden md:hover: lg:hidden block w-2 h-44 absolute bg-blue-600 rounded-full"
+              /> -->
+                  <div
+                    class="xname lg:flex lg:justify-between sm:flex sm:justify-between md:flex md:justify-between font-medium"
+                  >
+                    {#if userRender.order_status == "Received"}
+                      <p class="mt-7 ml-5">Order Received</p>
+                    {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
+                      <p class="mt-7 ml-5">Order Received</p>
+                    {:else if userRender.order_status == "Pending"}
+                      <p class="mt-7 ml-5">Order Pending</p>
+                    {:else}
+                      <p class="mt-7 ml-5">Unconfirmed Order</p>
+                    {/if}
+                    {#if userRender.order_status == "Processed"}
+                      <p class="mt-7 ml-5">Order Processed</p>
+                    {:else if userRender.order_status == "Processed" || userRender.order_status == "Shipped" || userRender.order_status == "Delivered"}
+                      <p class="mt-7 ml-5">Order Processed</p>
+                    {:else if userRender.order_status == "Received"}
+                      <p class="mt-7 ml-5">Order Processing</p>
+                    {:else}
+                      <p class="mt-7 ml-5">Unprocessed Order</p>
+                    {/if}
+                    {#if userRender.order_status == "Shipped"}
+                      <p class="mt-7 ml-5">Order Shipped</p>
+                    {:else if userRender.order_status == "Processed"}
+                      <p class="mt-7 ml-5">Shiping Order</p>
+                    {:else if userRender.order_status == "Delivered"}
+                      <p class="mt-7 ml-5">Order Shipped</p>
+                    {:else}
+                      <p class="mt-7 ml-5">Unshipped Order</p>
+                    {/if}
+                    {#if userRender.order_status == "Delivered"}
+                      <p class="mt-7 ml-5">Order Delivered</p>
+                    {:else if userRender.order_status == "Shipped"}
+                      <p class="mt-7 ml-5">Delivering Order</p>
+                    {:else}
+                      <p class="mt-7 ml-5">Undelivered Order</p>
+                    {/if}
+                  </div>
+                </div>
+
+                <div class="cancelbtn">
+                  <button
+                    on:click={runCancel(userRender)}
+                    class="w-full p-2 mt-2 rounded-md border-red-400 border-2"
+                    >CANCEL THIS ORDER</button
+                  >
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {/if}
       {/each}
     </div>
   {:else}
@@ -436,7 +417,7 @@
                     <p class="font-medium my-1 text-gray-700">
                       {sellerRender.product_price}₹
                     </p>
-                    <p class="truncate sm:whitespace-normal sm:w-56">
+                    <p class="truncate sm:whitespace-normal w-56 h-10 sm:w-56">
                       {sellerRender.product_desc}
                     </p>
                   </div>

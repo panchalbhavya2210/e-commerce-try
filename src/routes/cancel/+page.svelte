@@ -21,7 +21,6 @@
         invoice_amt: totalAmount,
         payment_status: "unpaid",
       };
-      console.log(orderDataToInsert);
       const { data, error } = await supabase
         .from("order_table")
         .insert(orderDataToInsert);
@@ -32,7 +31,6 @@
         //   .eq("product_id", prdId[i]);
       }
       ocTemp = error;
-      console.log(data, error);
     }
     if (ocTemp == null && addArr.length != 0) {
       orderConfirmation = !orderConfirmation;

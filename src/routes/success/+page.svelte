@@ -6,7 +6,6 @@
   import done from "../../lib/assets/done-round-svgrepo-com.svg";
 
   let isVerified = false;
-
   let addressData = [];
   let addArr = [];
   let arrCount = [];
@@ -36,6 +35,7 @@
         .select("*")
         .eq("auth_uid", authId);
       userName = udata[0].user_name;
+      user_email = udata[0].user_email;
 
       user_id = response.data.user.id;
       const { data: cartData, error } = await supabase
@@ -57,7 +57,6 @@
         if (countMap[key] > 1) {
         }
       }
-      console.log(countMap);
 
       const { data: productData } = await supabase
         .from("ProductData")
@@ -65,7 +64,6 @@
         .in("id", fetchArr);
 
       addArr = productData;
-      console.log(addArr);
       for (let i = 0; i < addArr.length; i++) {
         product_name.push(productData[i].product_name);
         product_desc.push(productData[i].product_description);
@@ -86,7 +84,6 @@
       } else {
         totalAmount = totalAmount;
       }
-      console.log(arrCount);
     } catch (error) {}
   }
 
@@ -96,7 +93,6 @@
       .select("*")
       .eq("user_id", user_id);
 
-    console.log(data, error);
     addressData = data;
   }
 
@@ -124,7 +120,6 @@
         invoice_amt: totalAmount,
         payment_status: "paid",
       };
-      console.log(orderDataToInsert);
       const { data, error } = await supabase
         .from("order_table")
         .insert(orderDataToInsert);
@@ -135,12 +130,9 @@
           .eq("product_id", prdId[i]);
       }
       ocTemp = error;
-      console.log(data, error);
-      console.log(ocTemp);
     }
     if (ocTemp == null && addArr.length != 0) {
       orderConfirmation = !orderConfirmation;
-      console.log(orderConfirmation);
       setTimeout(() => {
         orderConfirmation = !orderConfirmation;
       }, 5000);
@@ -175,9 +167,8 @@
       name: "ShopAholic",
       email: "geraltofrivia8491@gmail.com",
     };
-    sendSmtpEmail.to = [
-      { email: "panchalbhavya2210@gmail.com", name: "Bhavya Panchal" },
-    ];
+    console.log(user_email);
+    sendSmtpEmail.to = [{ email: user_email, name: userName }];
     sendSmtpEmail.replyTo = { email: "no-reply@gmail.com", name: "NoReply" };
     sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
     sendSmtpEmail.params = {

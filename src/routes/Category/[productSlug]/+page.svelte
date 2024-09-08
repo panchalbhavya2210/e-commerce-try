@@ -13,9 +13,7 @@
    */
   export let data = [];
   let ratData = [];
-  // console.log(data);
   let product = data;
-  // console.log(product.product);
   let prd = product.product;
 
   //obj to array
@@ -24,7 +22,6 @@
   if (data.product.length != 0) {
     prdCategory = prd[0].product_category;
   } else {
-    // console.log("it is what it is");
   }
   let ratings = [];
   let uimglink, uname, udate, uemail, formattedDate, auth_id;
@@ -48,13 +45,10 @@
           formattedDate = `${date.getDate()}/${
             date.getMonth() + 1
           }/${date.getFullYear()}`;
-          // console.log(uimglink, uname, formattedDate);
         }
         getData();
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }
   onMount(() => {
     dataC();
@@ -106,15 +100,12 @@
     if (ratData.length == 0) {
       btnDecision = false;
     }
-    // console.log(ratData);
     for (let i = 0; i < ratData.length; i++) {
       let checkUserReview = ratData[i].u_id;
       if (checkUserReview == auth_id) {
         btnDecision = true;
-        // console.log(btnDecision);
       } else {
         btnDecision = false;
-        // console.log(btnDecision);
       }
       ratings.push(ratData[i].review_stars);
     }
@@ -137,8 +128,6 @@
           ratData = ratData;
           ratData.push(payload.new);
           ratings.push(payload.new.review_stars);
-          console.log(payload);
-          // console.log(ratings);
         }
       )
       .subscribe();
@@ -168,7 +157,6 @@
       "5star": 0,
     };
     roundedRating;
-    // console.log(ratings);
     const averageRating =
       ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
     roundedRating = Math.min(Math.round(averageRating * 2) / 2, 5);
@@ -202,9 +190,6 @@
         (ratingCounts[key] / totalRatings) * 100
       );
     }
-    // console.log(ratingPercentages);
-    // console.log(roundedRating);
-    // console.log(ratingCounts);
   }
 
   let date = new Date();
@@ -224,7 +209,6 @@
 
   async function pushReview() {
     reviewState = !reviewState;
-
     let imageArray = [];
 
     if (files != undefined) {
@@ -240,8 +224,6 @@
           .from("review_img")
           .getPublicUrl(`review_img/${fileName}`);
         imageArray.push(dataOne);
-
-        // console.log(dataOne);
       }
 
       const reviewToInsert = {
@@ -260,7 +242,6 @@
       const { data, error } = await supabase
         .from("review_table")
         .insert(reviewToInsert);
-      // console.log(data, error);
 
       if (error == null || error.length == 0) {
         reviewTitle = "";
@@ -275,7 +256,6 @@
         reviewState = !reviewState;
       }
     }
-    // console.log(prdId);
   }
 
   async function addCart() {
@@ -306,7 +286,6 @@
               product_qty: prQty - qtyValue,
             })
             .eq("id", prdId);
-          console.log(prod, er);
 
           if (error == null) {
             orderConfirmation = true;

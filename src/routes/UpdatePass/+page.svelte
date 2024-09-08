@@ -16,14 +16,12 @@
       setTimeout(() => {
         successState = !successState;
       }, 3000);
-      console.log(data);
     } else {
       progressLogin = !progressLogin;
       errorState = !errorState;
       setTimeout(() => {
         errorState = !errorState;
       }, 3000);
-      console.log(error.name, error.message);
     }
   }
 </script>

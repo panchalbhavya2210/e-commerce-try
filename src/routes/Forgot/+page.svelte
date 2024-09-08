@@ -10,15 +10,9 @@
     const { data, error } = await supabase.auth.resetPasswordForEmail(
       emailVal,
       {
-        redirectTo: "http://localhost:5173/UpdatePass",
+        redirectTo: "https://e-commerce-try.vercel.app/UpdatePass",
       }
     );
-    console.log(data, error).then(() => {
-      successState = !successState;
-      setTimeout(() => {
-        successState = !successState;
-      }, 3000);
-    });
   }
 </script>
 

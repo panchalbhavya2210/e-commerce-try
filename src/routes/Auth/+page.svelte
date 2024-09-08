@@ -12,7 +12,6 @@
     errTitle;
   function onChange(event) {
     selected = event.currentTarget.value;
-    console.log(selected);
   }
 
   let emailVal;

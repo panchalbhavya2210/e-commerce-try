@@ -47,7 +47,6 @@
       hiddenState = false;
 
       addArr = productData;
-      console.log(addArr);
       if (addArr == null || addArr.length == 0) {
         hiddenState = false;
       }
